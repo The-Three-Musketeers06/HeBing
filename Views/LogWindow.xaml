@@ -1,0 +1,83 @@
+<Window x:Class="AiVisionStudio.Views.LogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+        Title="日志管理" Width="760" Height="460" WindowStartupLocation="CenterOwner"
+        WindowStyle="None" ResizeMode="CanResize"
+        Background="{StaticResource Bg}" Foreground="{StaticResource Text}"
+        FontFamily="Microsoft YaHei UI" FontSize="12" UseLayoutRounding="True">
+    <Window.Resources>
+        <CollectionViewSource x:Key="LogsDescendingView" Source="{Binding Logs}" >
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Sequence" Direction="Descending" />
+            </CollectionViewSource.SortDescriptions>
+            </CollectionViewSource>
+    </Window.Resources>
+    <Border BorderBrush="{StaticResource Border}" BorderThickness="1">
+        <DockPanel>
+            <Grid DockPanel.Dock="Top" Height="30" Background="{StaticResource Bg}" MouseLeftButtonDown="OnDrag">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
+                    <TextBlock Text="日志管理" Foreground="{StaticResource Text}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,4,0">
+                    <Button Style="{StaticResource CaptionButton}" Click="OnClear" ToolTip="清空">
+                        <Path Data="M4,5 L12,5 M6,5 L6,13 L10,13 L10,5 M7,3 L9,3" Stroke="{StaticResource TextDim}" StrokeThickness="1.1" />
+                    </Button>
+                    <Button Style="{StaticResource CaptionButton}" Click="OnClose" ToolTip="关闭">
+                        <Path Data="M5,5 L13,13 M13,5 L5,13" Stroke="{StaticResource TextDim}" StrokeThickness="1.2" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+            <Grid Background="{StaticResource Panel}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="24" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Border Background="{StaticResource PanelHead}" BorderBrush="{StaticResource Border}" BorderThickness="0,0,0,1">
+                    <Grid Margin="8,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="70" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="时间" Foreground="{StaticResource TextDim}" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1" Text="等级" Foreground="{StaticResource TextDim}" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="2" Text="内容" Foreground="{StaticResource TextDim}" VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+
+                <ListBox Grid.Row="1" ItemsSource="{Binding Source={StaticResource LogsDescendingView}}" Style="{StaticResource FlatListBox}"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Height="22">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="70" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Time}" Foreground="{StaticResource TextDim}" FontSize="11"
+                                           Margin="8,0,0,0" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" Text="{Binding Level}" FontSize="11" VerticalAlignment="Center">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="{StaticResource TextDim}" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsError}" Value="True">
+                                                    <Setter Property="Foreground" Value="{StaticResource Fail}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBlock Grid.Column="2" Text="{Binding Message}" Foreground="{StaticResource Text}"
+                                           Margin="8,0,0,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </DockPanel>
+    </Border>
+</Window>

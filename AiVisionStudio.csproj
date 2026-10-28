@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>AiVisionStudio</AssemblyName>
+    <RootNamespace>AiVisionStudio</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\Brand\ESVision.ico</ApplicationIcon>
+    <Title>ES-Vision-Studio</Title>
+    <Product>ES-Vision-Studio</Product>
+    <Company>恩视智能</Company>
+    <Platforms>AnyCPU;x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup>
+    <HikMvsManagedSdk Condition="'$(HikMvsManagedSdk)' == ''">C:\Program Files (x86)\MVS\Development\DotNet\win64\netstandard2.0\MvCameraControl.Net.dll</HikMvsManagedSdk>
+    <DefineConstants Condition="Exists('$(HikMvsManagedSdk)')">$(DefineConstants);HIK_MVS</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="Exists('$(HikMvsManagedSdk)')"><Reference Include="MvCameraControl.Net"><HintPath>$(HikMvsManagedSdk)</HintPath><Private>false</Private></Reference></ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OpenCvSharp4" Version="4.13.0.20260627" />
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.13.0.20260627" />
+    <PackageReference Include="YamlDotNet" Version="18.1.0" />
+    <PackageReference Include="ZXingCpp" Version="0.5.3" />
+    <PackageReference Include="MVTec.HalconDotNet" Version="26050.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Tests\**\*.cs" />
+    <Compile Remove=".build\**\*.cs" />
+    <Resource Include="Assets\Brand\EnshiLogo.png" />
+    <Resource Include="Assets\Brand\ESVision.ico" />
+    <None Update="Assets\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\HmiEarthTexture.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\HmiThumbnails\*.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Docs\ThirdParty\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

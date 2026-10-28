@@ -1,0 +1,36 @@
+{
+ "evidence_id": "gray16-shipped-help-20261021",
+ "source": {
+  "path": "E:\\Vision-Studi\\docs\\helper.exe",
+  "sha256": "98ad586cbd2b426d29a60c6bee594700aa241fb7da12ac09df02bbcecc12d66c",
+  "size": 272454992
+ },
+ "records": [
+  {
+   "asset": "/docs/assets/operation_2d_16位转8位_16位转8位.md.TdDoIhTA.lean.js",
+   "offset": 6565647,
+   "compressed_length": 1601,
+   "decoded_length": 5205,
+   "decoded_sha256": "9123ca74251671be989fd514e589968c5d1b0fd327bcfa3a0e7fc1b03c544fad",
+   "artifact": "original-16bit-doc-6565576.js"
+  }
+ ],
+ "limitations": [
+  "Bundled documentation establishes the documented algorithm, not measured implementation equivalence.",
+  "Pixel rounding and behavior for equal/reversed thresholds remain unverified against the original runtime."
+ ],
+ "findings": [
+  {
+   "confidence": "observed",
+   "claim": "The bundled documentation specifies a linear map from [minValue,maxValue] to [0,255], clipping below/above the interval to 0/255."
+  },
+  {
+   "confidence": "observed",
+   "claim": "Input is restricted to 16-bit unsigned single-channel grayscale (Format_Gray16U)."
+  },
+  {
+   "confidence": "observed",
+   "claim": "Input/output IM registers are documented as 0..31; Threshold.min/max as 0..65535."
+  }
+ ]
+}

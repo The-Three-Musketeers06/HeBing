@@ -1,0 +1,43 @@
+<Window x:Class="AiVisionStudio.Views.GlobalVariablesWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:AiVisionStudio.Services"
+        Title="全局变量 · ES-Vision-Studio" Width="1120" Height="720" MinWidth="900" MinHeight="540" WindowStartupLocation="CenterOwner"
+        Background="{StaticResource Bg}" Foreground="{StaticResource Text}" FontFamily="Microsoft YaHei UI" FontSize="13"
+        Icon="/AiVisionStudio;component/Assets/Brand/ESVision.ico" Closing="OnClosing">
+ <Border Background="{StaticResource Bg}" Padding="20"><Grid>
+  <Grid.RowDefinitions><RowDefinition Height="78"/><RowDefinition Height="48"/><RowDefinition Height="*"/><RowDefinition Height="86"/><RowDefinition Height="42"/></Grid.RowDefinitions>
+  <Border Background="{StaticResource TechSurface}" BorderBrush="{StaticResource Border}" BorderThickness="1" CornerRadius="10" Padding="16,10">
+   <DockPanel><Image Source="/AiVisionStudio;component/Assets/Brand/EnshiLogo.png" Width="46" Margin="0,0,14,0"/>
+    <StackPanel VerticalAlignment="Center"><TextBlock Text="GLOBAL VARIABLES" FontSize="10" Foreground="{StaticResource Accent}"/><TextBlock Text="全局变量管理" FontSize="21" FontWeight="SemiBold"/><TextBlock Text="工程默认值与运行值分开管理 · 支持类型校验及引用检查" FontSize="11" Foreground="{StaticResource TextDim}"/></StackPanel>
+   </DockPanel>
+  </Border>
+  <Grid Grid.Row="1" Margin="0,9,0,8"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+   <TextBox x:Name="SearchBox" Width="230" HorizontalAlignment="Left" ToolTip="搜索名称、类型或说明" TextChanged="OnSearch"/>
+   <StackPanel Grid.Column="1" Orientation="Horizontal" x:Name="DefinitionActions">
+    <Button Content="＋ 新增" Click="OnAdd" Margin="4,0"/><Button Content="删除所选" Click="OnDelete" Margin="4,0"/><Button Content="编辑数组默认值" Click="OnEditArray" Margin="4,0"/>
+    <Button Content="导入…" Click="OnImport" Margin="4,0"/><Button Content="导出…" Click="OnExport" Margin="4,0"/><Button Content="重新载入" Click="OnReload" Margin="4,0"/>
+   </StackPanel>
+  </Grid>
+  <DataGrid x:Name="VariablesGrid" Grid.Row="2" ItemsSource="{Binding RowsView}" AutoGenerateColumns="False" CellEditEnding="OnCellEdit" SelectionChanged="OnSelection">
+   <DataGrid.Columns>
+    <DataGridTextColumn Header="名称" Binding="{Binding Name,UpdateSourceTrigger=LostFocus}" Width="165"/>
+    <DataGridComboBoxColumn Header="类型" ItemsSource="{x:Static s:GlobalValue.Types}" SelectedItemBinding="{Binding Type,UpdateSourceTrigger=PropertyChanged}" Width="95"/>
+    <DataGridTextColumn Header="工程默认值" Binding="{Binding Default}" Width="180" MinWidth="150"/>
+    <DataGridTextColumn Header="当前运行值" Binding="{Binding Current}" IsReadOnly="True" Width="180"/>
+    <DataGridTextColumn Header="说明" Binding="{Binding Description}" Width="*" MinWidth="180"/>
+   </DataGrid.Columns>
+  </DataGrid>
+  <Border Grid.Row="3" Background="{StaticResource Panel}" BorderBrush="{StaticResource Border}" BorderThickness="1" CornerRadius="7" Padding="12" Margin="0,10,0,6">
+   <Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+    <TextBlock Text="运行值操作" FontWeight="SemiBold" Foreground="{StaticResource Accent}" FontSize="11"/>
+    <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Bottom" x:Name="RuntimeActions">
+     <TextBox x:Name="RuntimeValue" Width="240" ToolTip="输入选中变量的运行值"/>
+     <Button Content="写入运行值" Click="OnWrite" Margin="8,0,0,0"/><Button Content="恢复所选默认值" Click="OnReset" Margin="8,0,0,0"/>
+     <Button Content="运行值设为默认值" Click="OnUseCurrent" Margin="8,0,0,0"/><Button Content="查看引用" Click="OnReferences" Margin="8,0,0,0"/>
+    </StackPanel>
+   </Grid>
+  </Border>
+  <Grid Grid.Row="4"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+   <TextBlock x:Name="StatusText" Foreground="{StaticResource TextDim}" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,15,0"/>
+   <StackPanel Grid.Column="1" Orientation="Horizontal" x:Name="ApplyActions"><Button Content="应用定义" Click="OnApply" Margin="4,0"/><Button Content="应用并保存工程" Click="OnSave" Background="{StaticResource Accent}" Foreground="White" Margin="4,0"/></StackPanel>
+  </Grid>
+ </Grid></Border>
+</Window>

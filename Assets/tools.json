@@ -1,0 +1,2041 @@
+[
+ {
+  "label": "2D",
+  "cn": "2D",
+  "children": [
+   {
+    "label": "File",
+    "cn": "文件",
+    "children": [
+     {
+      "driver": "Crop Image",
+      "cn": "裁剪图片",
+      "children": []
+     },
+     {
+      "driver": "LoadImage",
+      "cn": "加载图片",
+      "children": []
+     },
+     {
+      "driver": "Save Render Image",
+      "cn": "保存渲染图",
+      "children": []
+     },
+     {
+      "driver": "SaveImage",
+      "cn": "保存图片",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "ROI",
+    "cn": "ROI",
+    "children": [
+     {
+      "driver": "Basic Create ROI",
+      "cn": "创建ROI",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Filter",
+    "cn": "预处理",
+    "children": [
+     {
+      "driver": "Depth To Gray",
+      "cn": "深度图转灰度图",
+      "children": []
+     },
+     {
+      "driver": "Basic Gamma",
+      "cn": "Gamma变换",
+      "children": []
+     },
+     {
+      "driver": "Basic Prewitt Filter",
+      "cn": "Prewitt滤波",
+      "children": []
+     },
+     {
+      "driver": "Basic Roberts Filter",
+      "cn": "Roberts滤波",
+      "children": []
+     },
+     {
+      "driver": "Basic Sauvola Threshold",
+      "cn": "Sauvola二值化",
+      "children": []
+     },
+     {
+      "driver": "Basic Sobel Filter",
+      "cn": "Sobel滤波",
+      "children": []
+     },
+     {
+      "driver": "Basic Median Filter",
+      "cn": "中值滤波",
+      "children": []
+     },
+     {
+      "driver": "Basic Region Process",
+      "cn": "区域处理",
+      "children": []
+     },
+     {
+      "driver": "Basic Region Operation",
+      "cn": "区域运算",
+      "children": []
+     },
+     {
+      "driver": "Basic Bilateral Filter",
+      "cn": "双边滤波",
+      "children": []
+     },
+     {
+      "driver": "Basic Morph Open",
+      "cn": "图像开运算",
+      "children": []
+     },
+     {
+      "driver": "Basic Rotate",
+      "cn": "图像旋转",
+      "children": []
+     },
+     {
+      "driver": "Basic Resize",
+      "cn": "图像缩放",
+      "children": []
+     },
+     {
+      "driver": "Basic Morph Erode",
+      "cn": "图像腐蚀",
+      "children": []
+     },
+     {
+      "driver": "Basic Morph Dilate",
+      "cn": "图像膨胀",
+      "children": []
+     },
+     {
+      "driver": "Basic Arithmetic",
+      "cn": "图像运算",
+      "children": []
+     },
+     {
+      "driver": "Basic Sharpen",
+      "cn": "图像锐化",
+      "children": []
+     },
+     {
+      "driver": "Basic Flip",
+      "cn": "图像镜像",
+      "children": []
+     },
+     {
+      "driver": "Basic Morph Close",
+      "cn": "图像闭运算",
+      "children": []
+     },
+     {
+      "driver": "Basic Mean Std Normalize",
+      "cn": "均值标准差映射",
+      "children": []
+     },
+     {
+      "driver": "Basic Mean Filter",
+      "cn": "均值滤波",
+      "children": []
+     },
+     {
+      "driver": "Basic Contrast",
+      "cn": "对比度调节",
+      "children": []
+     },
+     {
+      "driver": "Basic Adaptive Threshold",
+      "cn": "局部自适应二值化",
+      "children": []
+     },
+     {
+      "driver": "Basic Laplacian Filter",
+      "cn": "拉普拉斯滤波",
+      "children": []
+     },
+     {
+      "driver": "Basic Polar Unwrap",
+      "cn": "极轴展开",
+      "children": []
+     },
+     {
+      "driver": "Basic Polar Revert",
+      "cn": "极轴还原",
+      "children": []
+     },
+     {
+      "driver": "Basic Histogram Equalize",
+      "cn": "直方图均衡化",
+      "children": []
+     },
+     {
+      "driver": "Basic Histogram Stretch",
+      "cn": "直方图拉伸",
+      "children": []
+     },
+     {
+      "driver": "Basic Linear Transform",
+      "cn": "线性变换",
+      "children": []
+     },
+     {
+      "driver": "Basic Auto Threshold",
+      "cn": "自动二值化",
+      "children": []
+     },
+     {
+      "driver": "Basic Constant Time Clahe",
+      "cn": "自适应直方图均衡化",
+      "children": []
+     },
+     {
+      "driver": "Basic Threshold Binarization",
+      "cn": "阈值二值化",
+      "children": []
+     },
+     {
+      "driver": "Basic Gaussian Filter",
+      "cn": "高斯滤波",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Color",
+    "cn": "颜色",
+    "children": [
+     {
+      "driver": "Basic 16Gray To 8Gray",
+      "cn": "16位转8位",
+      "children": []
+     },
+     {
+      "driver": "Basic Color Convert",
+      "cn": "彩色转换",
+      "children": []
+     },
+     {
+      "driver": "Basic Channel Merge",
+      "cn": "通道合并",
+      "children": []
+     },
+     {
+      "driver": "Basic Channel Split",
+      "cn": "通道拆分",
+      "children": []
+     },
+     {
+      "driver": "Basic Channel Extract",
+      "cn": "通道提取",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Geometry",
+    "cn": "几何",
+    "children": [
+     {
+      "driver": "1D Line",
+      "cn": "1D直线",
+      "children": []
+     },
+     {
+      "driver": "2D Angle Bisector Detection",
+      "cn": "2D角平分线查找",
+      "children": []
+     },
+     {
+      "driver": "2D Line Intersection",
+      "cn": "2D线段交点查找",
+      "children": []
+     },
+     {
+      "driver": "2D Middle Line Search",
+      "cn": "2D中线查找",
+      "children": []
+     },
+     {
+      "driver": "2D Parallel Line Calculation",
+      "cn": "2D平行线计算",
+      "children": []
+     },
+     {
+      "driver": "2D Vertical Line Search",
+      "cn": "2D垂直线查找",
+      "children": []
+     },
+     {
+      "driver": "Basic Circle Find",
+      "cn": "查找圆",
+      "children": []
+     },
+     {
+      "driver": "Basic Ellipse Find",
+      "cn": "查找椭圆",
+      "children": []
+     },
+     {
+      "driver": "Basic Line Find",
+      "cn": "查找线",
+      "children": []
+     },
+     {
+      "driver": "Basic Edge Point Find",
+      "cn": "边缘点查找",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Measure",
+    "cn": "测量",
+    "children": [
+     {
+      "driver": "Basic P2P Mid",
+      "cn": "两点中点",
+      "children": []
+     },
+     {
+      "driver": "Basic L2L Angle",
+      "cn": "两线夹角",
+      "children": []
+     },
+     {
+      "driver": "Basic Pixel Statistics",
+      "cn": "像素统计",
+      "children": []
+     },
+     {
+      "driver": "Basic C2C Measure",
+      "cn": "圆到圆距离",
+      "children": []
+     },
+     {
+      "driver": "Basic Edge Width",
+      "cn": "宽度测量",
+      "children": []
+     },
+     {
+      "driver": "Basic Clarity",
+      "cn": "清晰度评估",
+      "children": []
+     },
+     {
+      "driver": "Basic P2P Measure",
+      "cn": "点到点距离",
+      "children": []
+     },
+     {
+      "driver": "Basic P2C Measure",
+      "cn": "点圆测量",
+      "children": []
+     },
+     {
+      "driver": "Basic P2E Measure",
+      "cn": "点椭圆测量",
+      "children": []
+     },
+     {
+      "driver": "Basic P2L Measure",
+      "cn": "点线测量",
+      "children": []
+     },
+     {
+      "driver": "Basic L2C Measure",
+      "cn": "线圆测量",
+      "children": []
+     },
+     {
+      "driver": "Basic L2E Measure",
+      "cn": "线椭圆测量",
+      "children": []
+     },
+     {
+      "driver": "Basic L2L Measure",
+      "cn": "线线测量",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Objects",
+    "cn": "目标",
+    "children": [
+     {
+      "driver": "Basic Blob Detect",
+      "cn": "Blob分析",
+      "children": []
+     },
+     {
+      "driver": "Basic Shape Match",
+      "cn": "基于轮廓匹配",
+      "children": []
+     },
+     {
+      "driver": "Basic NCC Match",
+      "cn": "基于灰度匹配",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Positioning",
+    "cn": "定位",
+    "children": [
+     {
+      "driver": "Basic Position Fix",
+      "cn": "位置修正",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Recognition",
+    "cn": "识别",
+    "children": [
+     {
+      "driver": "Basic 2D Code Reader",
+      "cn": "二维码识别",
+      "children": []
+     },
+     {
+      "driver": "Basic Code1D Reader",
+      "cn": "条码识别",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Rendering",
+    "cn": "图形生成",
+    "children": [
+     {
+      "driver": "2D Create Geometry",
+      "cn": "2D几何创建",
+      "children": []
+     },
+     {
+      "driver": "Basic Circle Fit",
+      "cn": "圆拟合",
+      "children": []
+     },
+     {
+      "driver": "Basic Ellipse Fit",
+      "cn": "椭圆拟合",
+      "children": []
+     },
+     {
+      "driver": "Basic Line Fit",
+      "cn": "直线拟合",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Integrate",
+    "cn": "集成",
+    "children": [
+     {
+      "driver": "2D Sealant",
+      "cn": "2D 密封胶",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Display",
+    "cn": "显示",
+    "children": [
+     {
+      "driver": "2D Display Data",
+      "cn": "2D 显示数据",
+      "children": []
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "label": "3D",
+  "cn": "3D",
+  "children": [
+   {
+    "label": "Convertion",
+    "cn": "转换",
+    "children": [
+     {
+      "driver": "DepthImageToPointCloud",
+      "cn": "深度图转点云",
+      "children": []
+     },
+     {
+      "driver": "PointCloudToDepthImage",
+      "cn": "点云转深度图",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Display",
+    "cn": "显示",
+    "children": [
+     {
+      "driver": "3D Display",
+      "cn": "3D显示",
+      "children": []
+     },
+      {
+        "driver": "3D Display Data",
+        "cn": "3D数据显示",
+        "children": []
+      }
+    ]
+   },
+   {
+    "label": "File",
+    "cn": "文件",
+    "children": [
+     {
+      "driver": "LoadPointCloud",
+      "cn": "加载3D点云",
+      "children": []
+     },
+     {
+      "driver": "LoadProfile",
+      "cn": "加载轮廓",
+      "children": []
+     },
+     {
+      "driver": "SavePointCloud",
+      "cn": "保存3D点云",
+      "children": []
+     },
+     {
+      "driver": "SaveProfile",
+      "cn": "保存轮廓",
+      "children": []
+     },
+      {
+        "driver": "TIFFToPointCloud",
+        "cn": "加载3D点云-三维TIFF",
+        "children": []
+      }
+    ]
+   },
+   {
+    "label": "Filter",
+    "cn": "预处理",
+    "children": [
+     {
+      "driver": "3D CloudCompare",
+      "cn": "3D点云比较",
+      "children": []
+     },
+     {
+      "driver": "3D CutFilter",
+      "cn": "3D点云裁切",
+      "children": []
+     },
+     {
+      "driver": "3D DownSampleFilter",
+      "cn": "3D下采样",
+      "children": []
+     },
+     {
+      "driver": "3D GaussianFilter",
+      "cn": "3D高斯滤波",
+      "children": []
+     },
+     {
+      "driver": "3D HoleFillingFilter",
+      "cn": "3D孔洞填补",
+      "children": []
+     },
+     {
+      "driver": "3D Interpolation",
+      "cn": "3D点云插值",
+      "children": []
+     },
+     {
+      "driver": "3D MedianFilter",
+      "cn": "3D中值滤波",
+      "children": []
+     },
+     {
+      "driver": "3D MultiSplicingFilter",
+      "cn": "3D多点云拼接",
+      "children": []
+     },
+     {
+      "driver": "3D NormalFilter",
+      "cn": "3D法向量滤波",
+      "children": []
+     },
+     {
+      "driver": "3D OutlierRemovalFilter",
+      "cn": "3D离群点滤波",
+      "children": []
+     },
+     {
+      "driver": "3D PercentileFilter",
+      "cn": "3D百分比滤波",
+      "children": []
+     },
+     {
+      "driver": "3D PointCloudDeduplication",
+      "cn": "3D点云去重",
+      "children": []
+     },
+     {
+      "driver": "3D PointCloudOperation",
+      "cn": "3D点云运算",
+      "children": []
+     },
+     {
+      "driver": "3D PositionAdjustment",
+      "cn": "3D位置调整",
+      "children": []
+     },
+     {
+      "driver": "3D SphereHeightMapping",
+      "cn": "3D球面高度映射",
+      "children": []
+     },
+     {
+      "driver": "3D SphereUnroll",
+      "cn": "3D球面展开",
+      "children": []
+     },
+     {
+      "driver": "3D SplicingFilter",
+      "cn": "3D点云拼接",
+      "children": []
+     },
+     {
+      "driver": "3D TransformationFilter",
+      "cn": "3D点云变换",
+      "children": []
+     },
+     {
+      "driver": "3D Unroll",
+      "cn": "3D曲面展开",
+      "children": []
+     },
+     {
+      "driver": "SequentialProcessing",
+      "cn": "3D点云有序化",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Geometry",
+    "cn": "几何",
+    "children": [
+     {
+      "driver": "3D Boundary",
+      "cn": "3D点云边缘",
+      "children": []
+     },
+     {
+      "driver": "3D BoundingBox",
+      "cn": "3D外接包围盒",
+      "children": []
+     },
+     {
+      "driver": "3D Circle",
+      "cn": "3D圆",
+      "children": []
+     },
+     {
+      "driver": "3D CylinderFitting",
+      "cn": "3D圆柱拟合",
+      "children": []
+     },
+     {
+      "driver": "3D GeometryCreate",
+      "cn": "3D几何创建",
+      "children": []
+     },
+     {
+      "driver": "3D GeometryIntersect",
+      "cn": "3D几何交点",
+      "children": []
+     },
+     {
+      "driver": "3D InflectionPoints",
+      "cn": "3D拐点查找",
+      "children": []
+     },
+     {
+      "driver": "3D Intersection Line Cloud",
+      "cn": "3D线与点云交点",
+      "children": []
+     },
+     {
+      "driver": "3D PeakFind",
+      "cn": "3D三面顶点",
+      "children": []
+     },
+     {
+      "driver": "3D Plane",
+      "cn": "3D平面拟合",
+      "children": []
+     },
+     {
+      "driver": "3D PointCloudCentroid",
+      "cn": "3D点云质心",
+      "children": []
+     },
+     {
+      "driver": "3D RectProbe",
+      "cn": "3D方形探针",
+      "children": []
+     },
+     {
+      "driver": "3D Region",
+      "cn": "3D区域运算",
+      "children": []
+     },
+     {
+      "driver": "3D SphereFitting",
+      "cn": "3D球拟合",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Guidance",
+    "cn": "引导",
+    "children": [
+     {
+      "driver": "3D CalibrationFileSplicing",
+      "cn": "3D标定文件拼接",
+      "children": []
+     },
+     {
+      "driver": "3D CalibrationMatrixComputation",
+      "cn": "3D标定矩阵计算",
+      "children": []
+     },
+     {
+      "driver": "3D CoordinateConversion EyeInHand",
+      "cn": "3D坐标转换-眼在手上",
+      "children": []
+     },
+     {
+      "driver": "3D CoordinateConversion EyeToHand",
+      "cn": "3D坐标转换-眼在手外",
+      "children": []
+     },
+     {
+      "driver": "3D HandEyeCalibration EyeInHand",
+      "cn": "3D手眼标定-眼在手上",
+      "children": []
+     },
+     {
+      "driver": "3D HandEyeCalibration EyeToHand",
+      "cn": "3D手眼标定-眼在手外",
+      "children": []
+     },
+     {
+      "driver": "3D LineScanCamera Calibration",
+      "cn": "3D线扫相机标定",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Integrate",
+    "cn": "集成",
+    "children": [
+     {
+      "driver": "3D ProfileSealant",
+      "cn": "3D胶路检测-轮廓",
+      "children": []
+     },
+     {
+      "driver": "3D Sealant",
+      "cn": "3D胶路检测-分割",
+      "children": []
+     },
+     {
+      "driver": "3D Solder Joint",
+      "cn": "3D焊点检测",
+      "children": []
+     },
+     {
+      "driver": "3D TrajectorySealant",
+      "cn": "3D胶路检测-轨迹",
+      "children": []
+     },
+     {
+      "driver": "PinMatch",
+      "cn": "Pin针匹配",
+      "children": []
+     },
+     {
+      "driver": "PinRecipe",
+      "cn": "Pin针配方创建",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Measurement",
+    "cn": "测量",
+    "children": [
+     {
+      "driver": "3D Angle",
+      "cn": "3D角度",
+      "children": []
+     },
+     {
+      "driver": "3D Distance",
+      "cn": "3D距离",
+      "children": []
+     },
+     {
+      "driver": "3D Flatness",
+      "cn": "3D平面度",
+      "children": []
+     },
+     {
+      "driver": "3D Gap",
+      "cn": "3D段差",
+      "children": []
+     },
+     {
+      "driver": "3D Height",
+      "cn": "3D高度",
+      "children": []
+     },
+     {
+      "driver": "3D ParallelismPlaneLine",
+      "cn": "3D线面平行度",
+      "children": []
+     },
+     {
+      "driver": "3D ParallelismPlanePlane",
+      "cn": "3D面面平行度",
+      "children": []
+     },
+     {
+      "driver": "3D PerpendicularityPlaneLine",
+      "cn": "3D线面垂直度",
+      "children": []
+     },
+     {
+      "driver": "3D PerpendicularityPlanePlane",
+      "cn": "3D面面垂直度",
+      "children": []
+     },
+     {
+      "driver": "3D PointPosition",
+      "cn": "3D点位置度",
+      "children": []
+     },
+     {
+      "driver": "3D ProfileofLine",
+      "cn": "3D圆弧线轮廓度",
+      "children": []
+     },
+     {
+      "driver": "3D ProfileofLineLine",
+      "cn": "3D直线线轮廓度",
+      "children": []
+     },
+     {
+      "driver": "3D ProfileofSurfaceCamberedSurface",
+      "cn": "3D曲面面轮廓度",
+      "children": []
+     },
+     {
+      "driver": "3D ProfileofSurfacePlane",
+      "cn": "3D平面面轮廓度",
+      "children": []
+     },
+     {
+      "driver": "3D SurfaceArea",
+      "cn": "3D表面积",
+      "children": []
+     },
+     {
+      "driver": "3D Volume",
+      "cn": "3D体积",
+      "children": []
+     },
+     {
+      "driver": "Coplanarity",
+      "cn": "3D共面度",
+      "children": []
+     },
+     {
+      "driver": "RegressPlaneCoplanarity",
+      "cn": "3D共面度-回归平面法",
+      "children": []
+     },
+     {
+      "driver": "SeatSurfaceCoplanarity",
+      "cn": "3D共面度-座面法",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Objects",
+    "cn": "目标",
+    "children": [
+     {
+      "driver": "3D Blob",
+      "cn": "3D斑点",
+      "children": []
+     },
+     {
+      "driver": "3D Defect",
+      "cn": "3D表面缺陷",
+      "children": []
+     },
+     {
+      "driver": "3D Matching",
+      "cn": "3D点云匹配",
+      "children": []
+     },
+     {
+      "driver": "3D ModelTraining",
+      "cn": "3D模型训练",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Positioning",
+    "cn": "定位",
+    "children": [
+     {
+      "driver": "3D RightAnglePositioning",
+      "cn": "3D直角定位",
+      "children": []
+     },
+     {
+      "driver": "3D RoundHolePositioning",
+      "cn": "3D圆孔定位",
+      "children": []
+     },
+     {
+      "driver": "Multilateration",
+      "cn": "3D多点定位",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Profile",
+    "cn": "轮廓",
+    "children": [
+     {
+      "driver": "3D ProfileArbitraryCapture",
+      "cn": "3D任意轮廓提取",
+      "children": []
+     },
+     {
+      "driver": "3D ProfileArea",
+      "cn": "3D轮廓面积",
+      "children": []
+     },
+     {
+      "driver": "3D ProfileCapture",
+      "cn": "3D轮廓提取",
+      "children": []
+     },
+     {
+      "driver": "3D ProfileCircle",
+      "cn": "3D轮廓圆",
+      "children": []
+     },
+     {
+      "driver": "3D ProfileCrossSectionStep",
+      "cn": "3D轮廓段差",
+      "children": []
+     },
+     {
+      "driver": "3D ProfileDistance",
+      "cn": "3D轮廓距离",
+      "children": []
+     },
+     {
+      "driver": "3D ProfileInflectionPoints",
+      "cn": "3D轮廓拐点",
+      "children": []
+     },
+     {
+      "driver": "3D ProfileIntersection",
+      "cn": "3D轮廓交点",
+      "children": []
+     },
+     {
+      "driver": "3D ProfileLine",
+      "cn": "3D轮廓直线",
+      "children": []
+     },
+     {
+      "driver": "Profile Display Data",
+      "cn": "轮廓数据显示",
+      "children": []
+     },
+     {
+      "driver": "ProfileCreateROI",
+      "cn": "创建轮廓ROI",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "ROI",
+    "cn": "ROI",
+    "children": [
+     {
+      "driver": "CreateROI",
+      "cn": "创建ROI",
+      "children": []
+     },
+     {
+      "driver": "CreateROIArray",
+      "cn": "创建ROI阵列",
+      "children": []
+     },
+     {
+      "driver": "MergeROI",
+      "cn": "合并ROI",
+      "children": []
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "label": "Capture",
+  "cn": "取图",
+  "children": [
+   {
+    "label": "Capture",
+    "cn": "相机",
+    "children": [
+     {
+      "driver": "Capture",
+      "cn": "取图",
+      "children": []
+     },
+     {
+      "driver": "Do3Think Control",
+      "cn": "Do3Think控制",
+      "children": []
+     },
+     {
+      "driver": "GCI GC3D Capture",
+      "cn": "GCI GC3D取图",
+      "children": []
+     },
+     {
+      "driver": "Gocator Capture",
+      "cn": "Gocator取图",
+      "children": []
+     },
+     {
+      "driver": "GocatorControl",
+      "cn": "Gocator控制",
+      "children": []
+     },
+     {
+      "driver": "Gocator GoPxL Capture",
+      "cn": "Gocator GoPxL取图",
+      "children": []
+     },
+     {
+      "driver": "Gocator GoPxL Control",
+      "cn": "Gocator GoPxL控制",
+      "children": []
+     },
+     {
+      "driver": "Hypersen HPS-DBL Capture",
+      "cn": "Hypersen HPS-DBL取图",
+      "children": []
+     },
+     {
+      "driver": "Hypersen HPS-DBL Control",
+      "cn": "Hypersen HPS-DBL控制",
+      "children": []
+     },
+     {
+      "driver": "Lvm Capture",
+      "cn": "Lvm取图",
+      "children": []
+     },
+     {
+      "driver": "LvmControl",
+      "cn": "Lvm控制",
+      "children": []
+     },
+     {
+      "driver": "MegaPhase SizectorS Capture",
+      "cn": "MegaPhase SizectorS取图",
+      "children": []
+     },
+     {
+      "driver": "Mv3d Capture",
+      "cn": "Mv3d取图",
+      "children": []
+     },
+     {
+      "driver": "Percipio Capture",
+      "cn": "Percipio取图",
+      "children": []
+     },
+     {
+      "driver": "Phoskey Capture",
+      "cn": "Phoskey取图",
+      "children": []
+     },
+     {
+      "driver": "Phoskey Control",
+      "cn": "Phoskey控制",
+      "children": []
+     },
+     {
+      "driver": "Thinkfocus Capture",
+      "cn": "Thinkfocus取图",
+      "children": []
+     },
+     {
+      "driver": "Thinkfocus Control",
+      "cn": "Thinkfocus控制",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Sensor",
+    "cn": "相机型号",
+    "children": [
+     {
+      "driver": "Benano",
+      "cn": "Benano相机",
+      "children": []
+     },
+     {
+      "driver": "Do3Think",
+      "cn": "Do3Think相机",
+      "children": []
+     },
+     {
+      "driver": "FocalSpec",
+      "cn": "FocalSpec相机",
+      "children": []
+     },
+     {
+      "driver": "GCI GC3D",
+      "cn": "GCI GC3D相机",
+      "children": []
+     },
+     {
+      "driver": "GigE Camera",
+      "cn": "GigE Camera相机",
+      "children": []
+     },
+     {
+      "driver": "Gocator",
+      "cn": "Gocator相机",
+      "children": []
+     },
+     {
+      "driver": "Gocator GoPxL",
+      "cn": "Gocator GoPxL相机",
+      "children": []
+     },
+     {
+      "driver": "Hypersen HPS-DBL",
+      "cn": "Hypersen HPS-DBL相机",
+      "children": []
+     },
+     {
+      "driver": "Hypersen HPS-LCF",
+      "cn": "Hypersen HPS-LCF相机",
+      "children": []
+     },
+     {
+      "driver": "iRAYPLE DL",
+      "cn": "iRAYPLE DL相机",
+      "children": []
+     },
+     {
+      "driver": "Keyence LJ-S8000",
+      "cn": "Keyence LJ-S8000相机",
+      "children": []
+     },
+     {
+      "driver": "Keyence LJ-V7000",
+      "cn": "Keyence LJ-V7000相机",
+      "children": []
+     },
+     {
+      "driver": "Keyence LJ-X8000",
+      "cn": "Keyence LJ-X8000相机",
+      "children": []
+     },
+     {
+      "driver": "Lvm",
+      "cn": "Lvm相机",
+      "children": []
+     },
+     {
+      "driver": "MegaPhase Hdc",
+      "cn": "MegaPhase Hdc相机",
+      "children": []
+     },
+     {
+      "driver": "MegaPhase Sizector",
+      "cn": "MegaPhase Sizector相机",
+      "children": []
+     },
+     {
+      "driver": "MegaPhase SizectorS",
+      "cn": "MegaPhase SizectorS相机",
+      "children": []
+     },
+     {
+      "driver": "Mv3d",
+      "cn": "Mv3d相机",
+      "children": []
+     },
+     {
+      "driver": "Mv3d RGB-D",
+      "cn": "Mv3d RGB-D相机",
+      "children": []
+     },
+     {
+      "driver": "Oi GTCamera",
+      "cn": "Oi GT相机",
+      "children": []
+     },
+     {
+      "driver": "Percipio",
+      "cn": "Percipio相机",
+      "children": []
+     },
+     {
+      "driver": "Phoskey GL",
+      "cn": "Phoskey GL相机",
+      "children": []
+     },
+     {
+      "driver": "RVBUST RVC",
+      "cn": "RVBUST RVC相机",
+      "children": []
+     },
+     {
+      "driver": "Sick Ranger3/Rular3000 Series",
+      "cn": "Sick Ranger3/Rular3000系列相机",
+      "children": []
+     },
+     {
+      "driver": "SmartRay",
+      "cn": "SmartRay相机",
+      "children": []
+     },
+     {
+      "driver": "SSZN SR7",
+      "cn": "SSZN SR7相机",
+      "children": []
+     },
+     {
+      "driver": "Thinkfocus",
+      "cn": "Thinkfocus相机",
+      "children": []
+     },
+     {
+      "driver": "Thinkfocus Controller",
+      "cn": "Thinkfocus Controller相机",
+      "children": []
+     },
+     {
+      "driver": "Usb Camera",
+      "cn": "Usb相机",
+      "children": []
+     },
+     {
+      "driver": "wenglor weCat3D",
+      "cn": "wenglor weCat3D相机",
+      "children": []
+     },
+     {
+      "driver": "ZTVTech",
+      "cn": "ZTVTech相机",
+      "children": []
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "label": "Communication",
+  "cn": "通信",
+  "children": [
+   {
+    "label": "ASCII",
+    "cn": "ASCII",
+    "children": [
+     {
+      "driver": "ReciveString",
+      "cn": "接收字符串",
+      "children": []
+     },
+     {
+      "driver": "SendString",
+      "cn": "发送字符串",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "I/O",
+    "cn": "I/O",
+    "children": [
+     {
+      "driver": "Read I/O",
+      "cn": "读取I/O",
+      "children": []
+     },
+     {
+      "driver": "Wait I/O",
+      "cn": "等待I/O",
+      "children": []
+     },
+     {
+      "driver": "Write I/O",
+      "cn": "写入I/O",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Modbus",
+    "cn": "Modbus",
+    "children": [
+     {
+      "driver": "ModbusReadBit",
+      "cn": "Modbus位读取",
+      "children": []
+     },
+     {
+      "driver": "ModbusReadRegister",
+      "cn": "Modbus寄存器读取",
+      "children": []
+     },
+     {
+      "driver": "ModbusWriteBit",
+      "cn": "Modbus位写入",
+      "children": []
+     },
+     {
+      "driver": "ModbusWriteRegister",
+      "cn": "Modbus寄存器写入",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "PLC",
+    "cn": "PLC",
+    "children": [
+     {
+      "driver": "ReadPlc",
+      "cn": "读取Plc",
+      "children": []
+     },
+     {
+      "driver": "WritePlc",
+      "cn": "写入Plc",
+      "children": []
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "label": "File",
+  "cn": "文件",
+  "children": [
+   {
+    "driver": "Create Table",
+    "cn": "创建数据表",
+    "children": []
+   },
+   {
+    "driver": "Read Recipe File",
+    "cn": "读取配方文件",
+    "children": []
+   },
+   {
+    "driver": "Save IM Screenshot",
+    "cn": "保存IM截图",
+    "children": []
+   },
+   {
+    "driver": "Write CSV",
+    "cn": "写入CSV",
+    "children": []
+   },
+   {
+    "driver": "Write Log",
+    "cn": "写入日志",
+    "children": []
+   },
+   {
+    "driver": "Write Table",
+    "cn": "写入数据表",
+    "children": []
+   }
+  ]
+ },
+ {
+  "label": "Logic",
+  "cn": "逻辑",
+  "children": [
+   {
+    "driver": "Call",
+    "cn": "调用程序",
+    "children": []
+   },
+   {
+    "driver": "Delay",
+    "cn": "延时",
+    "children": []
+   },
+   {
+    "driver": "If",
+    "cn": "条件分支",
+    "children": []
+   },
+   {
+    "driver": "Info Popup",
+    "cn": "信息弹窗",
+    "children": []
+   },
+   {
+    "driver": "Jump",
+    "cn": "跳转",
+    "children": []
+   },
+   {
+    "driver": "Loop",
+    "cn": "循环",
+    "children": []
+   },
+   {
+    "driver": "Mark",
+    "cn": "标记",
+    "children": []
+   },
+   {
+    "driver": "Parallel Call",
+    "cn": "并行调用程序",
+    "children": []
+   },
+   {
+    "driver": "SwitchRecipe",
+    "cn": "切换配方",
+    "children": []
+   },
+   {
+    "driver": "Value Check",
+    "cn": "数据检查",
+    "children": []
+   }
+  ]
+ },
+ {
+  "label": "Script",
+  "cn": "脚本",
+  "children": [
+   {
+    "driver": "Lua",
+    "cn": "Lua脚本",
+    "children": []
+   }
+  ]
+ },
+ {
+  "label": "Variable",
+  "cn": "变量",
+  "children": [
+   {
+    "driver": "Create Array",
+    "cn": "创建数组",
+    "children": []
+   },
+   {
+    "driver": "Create Text",
+    "cn": "创建文本",
+    "children": []
+   },
+   {
+    "driver": "String Split",
+    "cn": "文本分割",
+    "children": []
+   },
+   {
+    "driver": "Value Setting",
+    "cn": "变量设置",
+    "children": []
+   }
+  ]
+ },
+ {
+  "label": "2D Advanced",
+  "cn": "2D缺陷",
+  "children": [
+   {
+    "label": "Defect",
+    "cn": "缺陷",
+    "children": [
+     {
+      "driver": "2D Arc Edge Defect Detection",
+      "cn": "2D圆弧边缘缺陷检测",
+      "children": []
+     },
+     {
+      "driver": "2D Arc Pair Defect Detection",
+      "cn": "2D圆弧对缺陷检测",
+      "children": []
+     },
+     {
+      "driver": "2D Edge Model Defect Detection",
+      "cn": "2D边缘模型缺陷检测",
+      "children": []
+     },
+     {
+      "driver": "2D Edge Pair Model Defect Detection",
+      "cn": "2D边缘对模型缺陷检测",
+      "children": []
+     },
+     {
+      "driver": "2D Edge Pair Position Trend Analysis",
+      "cn": "2D边缘对位置趋势分析",
+      "children": []
+     },
+     {
+      "driver": "2D Edge Position Trend Analysis",
+      "cn": "2D边缘位置趋势分析",
+      "children": []
+     },
+     {
+      "driver": "2D Line Edge Defect Detection",
+      "cn": "2D直线边缘缺陷检测",
+      "children": []
+     },
+     {
+      "driver": "2D Line Edge Pair Defect Detection",
+      "cn": "2D直线边缘对缺陷检测",
+      "children": []
+     },
+     {
+      "driver": "2D Surface Defect Filter",
+      "cn": "2D表面缺陷滤波",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Objects",
+    "cn": "目标",
+    "children": [
+     {
+      "driver": "2D Blob Find",
+      "cn": "2DBlob分析",
+      "children": []
+     },
+     {
+      "driver": "2D Contour Pat Match",
+      "cn": "2D轮廓匹配",
+      "children": []
+     },
+     {
+      "driver": "2D Contour Pattern",
+      "cn": "2D轮廓模板创建",
+      "children": []
+     },
+     {
+      "driver": "2D Fast Feature Pat Match",
+      "cn": "2D快速匹配",
+      "children": []
+     },
+     {
+      "driver": "2D Fast Feature Pattern",
+      "cn": "2D快速模板创建",
+      "children": []
+     },
+     {
+      "driver": "2D Gray Pat Match",
+      "cn": "2D灰度匹配",
+      "children": []
+     },
+     {
+      "driver": "2D Gray Pattern",
+      "cn": "2D灰度模板创建",
+      "children": []
+     },
+     {
+      "driver": "2D HP Feature Pat Match",
+      "cn": "2D高精度匹配",
+      "children": []
+     },
+     {
+      "driver": "2D HP Feature Pattern",
+      "cn": "2D高精度模板创建",
+      "children": []
+     },
+     {
+      "driver": "2D Mark Find",
+      "cn": "2D图形定位",
+      "children": []
+     },
+     {
+      "driver": "2D Mark Find Pattern",
+      "cn": "2D图形模板创建",
+      "children": []
+     },
+     {
+      "driver": "2D Multi Category Blob Find",
+      "cn": "2DBlob标签分析",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Measure",
+    "cn": "测量",
+    "children": [
+     {
+      "driver": "2D C2C Measure",
+      "cn": "2D圆圆测量",
+      "children": []
+     },
+     {
+      "driver": "2D Hist Tool",
+      "cn": "2D直方图工具",
+      "children": []
+     },
+     {
+      "driver": "2D L2C Measure",
+      "cn": "2D线圆测量",
+      "children": []
+     },
+     {
+      "driver": "2D L2L Measure",
+      "cn": "2D线线测量",
+      "children": []
+     },
+     {
+      "driver": "2D Luminance Measurement",
+      "cn": "2D亮度测量",
+      "children": []
+     },
+     {
+      "driver": "2D P2C Measure",
+      "cn": "2D点圆测量",
+      "children": []
+     },
+     {
+      "driver": "2D P2L Measure",
+      "cn": "2D点线测量",
+      "children": []
+     },
+     {
+      "driver": "2D P2P Measure",
+      "cn": "2D点点测量",
+      "children": []
+     },
+     {
+      "driver": "2D Pixel Count",
+      "cn": "2D像素统计",
+      "children": []
+     },
+     {
+      "driver": "2D Spacing Detection",
+      "cn": "2D间距检测",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Computation",
+    "cn": "运算",
+    "children": [
+     {
+      "driver": "2D Calib Trans",
+      "cn": "2D标定转换",
+      "children": []
+     },
+     {
+      "driver": "2D Unit Conversion",
+      "cn": "2D单位转换",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Geometry",
+    "cn": "几何",
+    "children": [
+     {
+      "driver": "2D Caliper Tool",
+      "cn": "2D卡尺工具",
+      "children": []
+     },
+     {
+      "driver": "2D Circle Find",
+      "cn": "2D圆查找",
+      "children": []
+     },
+     {
+      "driver": "2D Cross Point Find",
+      "cn": "2D边缘交点",
+      "children": []
+     },
+     {
+      "driver": "2D Edge Find",
+      "cn": "2D边缘查找",
+      "children": []
+     },
+     {
+      "driver": "2D Ellipse Find",
+      "cn": "2D椭圆查找",
+      "children": []
+     },
+     {
+      "driver": "2D Line Find",
+      "cn": "2D直线查找",
+      "children": []
+     },
+     {
+      "driver": "2D Multi Line Find",
+      "cn": "2D多直线查找",
+      "children": []
+     },
+     {
+      "driver": "2D Pair Line Find",
+      "cn": "2D平行线查找",
+      "children": []
+     },
+     {
+      "driver": "2D Peak Find",
+      "cn": "2D顶点检测",
+      "children": []
+     },
+     {
+      "driver": "2D Rectangle Find",
+      "cn": "2D矩形检测",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Rendering",
+    "cn": "图形生成",
+    "children": [
+     {
+      "driver": "2D Circle Fit",
+      "cn": "2D圆拟合",
+      "children": []
+     },
+     {
+      "driver": "2D Ellipse Fit",
+      "cn": "2D椭圆拟合",
+      "children": []
+     },
+     {
+      "driver": "2D Line Fit",
+      "cn": "2D直线拟合",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Color",
+    "cn": "颜色",
+    "children": [
+     {
+      "driver": "2D Color Convert",
+      "cn": "2D颜色转换",
+      "children": []
+     },
+     {
+      "driver": "2D Color Measure",
+      "cn": "2D颜色测量",
+      "children": []
+     },
+     {
+      "driver": "2D Color Recognition",
+      "cn": "2D颜色识别",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "ROI",
+    "cn": "ROI",
+    "children": [
+     {
+      "driver": "2D Create ROI",
+      "cn": "2D创建ROI",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Filter",
+    "cn": "滤波器",
+    "children": [
+     {
+      "driver": "2D Geometric Transformation",
+      "cn": "2D几何变换",
+      "children": []
+     },
+     {
+      "driver": "2D Image Affine Transform",
+      "cn": "2D图像仿射变换",
+      "children": []
+     },
+     {
+      "driver": "2D Image Arithmetic",
+      "cn": "2D图像运算",
+      "children": []
+     },
+     {
+      "driver": "2D Image Binary",
+      "cn": "2D图像二值化",
+      "children": []
+     },
+     {
+      "driver": "2D Image Correct Manual",
+      "cn": "2D图像校正",
+      "children": []
+     },
+     {
+      "driver": "2D Image Correction",
+      "cn": "2D图像修正",
+      "children": []
+     },
+     {
+      "driver": "2D Image Enhancement",
+      "cn": "2D图像增强",
+      "children": []
+     },
+     {
+      "driver": "2D Image Filter",
+      "cn": "2D图像滤波",
+      "children": []
+     },
+     {
+      "driver": "2D Image Frame Mean",
+      "cn": "2D帧平均",
+      "children": []
+     },
+     {
+      "driver": "2D Image Inverse Affine Transformation",
+      "cn": "2D逆仿射变换",
+      "children": []
+     },
+     {
+      "driver": "2D Image Morphology",
+      "cn": "2D形态学处理",
+      "children": []
+     },
+     {
+      "driver": "2D Image Normalize",
+      "cn": "2D图像归一化",
+      "children": []
+     },
+     {
+      "driver": "2D Image Region Copy",
+      "cn": "2D拷贝填充",
+      "children": []
+     },
+     {
+      "driver": "2D Image Resize",
+      "cn": "2D图像缩放",
+      "children": []
+     },
+     {
+      "driver": "2D Image Sharpness",
+      "cn": "2D清晰度评估",
+      "children": []
+     },
+     {
+      "driver": "2D Image Stitch",
+      "cn": "2D图像拼接",
+      "children": []
+     },
+     {
+      "driver": "2D Image Stitch Template Config",
+      "cn": "2D图像拼接-模板配置",
+      "children": []
+     },
+     {
+      "driver": "2D Polar Warp",
+      "cn": "2D圆环展开",
+      "children": []
+     },
+     {
+      "driver": "2D Shade Correct",
+      "cn": "2D阴影校正",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Positioning",
+    "cn": "定位",
+    "children": [
+     {
+      "driver": "2D Position Fix",
+      "cn": "2D位置修正",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "Recognition",
+    "cn": "识别",
+    "children": [
+     {
+      "driver": "Char Det Cpu",
+      "cn": "DL字符定位-CPU",
+      "children": []
+     },
+     {
+      "driver": "Char Rec Cpu",
+      "cn": "DL字符识别-CPU",
+      "children": []
+     },
+     {
+      "driver": "Code Reader Cpu",
+      "cn": "DL读码-CPU",
+      "children": []
+     },
+     {
+      "driver": "Code1D Reader",
+      "cn": "条码识别",
+      "children": []
+     },
+     {
+      "driver": "Code2D Reader",
+      "cn": "二维码识别",
+      "children": []
+     },
+     {
+      "driver": "ML Classifier",
+      "cn": "ML分类",
+      "children": []
+     },
+     {
+      "driver": "Ocr",
+      "cn": "字符识别",
+      "children": []
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "label": "AI",
+  "cn": "AI",
+  "children": [
+   {
+    "label": "AIDI",
+    "cn": "AIDI",
+    "children": [
+     {
+      "driver": "AIDI Infer",
+      "cn": "AIDI推理",
+      "children": []
+     },
+     {
+      "driver": "AIDI3 Infer",
+      "cn": "AIDI3推理",
+      "children": []
+     }
+    ]
+   },
+   {
+    "label": "TYDI AI",
+    "cn": "TYDI",
+    "children": [
+     {
+      "driver": "TYDI AI Ad Infer",
+      "cn": "TYDI AI异常检测推理",
+      "children": []
+     },
+     {
+      "driver": "TYDI AI Cls Infer",
+      "cn": "TYDI AI分类推理",
+      "children": []
+     },
+     {
+      "driver": "TYDI AI Det Infer",
+      "cn": "TYDI AI目标检测推理",
+      "children": []
+     },
+     {
+      "driver": "TYDI AI Ins Seg Infer",
+      "cn": "TYDI AI实例分割推理",
+      "children": []
+     },
+     {
+      "driver": "TYDI AI Ocr Infer",
+      "cn": "TYDI AI OCR推理",
+      "children": []
+     },
+     {
+      "driver": "TYDI AI Rot Infer",
+      "cn": "TYDI AI旋转检测推理",
+      "children": []
+     },
+     {
+      "driver": "TYDI AI Seg Infer",
+      "cn": "TYDI AI分割推理",
+      "children": []
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "label": "ES Devices",
+  "cn": "设备",
+  "children": [
+   {
+    "driver": "ES Device Acquire",
+    "cn": "设备采集",
+    "children": []
+   },
+   {
+    "driver": "ES Device Exchange",
+    "cn": "设备通信",
+    "children": []
+   }
+  ]
+ }
+]

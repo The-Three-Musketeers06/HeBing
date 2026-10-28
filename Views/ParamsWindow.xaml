@@ -1,0 +1,274 @@
+<Window x:Class="AiVisionStudio.Views.ParamsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:AiVisionStudio.Views"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        Title="{Binding ToolTitle}" Width="900" Height="470" MinWidth="600" MinHeight="420"
+        WindowStartupLocation="CenterOwner" WindowStyle="None" ResizeMode="CanResize"
+        Background="{StaticResource Bg}" Foreground="{StaticResource Text}" FontFamily="Microsoft YaHei UI"
+        FontSize="13" UseLayoutRounding="True" SnapsToDevicePixels="True">
+    <Window.Resources>
+        <Style x:Key="ShapeTabItem" TargetType="TabItem">
+            <Setter Property="Foreground" Value="{StaticResource Text}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="TabSurface" Background="{StaticResource Panel}" BorderBrush="Transparent" BorderThickness="0,0,0,2" Padding="12,8" Margin="0,0,3,0">
+                            <ContentPresenter ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="TabSurface" Property="Background" Value="{StaticResource PanelHead}" />
+                                <Setter TargetName="TabSurface" Property="BorderBrush" Value="{StaticResource Accent}" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="TabSurface" Property="Background" Value="{StaticResource Hover}" /></Trigger>
+                            <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.5" /></Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ParameterDivider" TargetType="GridSplitter">
+            <Setter Property="Background" Value="{StaticResource Border}" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="ResizeBehavior" Value="PreviousAndNext" />
+            <Style.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="{StaticResource Accent}" /></Trigger></Style.Triggers>
+        </Style>
+        <Style x:Key="ParameterGroupDivider" TargetType="Thumb">
+            <Setter Property="Height" Value="6" />
+            <Setter Property="Cursor" Value="SizeNS" />
+            <Setter Property="Background" Value="{StaticResource Border}" />
+            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Thumb"><Border Background="{TemplateBinding Background}" /></ControlTemplate></Setter.Value></Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="{StaticResource Accent}" /></Trigger>
+                <Trigger Property="IsDragging" Value="True"><Setter Property="Background" Value="{StaticResource Accent}" /></Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="0" ResizeBorderThickness="5" GlassFrameThickness="0" CornerRadius="7" />
+    </shell:WindowChrome.WindowChrome>
+    <Border BorderBrush="{StaticResource Border}" BorderThickness="1" CornerRadius="7" Background="{StaticResource Bg}">
+        <Grid>
+            <Grid.RowDefinitions><RowDefinition Height="44" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+            <Grid Background="Transparent" MouseLeftButtonDown="OnDrag">
+                <TextBlock Text="{Binding ToolTitle}" Margin="16,0,90,0" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0">
+                    <Button Style="{StaticResource ToolIconButton}" Click="OnMaximize" ToolTip="最大化 / 还原" Width="34">
+                        <Path Data="M3,3 L17,3 17,17 3,17 Z" Stroke="{StaticResource TextDim}" StrokeThickness="1.5" Width="18" Height="18" Stretch="Uniform" />
+                    </Button>
+                    <Button Style="{StaticResource ToolIconButton}" Click="OnClose" ToolTip="关闭" Width="34">
+                        <Path Data="M3,3 L17,17 M17,3 L3,17" Stroke="{StaticResource TextDim}" StrokeThickness="1.5" Width="18" Height="18" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+            <Grid x:Name="Body" Grid.Row="1" Margin="0,0,0,1">
+                <Grid.RowDefinitions><RowDefinition x:Name="UpperHeight" Height="*"/><RowDefinition x:Name="HorizontalDividerHeight" Height="0"/><RowDefinition x:Name="LowerHeight" Height="0"/></Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="LeftWidth" Width="41*" MinWidth="300" /><ColumnDefinition x:Name="DividerWidth" Width="5" /><ColumnDefinition x:Name="RightWidth" Width="59*" MinWidth="360" />
+                </Grid.ColumnDefinitions>
+                <Grid x:Name="LeftPane">
+                    <Grid.RowDefinitions><RowDefinition Height="*" /><RowDefinition Height="44" /></Grid.RowDefinitions>
+                    <Grid x:Name="FormBody">
+                        <Grid.RowDefinitions><RowDefinition x:Name="FormHeight" Height="*"/><RowDefinition x:Name="InlineDividerHeight" Height="0"/><RowDefinition x:Name="InlineListHeight" Height="0"/></Grid.RowDefinitions>
+                        <ItemsControl x:Name="ParameterGroupItems" Margin="0,0,0,1" IsEnabled="{Binding CanEdit}">
+                            <ItemsControl.ItemsPanel><ItemsPanelTemplate><local:ParameterGroupsPanel /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                    <Grid.RowDefinitions><RowDefinition Height="*" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+                                    <Expander Header="{Binding Title}" IsExpanded="True" Style="{StaticResource ToolSection}" Margin="0,0,0,2">
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" CanContentScroll="False">
+                                            <StackPanel Margin="11,2,6,5">
+                                                <StackPanel x:Name="RenderActions" Orientation="Horizontal" Visibility="Collapsed" Margin="0,4,0,6">
+                                                    <Button Content="显示全部结果" Click="OnShowAllResults" Tag="True" Padding="8,3" FontSize="11" ToolTip="开启当前工具的结果显示选项，点击测试后刷新"/>
+                                                    <Button Content="隐藏全部结果" Click="OnShowAllResults" Tag="False" Padding="8,3" FontSize="11" Margin="6,0,0,0"/>
+                                                </StackPanel>
+                                                <ItemsControl ItemsSource="{Binding Items}">
+                                                    <ItemsControl.ItemTemplate><DataTemplate><local:ParameterEditor /></DataTemplate></ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                                <Expander x:Name="AdvancedSection" Header="高级参数" Style="{StaticResource ToolAdvancedSection}" IsExpanded="False">
+                                                    <ItemsControl x:Name="AdvancedEditors" Margin="10,0,0,0">
+                                                        <ItemsControl.ItemTemplate><DataTemplate><local:ParameterEditor /></DataTemplate></ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </Expander>
+                                            </StackPanel>
+                                        </ScrollViewer>
+                                    </Expander>
+                                    <Thumb Grid.Row="1" Style="{StaticResource ParameterGroupDivider}" ToolTip="拖动调整上下区域大小"
+                                           Loaded="OnParameterGroupDividerLoaded" DragDelta="OnParameterGroupResize" />
+                                    </Grid>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding Field}" Value="render"><Setter TargetName="RenderActions" Property="Visibility" Value="Visible" /></DataTrigger>
+                                        <DataTrigger Binding="{Binding AdvancedItems.Count}" Value="0"><Setter TargetName="AdvancedSection" Property="Visibility" Value="Collapsed" /></DataTrigger>
+                                        <Trigger SourceName="AdvancedSection" Property="IsExpanded" Value="True"><Setter TargetName="AdvancedEditors" Property="ItemsSource" Value="{Binding AdvancedItems}" /></Trigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TabControl x:Name="CompactGroups" Visibility="Collapsed" Margin="3,0,3,3" IsEnabled="{Binding CanEdit}">
+                            <TabControl.ItemTemplate><DataTemplate><TextBlock Text="{Binding Title}" Padding="8,3"/></DataTemplate></TabControl.ItemTemplate>
+                            <TabControl.ContentTemplate><DataTemplate>
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"><StackPanel Margin="9,3">
+                                    <ItemsControl ItemsSource="{Binding Items}"><ItemsControl.ItemTemplate><DataTemplate><local:ParameterEditor/></DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                                    <Expander Header="高级参数" IsExpanded="False"><ItemsControl ItemsSource="{Binding AdvancedItems}"><ItemsControl.ItemTemplate><DataTemplate><local:ParameterEditor/></DataTemplate></ItemsControl.ItemTemplate></ItemsControl></Expander>
+                                </StackPanel></ScrollViewer>
+                            </DataTemplate></TabControl.ContentTemplate>
+                        </TabControl>
+                        <GridSplitter x:Name="InlineDivider" Grid.Row="1" Height="5" Cursor="SizeNS" ResizeDirection="Rows"
+                                      Style="{StaticResource ParameterDivider}" Visibility="Collapsed" />
+                        <ContentControl x:Name="InlineListHost" Grid.Row="2" Visibility="Collapsed"/>
+                    </Grid>
+                    <ContentControl x:Name="ShapeEditorHost" Visibility="Collapsed" Margin="4,0,4,4" />
+                    <Border Grid.Row="1" Background="{StaticResource Panel}" CornerRadius="5" Padding="12,5,15,5">
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                            <Border Padding="10,2" BorderBrush="{StaticResource Text}" BorderThickness="1" CornerRadius="3" ToolTip="{Binding SelectedResult}">
+                                <TextBlock Text="状态" VerticalAlignment="Center" FontSize="12" />
+                            </Border>
+                            <TextBlock Grid.Column="1" x:Name="TestStatus" Text="" Margin="10,0,8,0" FontSize="11" Foreground="{StaticResource TextDim}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                <Button x:Name="TestButton" Content="测试" Click="OnTest" Style="{StaticResource ToolActionButton}" />
+                                <Button Content="保存" Click="OnSave" Style="{StaticResource ToolActionButton}" IsEnabled="{Binding CanEdit}" Margin="6,0,0,0" />
+                                <Button Content="关闭" Click="OnClose" Style="{StaticResource ToolActionButton}" Margin="6,0,0,0" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+                <GridSplitter x:Name="MainDivider" Grid.Column="1" Width="5" Cursor="SizeWE" Style="{StaticResource ParameterDivider}" ResizeDirection="Columns" />
+                <Grid x:Name="RightPane" Grid.Column="2">
+                    <Grid.RowDefinitions><RowDefinition x:Name="PreviewHeight" Height="70*" MinHeight="100" /><RowDefinition Height="5" /><RowDefinition x:Name="OutputHeight" Height="30*" MinHeight="70" /></Grid.RowDefinitions>
+                    <Border x:Name="PreviewPane" Background="#232323" BorderBrush="{StaticResource Border}" BorderThickness="1" CornerRadius="6">
+                        <Grid>
+                            <Grid.RowDefinitions><RowDefinition Height="31" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                            <DockPanel LastChildFill="True" Margin="2,0">
+                                <Button DockPanel.Dock="Right" Click="OnDisplayMenu" Style="{StaticResource ToolIconButton}" Width="62" ToolTip="显示设置">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Path Data="M1,1 L5,5 1,9" Stroke="{StaticResource TextDim}" StrokeThickness="1.3" Width="7" Height="10" VerticalAlignment="Center" Margin="0,0,5,0" />
+                                        <TextBlock Text="显示" FontSize="11" VerticalAlignment="Center" Foreground="{StaticResource TextDim}" />
+                                    </StackPanel>
+                                </Button>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Style="{StaticResource ToolIconButton}" Click="OnFit" ToolTip="适应窗口">
+                                        <Path Data="M2,7 L2,2 7,2 M13,2 L18,2 18,7 M18,13 L18,18 13,18 M7,18 L2,18 2,13 M6,6 L14,6 14,14 6,14 Z" Stroke="{StaticResource Accent}" StrokeThickness="1.4" Width="20" Height="20" />
+                                    </Button>
+                                    <Button Style="{StaticResource ToolIconButton}" Click="OnPreviewMenu" ToolTip="选择图像或点云">
+                                        <Path Data="M2,6 L12,1 21,6 11,11 Z M2,6 L2,16 11,21 21,16 21,6 M11,11 L11,21" Stroke="#A8A8AC" StrokeThickness="1.2" Width="22" Height="22" />
+                                    </Button>
+                                    <Button Style="{StaticResource ToolIconButton}" Click="OnFit" ToolTip="复位视图">
+                                        <Path Data="M4,6 A8,8 0 1 1 2,13 M4,1 L4,6 9,6" Stroke="{StaticResource Accent}" StrokeThickness="1.7" Width="22" Height="22" />
+                                    </Button>
+                                    <Button Style="{StaticResource ToolIconButton}" Click="OnSavePreview" ToolTip="保存预览图像">
+                                        <Path Data="M3,2 L17,2 20,5 20,20 2,20 2,2 Z M6,2 L6,8 15,8 15,2 M6,20 L6,13 16,13 16,20" Stroke="{StaticResource Accent}" StrokeThickness="1.3" Width="22" Height="22" />
+                                    </Button>
+                                    <Button Style="{StaticResource ToolIconButton}" Click="OnToggleOverlays" ToolTip="显示 / 隐藏结果标注">
+                                        <Path Data="M2,10 C6,2 16,2 21,10 C16,18 6,18 2,10 M14,10 A3,3 0 1 1 8,10 A3,3 0 1 1 14,10" Stroke="{StaticResource Accent}" StrokeThickness="1.3" Width="23" Height="20" />
+                                    </Button>
+                                    <TextBlock x:Name="PreviewMode" Text="2D模式" Margin="9,0,0,0" VerticalAlignment="Center" Foreground="#C6C6CA" />
+                                    <TextBlock x:Name="PreviewSlot" Text="" Margin="9,0,0,0" VerticalAlignment="Center" Foreground="{StaticResource TextDim}" FontSize="11" />
+                                </StackPanel>
+                            </DockPanel>
+                            <WrapPanel x:Name="ImagePagingBar" Grid.Row="1" Background="{StaticResource PanelHead}" Visibility="Collapsed" Margin="4,2">
+                                <ComboBox x:Name="ImageSourcePicker" Width="145" DisplayMemberPath="Name" SelectedValuePath="Uuid" SelectionChanged="OnImageSourceChanged" Margin="0,0,6,0" ToolTip="选择要切换图片的图像源" />
+                                <Button x:Name="PreviousImageButton" Content="上一张" Click="OnPreviousImage" Padding="7,2" />
+                                <TextBlock x:Name="ImagePageText" MinWidth="55" TextAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource Text}" />
+                                <Button x:Name="NextImageButton" Content="下一张" Click="OnNextImage" Padding="7,2" />
+                            </WrapPanel>
+                            <Border x:Name="RegionEditBar" Grid.Row="2" Background="{StaticResource PanelHead}" Padding="6,3" Visibility="Collapsed">
+                                <DockPanel>
+                                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                                        <Button Content="重绘" Click="OnRedrawRegion" Padding="8,2" />
+                                        <Button Content="完成" Click="OnFinishRegionEdit" Padding="8,2" Margin="5,0,0,0" />
+                                    </StackPanel>
+                                    <TextBlock x:Name="RegionEditHint" VerticalAlignment="Center" Foreground="{StaticResource Text}" FontSize="11" TextWrapping="Wrap" />
+                                </DockPanel>
+                            </Border>
+                            <local:ImageView x:Name="Preview" Grid.Row="3" />
+                            <StackPanel x:Name="EmptyPreview" Grid.Row="3" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False">
+                                <Path Data="M2,3 L34,3 34,27 2,27 Z M2,23 L11,14 18,20 25,11 34,20 M12,9 A2,2 0 1 1 8,9 A2,2 0 1 1 12,9" Stroke="#65656A" StrokeThickness="1.5" Width="36" Height="30" HorizontalAlignment="Center" />
+                                <TextBlock Text="无图像" Foreground="#7D7D82" HorizontalAlignment="Center" Margin="0,10,0,0" />
+                            </StackPanel>
+                            <TextBlock x:Name="PreviewTextOverlay" Grid.Row="3" Text="{Binding DrawText}" Foreground="Yellow" FontFamily="Consolas" FontSize="13" Margin="12" IsHitTestVisible="False" VerticalAlignment="Top" TextWrapping="Wrap" />
+                        </Grid>
+                    </Border>
+                    <ContentControl x:Name="SpecializedPreview" Visibility="Collapsed"/>
+                    <GridSplitter Grid.Row="1" Height="5" Cursor="SizeNS" ResizeDirection="Rows" Style="{StaticResource ParameterDivider}" />
+                    <Border Grid.Row="2" Background="{StaticResource Panel}" BorderBrush="{StaticResource Border}" BorderThickness="1" CornerRadius="6">
+                        <Grid>
+                            <Grid.RowDefinitions><RowDefinition Height="35" /><RowDefinition Height="34" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                            <Border Background="{StaticResource PanelHead}" CornerRadius="5,5,0,0" Padding="12,0"><TextBlock Text="输出参数" VerticalAlignment="Center" /></Border>
+                            <Grid Grid.Row="1" Margin="8,0,24,0">
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="42*" /><ColumnDefinition Width="24*" /><ColumnDefinition Width="34*" /></Grid.ColumnDefinitions>
+                                <TextBlock Text="名称" VerticalAlignment="Center" Margin="26,0,8,0" />
+                                <Border Grid.Column="1" BorderBrush="{StaticResource Border}" BorderThickness="1,0,0,0" Margin="0,8"><TextBlock Text="类型" Margin="12,-8,0,-8" VerticalAlignment="Center" /></Border>
+                                <Border Grid.Column="2" BorderBrush="{StaticResource Border}" BorderThickness="1,0,0,0" Margin="0,8"><TextBlock Text="值" Margin="12,-8,0,-8" VerticalAlignment="Center" /></Border>
+                            </Grid>
+                            <TreeView Grid.Row="2" ItemsSource="{Binding SelectedOutputs}" Background="Transparent" BorderThickness="0" Foreground="{StaticResource Text}" Margin="8,0"
+                                      TreeViewItem.Expanded="OnOutputExpanded" VirtualizingPanel.ScrollUnit="Pixel" VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible">
+                                <TreeView.ItemContainerStyle>
+                                    <Style TargetType="TreeViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                        <Setter Property="Foreground" Value="{StaticResource Text}" />
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="TreeViewItem">
+                                                    <Grid>
+                                                        <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+                                                        <Border x:Name="Row" Background="Transparent">
+                                                            <ContentPresenter ContentSource="Header" HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+                                                        </Border>
+                                                        <ToggleButton x:Name="Expander" Style="{StaticResource TreeExpander}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="6,0,0,0"
+                                                                      IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" />
+                                                        <ItemsPresenter x:Name="Children" Grid.Row="1" Margin="18,0,0,0" />
+                                                    </Grid>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsExpanded" Value="False"><Setter TargetName="Children" Property="Visibility" Value="Collapsed" /></Trigger>
+                                                        <Trigger Property="HasItems" Value="False"><Setter TargetName="Expander" Property="Visibility" Value="Collapsed" /></Trigger>
+                                                        <Trigger Property="IsSelected" Value="True"><Setter TargetName="Row" Property="Background" Value="{DynamicResource Selected}" /></Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </TreeView.ItemContainerStyle>
+                                <TreeView.ItemTemplate>
+                                    <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                        <Grid MinHeight="30">
+                                            <Grid.ColumnDefinitions><ColumnDefinition Width="42*" /><ColumnDefinition Width="24*" /><ColumnDefinition Width="34*" /></Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding DisplayName}" Margin="26,4,8,4" Foreground="{StaticResource Text}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Name}" />
+                                            <TextBlock Grid.Column="1" Text="{Binding DisplayType}" Margin="12,4,4,4" Foreground="{StaticResource Accent}" TextTrimming="CharacterEllipsis" />
+                                            <TextBox Grid.Column="2" Text="{Binding DisplayValue, Mode=OneWay}" Margin="12,4,4,4"
+                                                     Style="{x:Null}" Foreground="{StaticResource Text}" Background="Transparent" BorderThickness="0" Padding="0"
+                                                     IsReadOnly="True" IsReadOnlyCaretVisible="False" TextWrapping="Wrap"
+                                                     HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled"
+                                                     VerticalContentAlignment="Top" ToolTipService.InitialShowDelay="300" ToolTipService.ShowDuration="60000">
+                                                <TextBox.ToolTip>
+                                                    <ToolTip MaxWidth="520" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                                        <TextBlock Text="{Binding DisplayValue}" TextWrapping="Wrap" />
+                                                    </ToolTip>
+                                                </TextBox.ToolTip>
+                                            </TextBox>
+                                        </Grid>
+                                    </HierarchicalDataTemplate>
+                                </TreeView.ItemTemplate>
+                            </TreeView>
+                            <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False">
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers><DataTrigger Binding="{Binding SelectedOutputs.Count}" Value="0"><Setter Property="Visibility" Value="Visible" /></DataTrigger></Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+                                <Path Data="M7,6 C3,6 2,8 2,12 L2,31 30,31 30,17 M2,22 L11,22 14,26 20,26 23,22 30,22 M31,7 A8,8 0 1 1 15,7 A8,8 0 1 1 31,7 M20,4 L26,10 M26,4 L20,10" Stroke="#727277" StrokeThickness="2" Width="34" Height="36" HorizontalAlignment="Center" />
+                                <TextBlock Text="无数据" Foreground="#7D7D82" HorizontalAlignment="Center" Margin="0,8,0,0" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+                <ContentControl x:Name="ScriptHost" Grid.ColumnSpan="3" Margin="0,0,0,44" Visibility="Collapsed"/>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

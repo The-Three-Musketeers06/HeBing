@@ -1,0 +1,24 @@
+{
+ "evidence_id": "frontend-parameter-locale-20261021",
+ "authority": "shipped-artifact",
+ "confidence": "observed",
+ "source": {
+  "path": "E:\\Vision-Studi\\ES-Vision-Studio 4.5.1.exe",
+  "sha256": "de7d79861b4eca44b76cac4f7c9e3dd788c5efa642c77a42c9c424a579caf40c",
+  "size": 72995168
+ },
+ "asset": "/assets/index-e67db51d.js",
+ "compressed_offset": 42027323,
+ "compressed_length": 67566,
+ "decoded_length": 323713,
+ "decoded_sha256": "69aa58bdbb434e72bb63ca71d5d7f9e3607f6dd37df25f562c2dcb4331f5b846",
+ "operation": "Brotli decode, then parse constant-only JavaScript declarations and object spreads without evaluation",
+ "decoder": "D:\\Anaconda3\\Library\\bin\\brotlidec.dll",
+ "global_labels": 2774,
+ "driver_contexts": 332,
+ "ambiguous_labels_omitted_from_global_fallback": 325,
+ "limitations": [
+  "Identical English keys can have different Chinese labels; per-driver dictionaries take priority.",
+  "Labels absent from the recovered dictionaries retain their exact English key."
+ ]
+}

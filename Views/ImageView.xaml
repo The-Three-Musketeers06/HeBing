@@ -1,0 +1,187 @@
+<UserControl x:Class="AiVisionStudio.Views.ImageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:AiVisionStudio.Views"
+             Background="{StaticResource Panel}" ClipToBounds="True">
+    <Grid Background="{StaticResource Panel}">
+        <Grid.RowDefinitions>
+            <!--主图-->
+            <RowDefinition Height="*"/>
+            <!--图片状态栏-->
+            <RowDefinition Height="Auto"/>
+            <!--图片源缩略栏-->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel x:Name="ViewTools" Margin="0,3,0,0" />
+        </ScrollViewer>
+        <Grid x:Name="Host" Grid.Column="1" Background="{StaticResource RowBg}" ClipToBounds="True">
+            <Canvas>
+                <Image x:Name="Img" Stretch="Fill" RenderTransformOrigin="0,0" SnapsToDevicePixels="True">
+                    <Image.RenderTransform>
+                        <MatrixTransform x:Name="Mat" />
+                    </Image.RenderTransform>
+                </Image>
+            </Canvas>
+
+            <!-- 3D 点云视图（云模式时代替 Image） -->
+            <local:CloudView3D x:Name="Cloud3D" Visibility="Collapsed" />
+            <local:ProfileView x:Name="Profile" Visibility="Collapsed" />
+            <local:NativeOverlay2D x:Name="Native2D" />
+            <local:NativeOverlay2D x:Name="Measure2D" />
+            <local:RegionEditor2D x:Name="RegionCanvas" />
+
+            <TextBlock x:Name="Placeholder" Text="" Foreground="#FF777777" FontSize="14"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" />
+            <TextBlock x:Name="TextOverlay" Foreground="#7CFF7C" FontFamily="Consolas" FontSize="14" FontWeight="Bold"
+                   Margin="12,8,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsHitTestVisible="False" />
+            <Border x:Name="InfoBar" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="8"
+                Background="#99000000" CornerRadius="3" Padding="8,3" Visibility="Collapsed">
+                <TextBlock x:Name="InfoText" Foreground="#FF9A9AA3" FontSize="11" />
+            </Border>
+        </Grid>
+        <Border x:Name="ImageStatusBar" Grid.Row="1" Grid.ColumnSpan="2" Padding="8,4" Background="{StaticResource PanelHead}" BorderBrush="{StaticResource Border}" BorderThickness="0,1,0,0" Visibility="Collapsed">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!--左下角：图片名称-->
+                <TextBlock x:Name="ImageNameText" Margin="0,0,16,0" VerticalAlignment="Center" Foreground="{StaticResource Text}" FontSize="12" TextTrimming="CharacterEllipsis" ToolTip="{Binding Text,RelativeSource={RelativeSource Self}}"/>
+
+                <!--右下角：分辨率、鼠标坐标、RGB-->
+                <TextBlock x:Name="PixelInfoText" Grid.Column="1" VerticalAlignment="Center" Foreground="{StaticResource Text}" FontFamily="Consolas" FontSize="12"/>
+            </Grid>
+        </Border>
+        <Border x:Name="ThumbnailPanel" Grid.Row="2" Grid.ColumnSpan="2" Visibility="Collapsed" Background="{StaticResource Panel}" BorderBrush="{StaticResource Border}" BorderThickness="0,1,0,0" Padding="6">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="28"/>
+                    <RowDefinition Height="96"/>
+                </Grid.RowDefinitions>
+                <!--标题和关闭按钮-->
+                <Grid>
+                    <TextBlock x:Name="ThumbnailTitle" Text="图像源" VerticalAlignment="Center" Foreground="{StaticResource Text}" FontSize="12"/>
+                    <Button HorizontalAlignment="Right" Style="{StaticResource CaptionButton}" Content="x" FontSize="18" ToolTip="隐藏图片源，双击主图恢复" Click="OnHideThumbnails"/>
+                </Grid>
+
+                <!--横向缩略图列表-->
+                <ListBox x:Name="ThumbnailList" Grid.Row="1" Background="Transparent" BorderThickness="0" SelectionMode="Single" SelectionChanged="OnThumbnailSelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
+                    <ListBox.Resources>
+                        <!-- 仅覆盖缩略图栏，避免全局滚动条的固定宽度压缩横向轨道。 -->
+                        <Style x:Key="ThumbnailScrollPageButton" TargetType="RepeatButton">
+                            <Setter Property="Focusable" Value="False"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="RepeatButton">
+                                        <Border Background="Transparent"/>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                        <Style TargetType="ScrollBar">
+                            <Setter Property="Width" Value="Auto"/>
+                            <Setter Property="Height" Value="12"/>
+                            <Setter Property="Background" Value="{StaticResource PanelHead}"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ScrollBar">
+                                        <Grid Background="{TemplateBinding Background}">
+                                            <Track x:Name="PART_Track"
+                                                   Orientation="{TemplateBinding Orientation}"
+                                                   Minimum="{TemplateBinding Minimum}"
+                                                   Maximum="{TemplateBinding Maximum}"
+                                                   Value="{TemplateBinding Value}"
+                                                   ViewportSize="{TemplateBinding ViewportSize}"
+                                                   IsDirectionReversed="False">
+                                                <Track.DecreaseRepeatButton>
+                                                    <RepeatButton x:Name="DecreaseButton"
+                                                                  Style="{StaticResource ThumbnailScrollPageButton}"
+                                                                  Command="{x:Static ScrollBar.PageLeftCommand}"/>
+                                                </Track.DecreaseRepeatButton>
+                                                <Track.Thumb>
+                                                    <Thumb x:Name="ScrollThumb" MinWidth="20" Margin="0,2"
+                                                           Background="{StaticResource Accent}">
+                                                        <Thumb.Template>
+                                                            <ControlTemplate TargetType="Thumb">
+                                                                <Border Background="{TemplateBinding Background}" CornerRadius="3"/>
+                                                            </ControlTemplate>
+                                                        </Thumb.Template>
+                                                    </Thumb>
+                                                </Track.Thumb>
+                                                <Track.IncreaseRepeatButton>
+                                                    <RepeatButton x:Name="IncreaseButton"
+                                                                  Style="{StaticResource ThumbnailScrollPageButton}"
+                                                                  Command="{x:Static ScrollBar.PageRightCommand}"/>
+                                                </Track.IncreaseRepeatButton>
+                                            </Track>
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="Orientation" Value="Vertical">
+                                                <Setter TargetName="PART_Track" Property="IsDirectionReversed" Value="True"/>
+                                                <Setter TargetName="DecreaseButton" Property="Command" Value="{x:Static ScrollBar.PageUpCommand}"/>
+                                                <Setter TargetName="IncreaseButton" Property="Command" Value="{x:Static ScrollBar.PageDownCommand}"/>
+                                                <Setter TargetName="ScrollThumb" Property="MinWidth" Value="0"/>
+                                                <Setter TargetName="ScrollThumb" Property="MinHeight" Value="20"/>
+                                                <Setter TargetName="ScrollThumb" Property="Margin" Value="2,0"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="Orientation" Value="Vertical">
+                                    <Setter Property="Width" Value="12"/>
+                                    <Setter Property="Height" Value="Auto"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.Resources>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Margin" Value="2"/>
+                            <Setter Property="Padding" Value="3"/>
+                            <Setter Property="BorderThickness" Value="2"/>
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border Padding="{TemplateBinding Padding}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+                                            <ContentPresenter/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="BorderBrush" Value="{StaticResource Accent}"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Width="104" Height="72" Background="#202020" ToolTip="{Binding FilePath}">
+                                <Image Source="{Binding Preview}" Stretch="Uniform"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
+

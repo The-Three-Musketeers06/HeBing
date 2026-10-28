@@ -1,0 +1,125 @@
+<UserControl x:Class="AiVisionStudio.Views.ParameterEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:AiVisionStudio.Views" HorizontalContentAlignment="Stretch">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <local:ParameterNumberConverter x:Key="ParameterNumberDisplay" />
+            <Style x:Key="ImageInputButton" TargetType="Button">
+                <Setter Property="Background" Value="{StaticResource InputBg}" /><Setter Property="Foreground" Value="{StaticResource Text}" />
+                <Setter Property="MinHeight" Value="28" /><Setter Property="BorderThickness" Value="1" /><Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="Padding" Value="10,3" /><Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
+                    <Border x:Name="Surface" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                        <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                            <TextBlock Text="{TemplateBinding Content}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,8,0" />
+                            <Path Grid.Column="1" Data="M0,0 L5,5 10,0" Stroke="{StaticResource TextDim}" StrokeThickness="1.2" VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Surface" Property="BorderBrush" Value="{StaticResource Accent}" /></Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Surface" Property="BorderBrush" Value="{StaticResource Accent}" /></Trigger>
+                        <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.45" /></Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate></Setter.Value></Setter>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid x:Name="Root" Visibility="{Binding IsVisible, Converter={StaticResource ToolBooleanVisibility}}" IsEnabled="{Binding IsEnabled}">
+        <Grid x:Name="Leaf" MinHeight="39">
+            <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+            <Grid.ColumnDefinitions><ColumnDefinition x:Name="LabelColumn" Width="49*" /><ColumnDefinition Width="51*" /><ColumnDefinition Width="23" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+            <TextBlock x:Name="LeafLabel" Text="{Binding DisplayName}" VerticalAlignment="Center" Margin="0,10,7,10" TextTrimming="CharacterEllipsis" ToolTip="{Binding PathLabel}" />
+            <Grid x:Name="ValueCell" Grid.Column="1" Margin="0,5,0,5" VerticalAlignment="Center">
+                <TextBox x:Name="TextValue" Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ToolTextBox}" IsEnabled="{Binding CanEditValue}" />
+                <Grid x:Name="NumberValue" Visibility="Collapsed" IsEnabled="{Binding CanEditValue}">
+                    <TextBox x:Name="NumericText" Style="{StaticResource ToolTextBox}" Padding="8,3,45,3" ToolTip="{Binding Value}">
+                        <TextBox.Text>
+                            <MultiBinding Converter="{StaticResource ParameterNumberDisplay}" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                <Binding Path="Value" Mode="TwoWay" /><Binding Path="Kind" Mode="OneWay" />
+                                <Binding Path="IsKeyboardFocused" RelativeSource="{RelativeSource Self}" Mode="OneWay" />
+                            </MultiBinding>
+                        </TextBox.Text>
+                    </TextBox>
+                    <StackPanel x:Name="NumericSteps" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,3,0">
+                        <Button Content="−" FontSize="18" Style="{StaticResource ToolIconButton}" Width="21" Height="25" Foreground="#B8B8BD" Command="{Binding DecrementCommand}" ToolTip="减小" />
+                        <Button Content="+" FontSize="18" Style="{StaticResource ToolIconButton}" Width="21" Height="25" Foreground="#B8B8BD" Command="{Binding IncrementCommand}" ToolTip="增大" />
+                    </StackPanel>
+                </Grid>
+                <ComboBox x:Name="EnumValue" Visibility="Collapsed" ItemsSource="{Binding Options}" DisplayMemberPath="Label" SelectedItem="{Binding SelectedOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ToolComboBox}" IsEnabled="{Binding CanEditValue}" />
+                <Button x:Name="ImageInputValue" Visibility="Collapsed" Content="{Binding ImageInputLabel}" ToolTip="{Binding ImageInputLabel}"
+                        Style="{StaticResource ImageInputButton}" IsEnabled="{Binding IsEnabled}" Click="OnImageInputClick" />
+                <CheckBox x:Name="BooleanValue" Visibility="Collapsed" IsChecked="{Binding BoolValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ToolSwitch}" IsEnabled="{Binding CanEditValue}" />
+                <local:ColorParameterEditor x:Name="ColorValue" Visibility="Collapsed" IsEnabled="{Binding CanEditValue}" />
+                <local:StructuredParameterEditor x:Name="RangeValue" Visibility="Collapsed" IsEnabled="{Binding CanEditValue}" />
+                <DockPanel x:Name="FileValue" Visibility="Collapsed" IsEnabled="{Binding CanEditValue}">
+                    <Button DockPanel.Dock="Right" Style="{StaticResource ToolIconButton}" Width="29" Command="{Binding BrowseCommand}" ToolTip="浏览文件">
+                        <Path Data="M2,6 L2,3 9,3 12,6 21,6 21,19 2,19 Z M2,9 L21,9" Stroke="{StaticResource Accent}" StrokeThickness="1.5" Width="22" Height="22" />
+                    </Button>
+                    <TextBox Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ToolTextBox}" ToolTip="{Binding Value}" />
+                </DockPanel>
+                <Border x:Name="BoundValue" Visibility="Collapsed" Background="#23343E" CornerRadius="3" Padding="8,5" ToolTip="{Binding BindingLabel}">
+                    <TextBlock Text="{Binding BindingLabel}" Foreground="{StaticResource Accent}" TextTrimming="CharacterEllipsis" />
+                </Border>
+            </Grid>
+            <Button Grid.Column="2" x:Name="LeafBinding" Style="{StaticResource ToolIconButton}" Width="23" Height="27" VerticalAlignment="Center" Click="OnBindingClick" ToolTip="{Binding BindingLabel}" Visibility="{Binding CanBind, Converter={StaticResource ToolBooleanVisibility}}">
+                <Path Data="M8,13 L13,8 M5,11 L3,13 C0,16 5,21 8,18 L12,14 C14,12 13,9 11,8 M9,11 C7,10 7,7 9,5 L13,1 C16,-2 21,3 18,6 L16,8" Stroke="{StaticResource Accent}" StrokeThickness="1.7" Width="17" Height="19" Stretch="Uniform" />
+            </Button>
+            <Button x:Name="LeafRemoveButton" Grid.Column="3" Content="−" FontSize="17" Style="{StaticResource ToolIconButton}" Width="23" Command="{Binding RemoveItemCommand}" ToolTip="移除此项" Visibility="Collapsed" VerticalAlignment="Center" />
+            <TextBox x:Name="MultilineValue" Grid.Row="1" Grid.ColumnSpan="4" Visibility="Collapsed" Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Style="{StaticResource ToolTextBox}" AcceptsReturn="True" AcceptsTab="True" FontFamily="Consolas" FontSize="12"
+                     MinHeight="180" MaxHeight="350" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsEnabled="{Binding CanEditValue}" Margin="0,0,0,5" />
+            <TextBlock x:Name="LeafError" Grid.Row="2" Grid.ColumnSpan="4" Text="{Binding Error}" Foreground="{StaticResource Fail}" TextWrapping="Wrap" FontSize="11" Margin="0,0,0,5" Visibility="{Binding HasError, Converter={StaticResource ToolBooleanVisibility}}" />
+            <Button x:Name="BindPositionLeafButton" Grid.Row="1" Grid.ColumnSpan="4" Content="绑定模板定位…" HorizontalAlignment="Right" Padding="9,4" Margin="0,0,6,5" Visibility="Collapsed" Click="OnBindRegionPositionClick" IsEnabled="{Binding IsEnabled}" ToolTip="自动绑定前置模板匹配的基准点和运行点，使区域跟随目标" />
+        </Grid>
+        <Grid x:Name="Group" Visibility="Collapsed">
+            <Grid.RowDefinitions><RowDefinition Height="39" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+            <ToggleButton x:Name="GroupToggle" IsChecked="{Binding IsExpanded, Mode=TwoWay}" HorizontalContentAlignment="Stretch">
+                <ToggleButton.Template>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Grid Background="Transparent">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="49*" /><ColumnDefinition Width="51*" /><ColumnDefinition Width="23" /></Grid.ColumnDefinitions>
+                            <Border BorderBrush="{StaticResource Accent}" BorderThickness="3,0,0,0" Margin="0,12,8,12"><TextBlock Text="{Binding DisplayName}" Foreground="{StaticResource Text}" Margin="8,-5,0,-5" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" /></Border>
+                            <Path x:Name="Chevron" Grid.Column="2" Data="M1,1 L5,5 1,9" Stroke="#BEBEC3" StrokeThickness="1.3" Width="7" Height="11" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True"><Setter TargetName="Chevron" Property="RenderTransform"><Setter.Value><RotateTransform Angle="90" /></Setter.Value></Setter></Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </ToggleButton.Template>
+            </ToggleButton>
+            <Grid IsHitTestVisible="True">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="49*" /><ColumnDefinition Width="51*" /><ColumnDefinition Width="23" /></Grid.ColumnDefinitions>
+                <Button Grid.Column="1" Style="{StaticResource ToolIconButton}" Width="23" HorizontalAlignment="Left" VerticalAlignment="Center" Click="OnBindingClick" ToolTip="{Binding BindingLabel}" Visibility="{Binding CanBind, Converter={StaticResource ToolBooleanVisibility}}">
+                    <Path Data="M8,13 L13,8 M5,11 L3,13 C0,16 5,21 8,18 L12,14 C14,12 13,9 11,8 M9,11 C7,10 7,7 9,5 L13,1 C16,-2 21,3 18,6 L16,8" Stroke="{StaticResource Accent}" StrokeThickness="1.7" Width="17" Height="19" Stretch="Uniform" />
+                </Button>
+                <StackPanel x:Name="ArrayActions" Grid.Column="1" Visibility="Collapsed" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,0,6,0">
+                    <Button x:Name="AddArrayButton" Content="+" FontSize="17" Style="{StaticResource ToolIconButton}" Width="23" Command="{Binding AddItemCommand}" ToolTip="添加一项" />
+                    <Button x:Name="RemoveArrayButton" Content="−" FontSize="17" Style="{StaticResource ToolIconButton}" Width="23" Command="{Binding RemoveItemCommand}" ToolTip="移除此项" />
+                </StackPanel>
+                <Button x:Name="RegionDrawButton" Grid.Column="1" Content="绘制" Style="{StaticResource ToolIconButton}"
+                        Width="42" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"
+                        IsEnabled="{Binding CanEditValue}" Click="OnDrawRegion" ToolTip="在预览图像上绘制或调整区域" />
+            </Grid>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="BindPositionGroupButton" Content="绑定模板定位…" Padding="9,4" Margin="0,0,6,5" Visibility="Collapsed" Click="OnBindRegionPositionClick" IsEnabled="{Binding IsEnabled}" ToolTip="自动绑定前置模板匹配的基准点和运行点" />
+            </StackPanel>
+            <StackPanel Grid.Row="2" x:Name="GroupContent" Visibility="{Binding IsExpanded, Converter={StaticResource ToolBooleanVisibility}}">
+                <TextBlock x:Name="GroupBinding" Text="{Binding BindingLabel}" Foreground="{StaticResource Accent}" Margin="15,0,5,5" Visibility="Collapsed" TextTrimming="CharacterEllipsis" ToolTip="{Binding BindingLabel}" />
+                <ItemsControl x:Name="GroupChildren" Margin="17,0,0,0">
+                    <ItemsControl.ItemTemplate><DataTemplate><local:ParameterEditor /></DataTemplate></ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <TextBlock Text="{Binding Error}" Foreground="{StaticResource Fail}" TextWrapping="Wrap" FontSize="11" Margin="15,0,0,5" Visibility="{Binding HasError, Converter={StaticResource ToolBooleanVisibility}}" />
+            </StackPanel>
+        </Grid>
+        <StackPanel x:Name="MatrixPanel" Visibility="Collapsed">
+            <DockPanel Height="39">
+                <Button DockPanel.Dock="Right" Content="↗" Style="{StaticResource ToolIconButton}" Click="OnBindingClick" ToolTip="{Binding BindingLabel}" Visibility="{Binding CanBind, Converter={StaticResource ToolBooleanVisibility}}" />
+                <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center" Foreground="{StaticResource Text}" />
+            </DockPanel>
+            <local:StructuredParameterEditor x:Name="MatrixValue" />
+        </StackPanel>
+    </Grid>
+    <UserControl.Style>
+        <Style TargetType="UserControl"><Style.Triggers><DataTrigger Binding="{Binding IsVisible}" Value="False"><Setter Property="Visibility" Value="Collapsed" /></DataTrigger></Style.Triggers></Style>
+    </UserControl.Style>
+</UserControl>

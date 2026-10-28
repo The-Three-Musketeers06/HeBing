@@ -1,0 +1,2072 @@
+[
+  {
+    "Category": "安装",
+    "Title": "安装说明",
+    "Url": "https://ai-vision.tydi.fun/docs/install/%E5%AE%89%E8%A3%85%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "部署说明：框架依赖 .NET 10 Desktop Runtime，发布启动器已固定自有内核。",
+    "Gaps": "原手册安装/授权针对原产品；本工程部署说明单独提供。"
+  },
+  {
+    "Category": "界面与框架",
+    "Title": "界面介绍",
+    "Url": "https://ai-vision.tydi.fun/docs/studio/%E7%95%8C%E9%9D%A2%E4%BB%8B%E7%BB%8D.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "MainWindow / ParamsWindow：工程、工具、运行、图像、调试分区，浅色品牌和小屏布局。",
+    "Gaps": "外观按用户要求采用 ES 品牌，未按原版逐像素验收。"
+  },
+  {
+    "Category": "界面与框架",
+    "Title": "菜单栏",
+    "Url": "https://ai-vision.tydi.fun/docs/studio/%E8%8F%9C%E5%8D%95%E6%A0%8F.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "MainWindow.Management.cs：文件编辑、系统参数、变量配方设备、HMI、F1 帮助与核对入口。",
+    "Gaps": "菜单的全部边缘交互尚未逐项自动验收。"
+  },
+  {
+    "Category": "界面与框架",
+    "Title": "系统参数窗口",
+    "Url": "https://ai-vision.tydi.fun/docs/studio/%E7%B3%BB%E7%BB%9F%E5%8F%82%E6%95%B0%E9%A1%B5%E9%9D%A2.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "StudioSettings.cs / StudioSettingsWindow.cs：新增启动加载、程序选择、延时循环、HMI、极速模式和显示精度保存。",
+    "Gaps": "调试级别、运行时主题切换、原版网格点数三档设置未接入。"
+  },
+  {
+    "Category": "界面与框架",
+    "Title": "工具栏",
+    "Url": "https://ai-vision.tydi.fun/docs/studio/%E5%B7%A5%E5%85%B7%E6%A0%8F.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "MainWindow.xaml.cs / ExecutionEngine.cs：运行/步进/循环/暂停/停止/清空、视图控制及 Ctrl+F 系列快捷键。",
+    "Gaps": "暂停在当前算子返回后生效；不是强制中断算法线程。"
+  },
+  {
+    "Category": "界面与框架",
+    "Title": "全局变量窗口",
+    "Url": "https://ai-vision.tydi.fun/docs/studio/%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%A1%B5%E9%9D%A2.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "ProjectManagement.cs / ArrayVariableWindow.cs：标量及四类数组定义、默认值、当前值、大小写区分、保存与撤销。",
+    "Gaps": "未声明且为空或异构的运行时数组无法推断元素类型，须显式声明。"
+  },
+  {
+    "Category": "界面与框架",
+    "Title": "配方管理窗口",
+    "Url": "https://ai-vision.tydi.fun/docs/studio/%E9%85%8D%E6%96%B9%E7%AE%A1%E7%90%86%E9%A1%B5%E9%9D%A2.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "RecipeDocument.cs / RecipeManagerWindow：JSON 配方行列编辑、导入保存、默认与活动配方；新增脚本按名称切换。",
+    "Gaps": "复杂嵌套单元格仍通过 JSON 编辑；未覆盖原版所有表格交互。"
+  },
+  {
+    "Category": "界面与框架",
+    "Title": "设备配置窗口",
+    "Url": "https://ai-vision.tydi.fun/docs/studio/%E8%AE%BE%E5%A4%87%E9%85%8D%E7%BD%AE%E9%A1%B5%E9%9D%A2.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "NativeDeviceConfiguration / DeviceRuntime.Native：导入原版 devices.define，TCP/UDP/串口、独立DI/DO、原生Modbus客户端算子及海康MVS采集入口。",
+    "Gaps": "Modbus原生服务器/从站四区未接，串口/RTU及厂商SDK尚无实机回归；多客户端帧路由仍需完善。"
+  },
+  {
+    "Category": "界面与框架",
+    "Title": "工程列表",
+    "Url": "https://ai-vision.tydi.fun/docs/studio/%E5%B7%A5%E7%A8%8B%E5%88%97%E8%A1%A8.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "ProgramManagement.cs：新建/重命名/默认/删除、引用检查、撤销和工程保存。",
+    "Gaps": "后台程序的独立常驻调度未达到原版语义。"
+  },
+  {
+    "Category": "界面与框架",
+    "Title": "工具列表",
+    "Url": "https://ai-vision.tydi.fun/docs/studio/%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "MainViewModel.cs / MainWindow.xaml：层级、子项数量、分类搜索、双击/拖放添加。",
+    "Gaps": "375 个目录项并非全部有内核，详见驱动明细。"
+  },
+  {
+    "Category": "界面与框架",
+    "Title": "运行列表",
+    "Url": "https://ai-vision.tydi.fun/docs/studio/%E8%BF%90%E8%A1%8C%E5%88%97%E8%A1%A8.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "ExecutionEngine.cs / Operation.cs：步骤状态、时间、断点、禁用、顺序与工具参数编辑。",
+    "Gaps": "逐算子累计成功/警告/失败计数、升级标记和多项剪贴板未完整实现。"
+  },
+  {
+    "Category": "界面与框架",
+    "Title": "工具编辑窗口",
+    "Url": "https://ai-vision.tydi.fun/docs/studio/%E5%B7%A5%E5%85%B7%E7%BC%96%E8%BE%91%E9%A1%B5%E9%9D%A2.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "ParameterEditor.cs / ParamsWindow：动态参数、绑定、输入/计算/结果、测试及保存，小屏自适应。",
+    "Gaps": "参数模板存在不保证所有算法分支或全部 ROI 拖拽编辑已实现。"
+  },
+  {
+    "Category": "界面与框架",
+    "Title": "参数绑定窗口",
+    "Url": "https://ai-vision.tydi.fun/docs/studio/%E5%8F%82%E6%95%B0%E7%BB%91%E5%AE%9A%E9%A1%B5%E9%9D%A2.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "OutputBindingResolver.cs / ParamsWindow：精确程序和 UUID、嵌套字段、零基数组索引，缺失输出明确报错。",
+    "Gaps": "需要上游真实产出；未实现上游不会用零值替代。"
+  },
+  {
+    "Category": "界面与框架",
+    "Title": "图像显示栏",
+    "Url": "https://ai-vision.tydi.fun/docs/studio/%E5%9B%BE%E5%83%8F%E6%98%BE%E7%A4%BA%E6%A0%8F.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "ImageWorkspace / ImageViewer：多 IM、六面旋转、点云颜色、LOD、检测叠加、缩放与存图。",
+    "Gaps": "全部网面/OBB/拾取测距及原版布局交互未逐项对齐。"
+  },
+  {
+    "Category": "界面与框架",
+    "Title": "调试输出栏",
+    "Url": "https://ai-vision.tydi.fun/docs/studio/%E8%B0%83%E8%AF%95%E8%BE%93%E5%87%BA%E6%A0%8F.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "VarRow.cs / MainViewModel.cs：全局与算子结果树、分级日志、设备配置内连接反馈。",
+    "Gaps": "独立设备状态页、默认值列和完整 Warning/Message 合同仍需补齐。"
+  },
+  {
+    "Category": "界面与框架",
+    "Title": "状态栏",
+    "Url": "https://ai-vision.tydi.fun/docs/studio/%E7%8A%B6%E6%80%81%E6%A0%8F.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "MainWindow status timer：工程路径、耗时、进程 CPU 和内存状态。",
+    "Gaps": "显示的是本进程资源，非原版系统所有进程口径；不复制原产品授权。"
+  },
+  {
+    "Category": "HMI",
+    "Title": "使用介绍",
+    "Url": "https://ai-vision.tydi.fun/docs/HMI/%E5%9F%BA%E6%9C%AC%E4%BB%8B%E7%BB%8D.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "HmiWindow / HmiDocumentService / HmiRuntime：aivh 读写、组件编辑、绑定、运行控制、图表和数据库结果连接。",
+    "Gaps": "登录权限、完整多看板/分组/模板交互尚未与手册全部对齐。"
+  },
+  {
+    "Category": "HMI",
+    "Title": "常用组件",
+    "Url": "https://ai-vision.tydi.fun/docs/HMI/%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "HmiRuntime.cs / Hmi widgets：输入、按钮、图片、结果、表格及图表绑定已有回归覆盖。",
+    "Gaps": "装饰、统计、相机及全部组件样式未穷举验证；现场连接待测。"
+  },
+  {
+    "Category": "HMI",
+    "Title": "快捷键&全局设置",
+    "Url": "https://ai-vision.tydi.fun/docs/HMI/%E5%BF%AB%E6%8D%B7%E9%94%AE%E4%B8%8E%E7%B3%BB%E7%BB%9F%E8%AE%BE%E7%BD%AE.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "手册该页缺少详细内容：现有 HMI 编辑器提供自身快捷键。",
+    "Gaps": "缺少足够手册规格，不能认定完全一致。"
+  },
+  {
+    "Category": "通用类型",
+    "Title": "ROI类型",
+    "Url": "https://ai-vision.tydi.fun/docs/global/ROI%E7%B1%BB%E5%9E%8B.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "CloudRegionSelector / RenderingOps：支持常用窗口、盒子、点集、区域绑定与阵列。",
+    "Gaps": "1D/旋转/复合 ROI 的全部算法消费与交互绘制需逐种校准。"
+  },
+  {
+    "Category": "通用类型",
+    "Title": "几何类型",
+    "Url": "https://ai-vision.tydi.fun/docs/global/%E5%87%A0%E4%BD%95%E7%B1%BB%E5%9E%8B.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "LuaManualFunctions / GeometryCompletion：补齐1D/2D/3D几何脚本输出、矩阵与位姿，参数消费、绑定与绘制有定量检查。",
+    "Gaps": "各算法对全部几何组合的支持仍需逐项验收。"
+  },
+  {
+    "Category": "通用类型",
+    "Title": "Overlay",
+    "Url": "https://ai-vision.tydi.fun/docs/global/Overlay.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "DetectionOverlay2D / ImageViewer：二维轮廓框点文本、三维几何和屏幕字号上限。",
+    "Gaps": "全部多边形/透明度/遮挡语义未逐项校准。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "2D数据显示",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/2d/2D%E6%95%B0%E6%8D%AE%E6%98%BE%E7%A4%BA/2D%E6%95%B0%E6%8D%AE%E6%98%BE%E7%A4%BA.html",
+    "Driver": "2D Display Data",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：2D Display Data；运行时注册：2D Display Data",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "2D模板创建",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/2d/2D%E6%A8%A1%E6%9D%BF%E5%88%9B%E5%BB%BA/2D%E6%A8%A1%E6%9D%BF%E5%88%9B%E5%BB%BA.html",
+    "Driver": "Create Template 2D",
+    "RelatedDrivers": "Basic Shape Model",
+    "Status": "有对应工具 / 版本参数待对齐",
+    "Evidence": "4.5.1 参数目录：Create Template 2D；运行时注册：无；对应实现：Basic Shape Model",
+    "Gaps": "尚未实现这些驱动的执行逻辑，目录和参数页不能替代计算。 现有相近工具 Basic Shape Model 的参数合同不同，未自动替换。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "2D图片裁切",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/2d/2D%E5%9B%BE%E7%89%87%E8%A3%81%E5%88%87/2D%E5%9B%BE%E7%89%87%E8%A3%81%E5%88%87.html",
+    "Driver": "Crop Image",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：Crop Image；运行时注册：Crop Image",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "加载图片",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/2d/%E5%8A%A0%E8%BD%BD%E5%9B%BE%E7%89%87/%E5%8A%A0%E8%BD%BD%E5%9B%BE%E7%89%87.html",
+    "Driver": "LoadImage",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：LoadImage；运行时注册：LoadImage",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "保存图片",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/2d/%E4%BF%9D%E5%AD%98%E5%9B%BE%E7%89%87/%E4%BF%9D%E5%AD%98%E5%9B%BE%E7%89%87.html",
+    "Driver": "SaveImage",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：SaveImage；运行时注册：SaveImage",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "1D直线",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/2d/1D%E7%9B%B4%E7%BA%BF/1D%E7%9B%B4%E7%BA%BF.html",
+    "Driver": "1D Line",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：1D Line；运行时注册：1D Line",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "2D圆",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/2d/2D%E5%9C%86/2D%E5%9C%86.html",
+    "Driver": "2D Circle",
+    "RelatedDrivers": "Basic Circle Find / Basic Circle Fit",
+    "Status": "有对应工具 / 版本参数待对齐",
+    "Evidence": "4.5.1 参数目录：2D Circle；运行时注册：无；对应实现：Basic Circle Find / Basic Circle Fit",
+    "Gaps": "尚未实现这些驱动的执行逻辑，目录和参数页不能替代计算。 现有相近工具 Basic Circle Find / Basic Circle Fit 的参数合同不同，未自动替换。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "2D直线",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/2d/2D%E7%9B%B4%E7%BA%BF/2D%E7%9B%B4%E7%BA%BF.html",
+    "Driver": "2D Line",
+    "RelatedDrivers": "Basic Line Find / Basic Line Fit",
+    "Status": "有对应工具 / 版本参数待对齐",
+    "Evidence": "4.5.1 参数目录：2D Line；运行时注册：无；对应实现：Basic Line Find / Basic Line Fit",
+    "Gaps": "尚未实现这些驱动的执行逻辑，目录和参数页不能替代计算。 现有相近工具 Basic Line Find / Basic Line Fit 的参数合同不同，未自动替换。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "2D直线交点",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/2d/2D%E7%9B%B4%E7%BA%BF%E4%BA%A4%E7%82%B9/2D%E7%9B%B4%E7%BA%BF%E4%BA%A4%E7%82%B9.html",
+    "Driver": "2D Line Intersection",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：2D Line Intersection；运行时注册：2D Line Intersection",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "2D胶路检测",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/2d/2D%E8%83%B6%E8%B7%AF%E6%A3%80%E6%B5%8B/2D%E8%83%B6%E8%B7%AF%E6%A3%80%E6%B5%8B.html",
+    "Driver": "2D Sealant",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：2D Sealant；运行时注册：2D Sealant",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "2D斑点",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/2d/2D%E6%96%91%E7%82%B9/2D%E6%96%91%E7%82%B9.html",
+    "Driver": "2D Blob",
+    "RelatedDrivers": "Basic Blob Detect",
+    "Status": "有对应工具 / 版本参数待对齐",
+    "Evidence": "4.5.1 参数目录：2D Blob；运行时注册：无；对应实现：Basic Blob Detect",
+    "Gaps": "尚未实现这些驱动的执行逻辑，目录和参数页不能替代计算。 现有相近工具 Basic Blob Detect 的参数合同不同，未自动替换。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "2D轮廓模板匹配",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/2d/2D%E8%BD%AE%E5%BB%93%E6%A8%A1%E6%9D%BF%E5%8C%B9%E9%85%8D/2D%E8%BD%AE%E5%BB%93%E6%A8%A1%E6%9D%BF%E5%8C%B9%E9%85%8D.html",
+    "Driver": "Contour Template Match 2d",
+    "RelatedDrivers": "Basic Shape Match",
+    "Status": "有对应工具 / 版本参数待对齐",
+    "Evidence": "4.5.1 参数目录：Contour Template Match 2d；运行时注册：无；对应实现：Basic Shape Match",
+    "Gaps": "尚未实现这些驱动的执行逻辑，目录和参数页不能替代计算。 现有相近工具 Basic Shape Match 的参数合同不同，未自动替换。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "2D图像模板匹配",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/2d/2D%E5%9B%BE%E5%83%8F%E6%A8%A1%E6%9D%BF%E5%8C%B9%E9%85%8D/2D%E5%9B%BE%E5%83%8F%E6%A8%A1%E6%9D%BF%E5%8C%B9%E9%85%8D.html",
+    "Driver": "Image Template Match 2d",
+    "RelatedDrivers": "Basic Shape Match",
+    "Status": "有对应工具 / 版本参数待对齐",
+    "Evidence": "4.5.1 参数目录：Image Template Match 2d；运行时注册：无；对应实现：Basic Shape Match",
+    "Gaps": "尚未实现这些驱动的执行逻辑，目录和参数页不能替代计算。 现有相近工具 Basic Shape Match 的参数合同不同，未自动替换。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "深度图转点云",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/%E6%B7%B1%E5%BA%A6%E5%9B%BE%E8%BD%AC%E7%82%B9%E4%BA%91/%E6%B7%B1%E5%BA%A6%E5%9B%BE%E8%BD%AC%E7%82%B9%E4%BA%91.html",
+    "Driver": "DepthImageToPointCloud",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：DepthImageToPointCloud；运行时注册：DepthImageToPointCloud",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "点云转深度图",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/%E7%82%B9%E4%BA%91%E8%BD%AC%E6%B7%B1%E5%BA%A6%E5%9B%BE/%E7%82%B9%E4%BA%91%E8%BD%AC%E6%B7%B1%E5%BA%A6%E5%9B%BE.html",
+    "Driver": "PointCloudToDepthImage",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：PointCloudToDepthImage；运行时注册：PointCloudToDepthImage",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D显示",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E6%98%BE%E7%A4%BA/3D%E6%98%BE%E7%A4%BA.html",
+    "Driver": "3D Display",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D Display；运行时注册：3D Display",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D数据显示",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E6%95%B0%E6%8D%AE%E6%98%BE%E7%A4%BA/3D%E6%95%B0%E6%8D%AE%E6%98%BE%E7%A4%BA.html",
+    "Driver": "3D Display Data",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D Display Data；运行时注册：3D Display Data",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "加载3D点云",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/%E5%8A%A0%E8%BD%BD3D%E7%82%B9%E4%BA%91/%E5%8A%A0%E8%BD%BD3D%E7%82%B9%E4%BA%91.html",
+    "Driver": "LoadPointCloud",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：LoadPointCloud；运行时注册：LoadPointCloud",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "保存3D点云",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/%E4%BF%9D%E5%AD%983D%E7%82%B9%E4%BA%91/%E4%BF%9D%E5%AD%983D%E7%82%B9%E4%BA%91.html",
+    "Driver": "SavePointCloud",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：SavePointCloud；运行时注册：SavePointCloud",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "加载3D点云-三维TIFF",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/%E5%8A%A0%E8%BD%BD3D%E7%82%B9%E4%BA%91-%E4%B8%89%E7%BB%B4TIFF/%E5%8A%A0%E8%BD%BD3D%E7%82%B9%E4%BA%91-%E4%B8%89%E7%BB%B4TIFF.html",
+    "Driver": "TIFFToPointCloud",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：TIFFToPointCloud；运行时注册：TIFFToPointCloud",
+    "Gaps": "支持单通道XYZ三图与三通道TIFF、有限值过滤、Z无效值、真实输出与行列映射；三通道按TIFF RGB=XYZ解释。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D点云比较",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E7%82%B9%E4%BA%91%E6%AF%94%E8%BE%83/3D%E7%82%B9%E4%BA%91%E6%AF%94%E8%BE%83.html",
+    "Driver": "3D CloudCompare",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D CloudCompare；运行时注册：3D CloudCompare",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D点云裁切",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E7%82%B9%E4%BA%91%E8%A3%81%E5%88%87/3D%E7%82%B9%E4%BA%91%E8%A3%81%E5%88%87.html",
+    "Driver": "3D CutFilter",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D CutFilter；运行时注册：3D CutFilter",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D下采样",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E4%B8%8B%E9%87%87%E6%A0%B7/3D%E4%B8%8B%E9%87%87%E6%A0%B7.html",
+    "Driver": "3D DownSampleFilter",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D DownSampleFilter；运行时注册：3D DownSampleFilter",
+    "Gaps": "当前支持方法须与 CloudOps 分支匹配，未知采样方法明确失败。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D高斯滤波",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E9%AB%98%E6%96%AF%E6%BB%A4%E6%B3%A2/3D%E9%AB%98%E6%96%AF%E6%BB%A4%E6%B3%A2.html",
+    "Driver": "3D GaussianFilter",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D GaussianFilter；运行时注册：3D GaussianFilter",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D孔洞填补",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E5%AD%94%E6%B4%9E%E5%A1%AB%E8%A1%A5/3D%E5%AD%94%E6%B4%9E%E5%A1%AB%E8%A1%A5.html",
+    "Driver": "3D HoleFillingFilter",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D HoleFillingFilter；运行时注册：3D HoleFillingFilter",
+    "Gaps": "已实现XY栅格及对向有效点线性补洞；保留外部空白，不向无支撑区域外推；邻域规则需原版校准。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D点云插值",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E7%82%B9%E4%BA%91%E6%8F%92%E5%80%BC/3D%E7%82%B9%E4%BA%91%E6%8F%92%E5%80%BC.html",
+    "Driver": "3D Interpolation",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D Interpolation；运行时注册：3D Interpolation",
+    "Gaps": "保留PCD像素拓扑；原始点保持、XY双线性定位、Z最近有效邻点，支持4/8/24邻域；与原版细节需校准。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D中值滤波",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E4%B8%AD%E5%80%BC%E6%BB%A4%E6%B3%A2/3D%E4%B8%AD%E5%80%BC%E6%BB%A4%E6%B3%A2.html",
+    "Driver": "3D MedianFilter",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D MedianFilter；运行时注册：3D MedianFilter",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D离群点滤波",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E7%A6%BB%E7%BE%A4%E7%82%B9%E6%BB%A4%E6%B3%A2/3D%E7%A6%BB%E7%BE%A4%E7%82%B9%E6%BB%A4%E6%B3%A2.html",
+    "Driver": "3D OutlierRemovalFilter",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D OutlierRemovalFilter；运行时注册：3D OutlierRemovalFilter",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D百分比滤波",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E7%99%BE%E5%88%86%E6%AF%94%E6%BB%A4%E6%B3%A2/3D%E7%99%BE%E5%88%86%E6%AF%94%E6%BB%A4%E6%B3%A2.html",
+    "Driver": "3D PercentileFilter",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D PercentileFilter；运行时注册：3D PercentileFilter",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D点云运算",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E7%82%B9%E4%BA%91%E8%BF%90%E7%AE%97/3D%E7%82%B9%E4%BA%91%E8%BF%90%E7%AE%97.html",
+    "Driver": "3D PointCloudOperation",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D PointCloudOperation；运行时注册：3D PointCloudOperation",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D位置调整",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E4%BD%8D%E7%BD%AE%E8%B0%83%E6%95%B4/3D%E4%BD%8D%E7%BD%AE%E8%B0%83%E6%95%B4.html",
+    "Driver": "3D PositionAdjustment",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D PositionAdjustment；运行时注册：3D PositionAdjustment",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D点云拼接",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E7%82%B9%E4%BA%91%E6%8B%BC%E6%8E%A5/3D%E7%82%B9%E4%BA%91%E6%8B%BC%E6%8E%A5.html",
+    "Driver": "3D SplicingFilter",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D SplicingFilter；运行时注册：3D SplicingFilter",
+    "Gaps": "按 4×4 矩阵变换及半径连通聚合；不包括标定矩阵求解。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D点云变换",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E7%82%B9%E4%BA%91%E5%8F%98%E6%8D%A2/3D%E7%82%B9%E4%BA%91%E5%8F%98%E6%8D%A2.html",
+    "Driver": "3D TransformationFilter",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D TransformationFilter；运行时注册：3D TransformationFilter",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D曲面展开",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E6%9B%B2%E9%9D%A2%E5%B1%95%E5%BC%80/3D%E6%9B%B2%E9%9D%A2%E5%B1%95%E5%BC%80.html",
+    "Driver": "3D Unroll",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D Unroll；运行时注册：3D Unroll",
+    "Gaps": "按实际圆柱轴展开；拟合采用PCA/径向LS，Set Search Radius未接原版法线邻域逻辑，明确Warning。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D点云有序化",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E7%82%B9%E4%BA%91%E6%9C%89%E5%BA%8F%E5%8C%96/3D%E7%82%B9%E4%BA%91%E6%9C%89%E5%BA%8F%E5%8C%96.html",
+    "Driver": "SequentialProcessing",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：SequentialProcessing；运行时注册：SequentialProcessing",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D点云去重",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E7%82%B9%E4%BA%91%E5%8E%BB%E9%87%8D/3D%E7%82%B9%E4%BA%91%E5%8E%BB%E9%87%8D.html",
+    "Driver": "3D PointCloudDeduplication",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D PointCloudDeduplication；运行时注册：3D PointCloudDeduplication",
+    "Gaps": "按半径连通聚合均值；原版聚合规则尚无数值基准。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D点云边缘",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E7%82%B9%E4%BA%91%E8%BE%B9%E7%BC%98/3D%E7%82%B9%E4%BA%91%E8%BE%B9%E7%BC%98.html",
+    "Driver": "3D Boundary",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D Boundary；运行时注册：3D Boundary",
+    "Gaps": "扫描、凹包、法向角度与有序模式已有计算；凹包Alpha按平均点距解释，与原版密度标度仍需校准。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D外接包围盒",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E5%A4%96%E6%8E%A5%E5%8C%85%E5%9B%B4%E7%9B%92/3D%E5%A4%96%E6%8E%A5%E5%8C%85%E5%9B%B4%E7%9B%92.html",
+    "Driver": "3D BoundingBox",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D BoundingBox；运行时注册：3D BoundingBox",
+    "Gaps": "AABB及PCA定向包围盒；PCA不保证最小体积，已明确Warning。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D圆",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E5%9C%86/3D%E5%9C%86.html",
+    "Driver": "3D Circle",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D Circle；运行时注册：3D Circle",
+    "Gaps": "任意平面拟圆、ROI数组、实际边缘/inliers、Center Point 3D及circle；卡尺与原版数值仍需标定，运行时有Warning。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D圆柱拟合",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E5%9C%86%E6%9F%B1%E6%8B%9F%E5%90%88/3D%E5%9C%86%E6%9F%B1%E6%8B%9F%E5%90%88.html",
+    "Driver": "3D CylinderFitting",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D CylinderFitting；运行时注册：3D CylinderFitting",
+    "Gaps": "任意轴PCA初值与径向最小二乘、统计滤波、central_axis及cylinder数组；非原版法线RANSAC，输出Warning。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D几何创建",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E5%87%A0%E4%BD%95%E5%88%9B%E5%BB%BA/3D%E5%87%A0%E4%BD%95%E5%88%9B%E5%BB%BA.html",
+    "Driver": "3D GeometryCreate",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D GeometryCreate；运行时注册：3D GeometryCreate",
+    "Gaps": "已补两点直线、三点平面、点线平面及三维坐标合同；共线/重合输入明确失败。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D几何交点",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E5%87%A0%E4%BD%95%E4%BA%A4%E7%82%B9/3D%E5%87%A0%E4%BD%95%E4%BA%A4%E7%82%B9.html",
+    "Driver": "3D GeometryIntersect",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D GeometryIntersect；运行时注册：3D GeometryIntersect",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D拐点查找",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E6%8B%90%E7%82%B9%E6%9F%A5%E6%89%BE/3D%E6%8B%90%E7%82%B9%E6%9F%A5%E6%89%BE.html",
+    "Driver": "3D InflectionPoints",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D InflectionPoints；运行时注册：3D InflectionPoints",
+    "Gaps": "真实局部切线/方向极值，噪声处理和原版数值仍需校准，已输出Warning。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D平面拟合",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E5%B9%B3%E9%9D%A2%E6%8B%9F%E5%90%88/3D%E5%B9%B3%E9%9D%A2%E6%8B%9F%E5%90%88.html",
+    "Driver": "3D Plane",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D Plane；运行时注册：3D Plane",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D点云质心",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E7%82%B9%E4%BA%91%E8%B4%A8%E5%BF%83/3D%E7%82%B9%E4%BA%91%E8%B4%A8%E5%BF%83.html",
+    "Driver": "3D PointCloudCentroid",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D PointCloudCentroid；运行时注册：3D PointCloudCentroid",
+    "Gaps": "保留XYZ、Pointe3D数组与旧Centroid单区域标量；坐标参考/ROI测试通过。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D方形探针",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E6%96%B9%E5%BD%A2%E6%8E%A2%E9%92%88/3D%E6%96%B9%E5%BD%A2%E6%8E%A2%E9%92%88.html",
+    "Driver": "3D RectProbe",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D RectProbe；运行时注册：3D RectProbe",
+    "Gaps": "定向排除锥按完整顶角解释，内部半角=输入/2；保留原ROI和参数，含独立角界/遮挡与拟合回归；与原版数值仍需对照。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D区域运算",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E5%8C%BA%E5%9F%9F%E8%BF%90%E7%AE%97/3D%E5%8C%BA%E5%9F%9F%E8%BF%90%E7%AE%97.html",
+    "Driver": "3D Region",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D Region；运行时注册：3D Region",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D线与点云交点",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E7%BA%BF%E4%B8%8E%E7%82%B9%E4%BA%91%E4%BA%A4%E7%82%B9/3D%E7%BA%BF%E4%B8%8E%E7%82%B9%E4%BA%91%E4%BA%A4%E7%82%B9.html",
+    "Driver": "3D Intersection Line Cloud",
+    "RelatedDrivers": "",
+    "Status": "缺少本地驱动实现",
+    "Evidence": "4.5.1 参数目录：3D Intersection Line Cloud；运行时注册：无",
+    "Gaps": "尚未实现这些驱动的执行逻辑，目录和参数页不能替代计算。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D标定文件拼接",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E6%A0%87%E5%AE%9A%E6%96%87%E4%BB%B6%E6%8B%BC%E6%8E%A5/3D%E6%A0%87%E5%AE%9A%E6%96%87%E4%BB%B6%E6%8B%BC%E6%8E%A5.html",
+    "Driver": "3D CalibrationFileSplicing",
+    "RelatedDrivers": "",
+    "Status": "缺少本地驱动实现",
+    "Evidence": "4.5.1 参数目录：3D CalibrationFileSplicing；运行时注册：无",
+    "Gaps": "尚未实现这些驱动的执行逻辑，目录和参数页不能替代计算。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D标定矩阵计算",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E6%A0%87%E5%AE%9A%E7%9F%A9%E9%98%B5%E8%AE%A1%E7%AE%97/3D%E6%A0%87%E5%AE%9A%E7%9F%A9%E9%98%B5%E8%AE%A1%E7%AE%97.html",
+    "Driver": "3D CalibrationMatrixComputation",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D CalibrationMatrixComputation；运行时注册：3D CalibrationMatrixComputation",
+    "Gaps": "严格右手刚体矩阵校验与连乘、12/16值读取、具名JSON原子写出；输出集合与原版格式兼容性未证。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D坐标转换-眼在手上",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E5%9D%90%E6%A0%87%E8%BD%AC%E6%8D%A2-%E7%9C%BC%E5%9C%A8%E6%89%8B%E4%B8%8A/3D%E5%9D%90%E6%A0%87%E8%BD%AC%E6%8D%A2-%E7%9C%BC%E5%9C%A8%E6%89%8B%E4%B8%8A.html",
+    "Driver": "3D CoordinateConversion EyeInHand",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D CoordinateConversion EyeInHand；运行时注册：3D CoordinateConversion EyeInHand",
+    "Gaps": "真实齐次变换乘法及四元数；单法线没有roll信息时采用最短旋转并警告，现场机器人未校准。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D坐标转换-眼在手外",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E5%9D%90%E6%A0%87%E8%BD%AC%E6%8D%A2-%E7%9C%BC%E5%9C%A8%E6%89%8B%E5%A4%96/3D%E5%9D%90%E6%A0%87%E8%BD%AC%E6%8D%A2-%E7%9C%BC%E5%9C%A8%E6%89%8B%E5%A4%96.html",
+    "Driver": "3D CoordinateConversion EyeToHand",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D CoordinateConversion EyeToHand；运行时注册：3D CoordinateConversion EyeToHand",
+    "Gaps": "真实齐次变换乘法及四元数；单法线没有roll信息时采用最短旋转并警告，现场机器人未校准。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D手眼标定-眼在手上",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E6%89%8B%E7%9C%BC%E6%A0%87%E5%AE%9A-%E7%9C%BC%E5%9C%A8%E6%89%8B%E4%B8%8A/3D%E6%89%8B%E7%9C%BC%E6%A0%87%E5%AE%9A-%E7%9C%BC%E5%9C%A8%E6%89%8B%E4%B8%8A.html",
+    "Driver": "3D HandEyeCalibration EyeInHand",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D HandEyeCalibration EyeInHand；运行时注册：3D HandEyeCalibration EyeInHand",
+    "Gaps": "棋盘格RGB+有序PCD+TCP姿态真实手眼求解；仅右手棋盘格，相邻采集转角须小于90°。示例闭环RMS：眼上11.378mm、眼外1.012mm；眼上残差偏大，仅流程通过，精度未验收，现场机器人未校准。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D手眼标定-眼在手外",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E6%89%8B%E7%9C%BC%E6%A0%87%E5%AE%9A-%E7%9C%BC%E5%9C%A8%E6%89%8B%E5%A4%96/3D%E6%89%8B%E7%9C%BC%E6%A0%87%E5%AE%9A-%E7%9C%BC%E5%9C%A8%E6%89%8B%E5%A4%96.html",
+    "Driver": "3D HandEyeCalibration EyeToHand",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D HandEyeCalibration EyeToHand；运行时注册：3D HandEyeCalibration EyeToHand",
+    "Gaps": "棋盘格RGB+有序PCD+TCP姿态真实手眼求解；仅右手棋盘格，相邻采集转角须小于90°。示例闭环RMS：眼上11.378mm、眼外1.012mm；眼上残差偏大，仅流程通过，精度未验收，现场机器人未校准。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D线扫相机标定",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E7%BA%BF%E6%89%AB%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A/3D%E7%BA%BF%E6%89%AB%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A.html",
+    "Driver": "3D LineScanCamera Calibration",
+    "RelatedDrivers": "",
+    "Status": "缺少本地驱动实现",
+    "Evidence": "4.5.1 参数目录：3D LineScanCamera Calibration；运行时注册：无",
+    "Gaps": "尚未实现这些驱动的执行逻辑，目录和参数页不能替代计算。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "胶路检测-轮廓",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/%E8%83%B6%E8%B7%AF%E6%A3%80%E6%B5%8B-%E8%BD%AE%E5%BB%93/%E8%83%B6%E8%B7%AF%E6%A3%80%E6%B5%8B-%E8%BD%AE%E5%BB%93.html",
+    "Driver": "3D ProfileSealant",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D ProfileSealant；运行时注册：3D ProfileSealant",
+    "Gaps": "按真实截面测宽高、断胶及上下限，输出点线文字；原版的采样与噪声阈值仍需校准。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "胶路检测-分割",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/%E8%83%B6%E8%B7%AF%E6%A3%80%E6%B5%8B-%E5%88%86%E5%89%B2/%E8%83%B6%E8%B7%AF%E6%A3%80%E6%B5%8B-%E5%88%86%E5%89%B2.html",
+    "Driver": "3D Sealant",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D Sealant；运行时注册：3D Sealant",
+    "Gaps": "XY分割与细化骨架、原始点截面宽高、断胶NG、实际叠加；复杂分叉/非星形胶路未宣称支持，骨架方法输出Warning。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "焊点检测",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/%E7%84%8A%E7%82%B9%E6%A3%80%E6%B5%8B/%E7%84%8A%E7%82%B9%E6%A3%80%E6%B5%8B.html",
+    "Driver": "3D Solder Joint",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D Solder Joint；运行时注册：3D Solder Joint",
+    "Gaps": "轮廓切片体积、Y 向切片及可变邻居法线估计未完成。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "胶路检测-轨迹",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/%E8%83%B6%E8%B7%AF%E6%A3%80%E6%B5%8B-%E8%BD%A8%E8%BF%B9/%E8%83%B6%E8%B7%AF%E6%A3%80%E6%B5%8B-%E8%BD%A8%E8%BF%B9.html",
+    "Driver": "3D TrajectorySealant",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D TrajectorySealant；运行时注册：3D TrajectorySealant",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "Pin针匹配",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/Pin%E9%92%88%E5%8C%B9%E9%85%8D/Pin%E9%92%88%E5%8C%B9%E9%85%8D.html",
+    "Driver": "PinMatch",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：PinMatch；运行时注册：PinMatch",
+    "Gaps": "真实位置/高度/间距与配方公差；普通输出按算子隔离，测量结果全局保存为PinMatch.<算子UUID>.Result及pin_result，避免并行污染。全局命名属于自有合同，原版同名兼容未证。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "Pin针配方创建",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/Pin%E9%92%88%E9%85%8D%E6%96%B9%E5%88%9B%E5%BB%BA/Pin%E9%92%88%E9%85%8D%E6%96%B9%E5%88%9B%E5%BB%BA.html",
+    "Driver": "PinRecipe",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：PinRecipe；运行时注册：PinRecipe",
+    "Gaps": "按测得针脚生成 JSON；高度关闭时生成配方不能用于需要 PinHeight 的比较。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D角度",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E8%A7%92%E5%BA%A6/3D%E8%A7%92%E5%BA%A6.html",
+    "Driver": "3D Angle",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D Angle；运行时注册：3D Angle",
+    "Gaps": "投影与范围的方向符号仍需原版基准；不声称数值等价。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D距离",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E8%B7%9D%E7%A6%BB/3D%E8%B7%9D%E7%A6%BB.html",
+    "Driver": "3D Distance",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D Distance；运行时注册：3D Distance",
+    "Gaps": "已修复 4.5.1 三模式、三维坐标、数组绑定和距离叠加；轴向直线测量无交点时明确失败，仍需原版数值校准。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D平面度",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E5%B9%B3%E9%9D%A2%E5%BA%A6/3D%E5%B9%B3%E9%9D%A2%E5%BA%A6.html",
+    "Driver": "3D Flatness",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D Flatness；运行时注册：3D Flatness",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D高度",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E9%AB%98%E5%BA%A6/3D%E9%AB%98%E5%BA%A6.html",
+    "Driver": "3D Height",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D Height；运行时注册：3D Height",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D表面积",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E8%A1%A8%E9%9D%A2%E7%A7%AF/3D%E8%A1%A8%E9%9D%A2%E7%A7%AF.html",
+    "Driver": "3D SurfaceArea",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D SurfaceArea；运行时注册：3D SurfaceArea",
+    "Gaps": "XY Delaunay及搜索距离筛边，限单层曲面；非原版通用曲面重建。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D体积",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E4%BD%93%E7%A7%AF/3D%E4%BD%93%E7%A7%AF.html",
+    "Driver": "3D Volume",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D Volume；运行时注册：3D Volume",
+    "Gaps": "单层轮廓积分、跨参考面裁剪与包围盒；旋转盒为PCA而非全局最小体积。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D共面度",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E5%85%B1%E9%9D%A2%E5%BA%A6/3D%E5%85%B1%E9%9D%A2%E5%BA%A6.html",
+    "Driver": "Coplanarity",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：Coplanarity；运行时注册：Coplanarity",
+    "Gaps": "已有自有计算及独立预期值测试；座面最多300端子、PCA/最小二乘等方法不等同于原版全部公差求解。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D共面度-回归平面法",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E5%85%B1%E9%9D%A2%E5%BA%A6-%E5%9B%9E%E5%BD%92%E5%B9%B3%E9%9D%A2%E6%B3%95/3D%E5%85%B1%E9%9D%A2%E5%BA%A6-%E5%9B%9E%E5%BD%92%E5%B9%B3%E9%9D%A2%E6%B3%95.html",
+    "Driver": "RegressPlaneCoplanarity",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：RegressPlaneCoplanarity；运行时注册：RegressPlaneCoplanarity",
+    "Gaps": "已有自有计算及独立预期值测试；座面最多300端子、PCA/最小二乘等方法不等同于原版全部公差求解。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D共面度-座面法",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E5%85%B1%E9%9D%A2%E5%BA%A6-%E5%BA%A7%E9%9D%A2%E6%B3%95/3D%E5%85%B1%E9%9D%A2%E5%BA%A6-%E5%BA%A7%E9%9D%A2%E6%B3%95.html",
+    "Driver": "SeatSurfaceCoplanarity",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：SeatSurfaceCoplanarity；运行时注册：SeatSurfaceCoplanarity",
+    "Gaps": "已有自有计算及独立预期值测试；座面最多300端子、PCA/最小二乘等方法不等同于原版全部公差求解。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D点位置度",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E7%82%B9%E4%BD%8D%E7%BD%AE%E5%BA%A6/3D%E7%82%B9%E4%BD%8D%E7%BD%AE%E5%BA%A6.html",
+    "Driver": "3D PointPosition",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D PointPosition；运行时注册：3D PointPosition",
+    "Gaps": "最小二乘理论点拟合及位置偏差；RANSAC尚缺，贴合仅平移ICP并输出Warning。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D面面垂直度",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E9%9D%A2%E9%9D%A2%E5%9E%82%E7%9B%B4%E5%BA%A6/3D%E9%9D%A2%E9%9D%A2%E5%9E%82%E7%9B%B4%E5%BA%A6.html",
+    "Driver": "3D PerpendicularityPlanePlane",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D PerpendicularityPlanePlane；运行时注册：3D PerpendicularityPlanePlane",
+    "Gaps": "已有自有计算及独立预期值测试；座面最多300端子、PCA/最小二乘等方法不等同于原版全部公差求解。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D面面平行度",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E9%9D%A2%E9%9D%A2%E5%B9%B3%E8%A1%8C%E5%BA%A6/3D%E9%9D%A2%E9%9D%A2%E5%B9%B3%E8%A1%8C%E5%BA%A6.html",
+    "Driver": "3D ParallelismPlanePlane",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D ParallelismPlanePlane；运行时注册：3D ParallelismPlanePlane",
+    "Gaps": "已有自有计算及独立预期值测试；座面最多300端子、PCA/最小二乘等方法不等同于原版全部公差求解。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D平面面轮廓度",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E5%B9%B3%E9%9D%A2%E9%9D%A2%E8%BD%AE%E5%BB%93%E5%BA%A6/3D%E5%B9%B3%E9%9D%A2%E9%9D%A2%E8%BD%AE%E5%BB%93%E5%BA%A6.html",
+    "Driver": "3D ProfileofSurfacePlane",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D ProfileofSurfacePlane；运行时注册：3D ProfileofSurfacePlane",
+    "Gaps": "已有自有计算及独立预期值测试；座面最多300端子、PCA/最小二乘等方法不等同于原版全部公差求解。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D曲面面轮廓度",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E6%9B%B2%E9%9D%A2%E9%9D%A2%E8%BD%AE%E5%BB%93%E5%BA%A6/3D%E6%9B%B2%E9%9D%A2%E9%9D%A2%E8%BD%AE%E5%BB%93%E5%BA%A6.html",
+    "Driver": "3D ProfileofSurfaceCamberedSurface",
+    "RelatedDrivers": "",
+    "Status": "缺少本地驱动实现",
+    "Evidence": "4.5.1 参数目录：3D ProfileofSurfaceCamberedSurface；运行时注册：无",
+    "Gaps": "尚未实现这些驱动的执行逻辑，目录和参数页不能替代计算。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D线面垂直度",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E7%BA%BF%E9%9D%A2%E5%9E%82%E7%9B%B4%E5%BA%A6/3D%E7%BA%BF%E9%9D%A2%E5%9E%82%E7%9B%B4%E5%BA%A6.html",
+    "Driver": "3D PerpendicularityPlaneLine",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D PerpendicularityPlaneLine；运行时注册：3D PerpendicularityPlaneLine",
+    "Gaps": "已有自有计算及独立预期值测试；座面最多300端子、PCA/最小二乘等方法不等同于原版全部公差求解。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D线面平行度",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E7%BA%BF%E9%9D%A2%E5%B9%B3%E8%A1%8C%E5%BA%A6/3D%E7%BA%BF%E9%9D%A2%E5%B9%B3%E8%A1%8C%E5%BA%A6.html",
+    "Driver": "3D ParallelismPlaneLine",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D ParallelismPlaneLine；运行时注册：3D ParallelismPlaneLine",
+    "Gaps": "已有自有计算及独立预期值测试；座面最多300端子、PCA/最小二乘等方法不等同于原版全部公差求解。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D圆弧线轮廓度",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E5%9C%86%E5%BC%A7%E7%BA%BF%E8%BD%AE%E5%BB%93%E5%BA%A6/3D%E5%9C%86%E5%BC%A7%E7%BA%BF%E8%BD%AE%E5%BB%93%E5%BA%A6.html",
+    "Driver": "3D ProfileofLine",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D ProfileofLine；运行时注册：3D ProfileofLine",
+    "Gaps": "名义圆弧拟合与偏差；最小二乘实现，RANSAC未实现。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D直线线轮廓度",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E7%9B%B4%E7%BA%BF%E7%BA%BF%E8%BD%AE%E5%BB%93%E5%BA%A6/3D%E7%9B%B4%E7%BA%BF%E7%BA%BF%E8%BD%AE%E5%BB%93%E5%BA%A6.html",
+    "Driver": "3D ProfileofLineLine",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D ProfileofLineLine；运行时注册：3D ProfileofLineLine",
+    "Gaps": "1D/3D名义直线比较、数据文件和偏差；3D双线分组依赖连续点段，贴合为平移ICP。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D斑点",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E6%96%91%E7%82%B9/3D%E6%96%91%E7%82%B9.html",
+    "Driver": "3D Blob",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D Blob；运行时注册：3D Blob",
+    "Gaps": "Simple blob 有序拓扑未实现，部分排序未实现；欧式聚类已有精确点集测试。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D表面缺陷",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E8%A1%A8%E9%9D%A2%E7%BC%BA%E9%99%B7/3D%E8%A1%A8%E9%9D%A2%E7%BC%BA%E9%99%B7.html",
+    "Driver": "3D Defect",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D Defect；运行时注册：3D Defect",
+    "Gaps": "非零 Margin 明确不支持；凸凹缺陷仍需原版数值校准。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D点云匹配",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E7%82%B9%E4%BA%91%E5%8C%B9%E9%85%8D/3D%E7%82%B9%E4%BA%91%E5%8C%B9%E9%85%8D.html",
+    "Driver": "3D Matching",
+    "RelatedDrivers": "",
+    "Status": "缺少本地驱动实现",
+    "Evidence": "4.5.1 参数目录：3D Matching；运行时注册：无",
+    "Gaps": "尚未实现这些驱动的执行逻辑，目录和参数页不能替代计算。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D模型训练",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/3D%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83.html",
+    "Driver": "3D ModelTraining",
+    "RelatedDrivers": "",
+    "Status": "缺少本地驱动实现",
+    "Evidence": "4.5.1 参数目录：3D ModelTraining；运行时注册：无",
+    "Gaps": "尚未实现这些驱动的执行逻辑，目录和参数页不能替代计算。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D多点定位",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E5%A4%9A%E7%82%B9%E5%AE%9A%E4%BD%8D/3D%E5%A4%9A%E7%82%B9%E5%AE%9A%E4%BD%8D.html",
+    "Driver": "Multilateration",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：Multilateration；运行时注册：Multilateration",
+    "Gaps": "2..9组定位点/ROI代表点、滤波、按参考坐标轴平移；需现场定位精度验收。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D轮廓面积",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E8%BD%AE%E5%BB%93%E9%9D%A2%E7%A7%AF/3D%E8%BD%AE%E5%BB%93%E9%9D%A2%E7%A7%AF.html",
+    "Driver": "3D ProfileArea",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D ProfileArea；运行时注册：3D ProfileArea",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D轮廓提取",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E8%BD%AE%E5%BB%93%E6%8F%90%E5%8F%96/3D%E8%BD%AE%E5%BB%93%E6%8F%90%E5%8F%96.html",
+    "Driver": "3D ProfileCapture",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D ProfileCapture；运行时注册：3D ProfileCapture",
+    "Gaps": "真实1D轮廓及点集，XY/YZ/XZ截面、带宽与最近行列；对应物理分辨率和原版采样细节待校准。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D轮廓段差",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E8%BD%AE%E5%BB%93%E6%AE%B5%E5%B7%AE/3D%E8%BD%AE%E5%BB%93%E6%AE%B5%E5%B7%AE.html",
+    "Driver": "3D ProfileCrossSectionStep",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D ProfileCrossSectionStep；运行时注册：3D ProfileCrossSectionStep",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D轮廓距离",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E8%BD%AE%E5%BB%93%E8%B7%9D%E7%A6%BB/3D%E8%BD%AE%E5%BB%93%E8%B7%9D%E7%A6%BB.html",
+    "Driver": "3D ProfileDistance",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D ProfileDistance；运行时注册：3D ProfileDistance",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D轮廓拐点",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E8%BD%AE%E5%BB%93%E6%8B%90%E7%82%B9/3D%E8%BD%AE%E5%BB%93%E6%8B%90%E7%82%B9.html",
+    "Driver": "3D ProfileInflectionPoints",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D ProfileInflectionPoints；运行时注册：3D ProfileInflectionPoints",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "3D轮廓交点",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/3D%E8%BD%AE%E5%BB%93%E4%BA%A4%E7%82%B9/3D%E8%BD%AE%E5%BB%93%E4%BA%A4%E7%82%B9.html",
+    "Driver": "3D ProfileIntersection",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：3D ProfileIntersection；运行时注册：3D ProfileIntersection",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "轮廓数据显示",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/%E8%BD%AE%E5%BB%93%E6%95%B0%E6%8D%AE%E6%98%BE%E7%A4%BA/%E8%BD%AE%E5%BB%93%E6%95%B0%E6%8D%AE%E6%98%BE%E7%A4%BA.html",
+    "Driver": "Profile Display Data",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：Profile Display Data；运行时注册：Profile Display Data",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "创建ROI",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/%E5%88%9B%E5%BB%BAROI/%E5%88%9B%E5%BB%BAROI.html",
+    "Driver": "CreateROI | Basic Create ROI",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：CreateROI, Basic Create ROI；运行时注册：CreateROI, Basic Create ROI",
+    "Gaps": "从配方创建区域未实现；其他区域见类型支持清单。；从配方创建区域未实现；其他区域见类型支持清单。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "创建ROI阵列",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/3d/%E5%88%9B%E5%BB%BAROI%E9%98%B5%E5%88%97/%E5%88%9B%E5%BB%BAROI%E9%98%B5%E5%88%97.html",
+    "Driver": "CreateROIArray",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：CreateROIArray；运行时注册：CreateROIArray",
+    "Gaps": "支持 box/window2d/circlewindow2d/cylinderbox，其他类型仍缺失。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "取图",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/capture/%E5%8F%96%E5%9B%BE/%E5%8F%96%E5%9B%BE.html",
+    "Driver": "Capture",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：Capture；运行时注册：Capture",
+    "Gaps": "原生8通道绑定自有设备驱动，全部成功后提交，先校验写权限；并发采集不保证多相机硬件同步，实机待验。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "Gocator控制",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/capture/gocator%E6%8E%A7%E5%88%B6/gocator%E6%8E%A7%E5%88%B6.html",
+    "Driver": "GocatorControl",
+    "RelatedDrivers": "",
+    "Status": "缺少本地驱动实现",
+    "Evidence": "4.5.1 参数目录：GocatorControl；运行时注册：无",
+    "Gaps": "尚未实现这些驱动的执行逻辑，目录和参数页不能替代计算。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "Hypersen HPS-DBL取图",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/capture/HPSDBL%E5%8F%96%E5%9B%BE/HPSDBL%E5%8F%96%E5%9B%BE.html",
+    "Driver": "Hypersen HPS-DBL Capture",
+    "RelatedDrivers": "",
+    "Status": "缺少本地驱动实现",
+    "Evidence": "4.5.1 参数目录：Hypersen HPS-DBL Capture；运行时注册：无",
+    "Gaps": "尚未实现这些驱动的执行逻辑，目录和参数页不能替代计算。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "盛相 SizectorS取图",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/capture/MPSizectors%E5%8F%96%E5%9B%BE/MPSizectors%E5%8F%96%E5%9B%BE.html",
+    "Driver": "MegaPhase SizectorS Capture",
+    "RelatedDrivers": "",
+    "Status": "缺少本地驱动实现",
+    "Evidence": "4.5.1 参数目录：MegaPhase SizectorS Capture；运行时注册：无",
+    "Gaps": "尚未实现这些驱动的执行逻辑，目录和参数页不能替代计算。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "接收字符串",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/communication/%E6%8E%A5%E6%94%B6%E5%AD%97%E7%AC%A6%E4%B8%B2/%E6%8E%A5%E6%94%B6%E5%AD%97%E7%AC%A6%E4%B8%B2.html",
+    "Driver": "ReciveString",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：ReciveString；运行时注册：ReciveString",
+    "Gaps": "原生Recived输出、持久连接、超时/取消；TCP服务器多客户端独立帧路由未完成，无输入不会伪造成功。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "发送字符串",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/communication/%E5%8F%91%E9%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2/%E5%8F%91%E9%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2.html",
+    "Driver": "SendString",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：SendString；运行时注册：SendString",
+    "Gaps": "持久连接分离发送和控制字符；TCP服务器当前广播至已连接客户端，现场协议待验。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "读取I/O",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/communication/%E8%AF%BB%E5%8F%96IO/%E8%AF%BB%E5%8F%96IO.html",
+    "Driver": "Read I/O",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：Read I/O；运行时注册：Read I/O",
+    "Gaps": "虚拟16路DI实际状态，和DO独立；物理IO板卡依赖SDK。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "等待I/O",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/communication/%E7%AD%89%E5%BE%85IO/%E7%AD%89%E5%BE%85IO.html",
+    "Driver": "Wait I/O",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：Wait I/O；运行时注册：Wait I/O",
+    "Gaps": "Low/High/Rise/Fall等待、超时和取消；实际信号需要设备或明确写入模拟DI。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "写入I/O",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/communication/%E5%86%99%E5%85%A5IO/%E5%86%99%E5%85%A5IO.html",
+    "Driver": "Write I/O",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：Write I/O；运行时注册：Write I/O",
+    "Gaps": "虚拟16路DO Low/High/NoChange，和DI独立；物理IO板卡依赖SDK。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "Modbus 位读取",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/communication/Modbus%E4%BD%8D%E8%AF%BB%E5%8F%96/Modbus%E4%BD%8D%E8%AF%BB%E5%8F%96.html",
+    "Driver": "ModbusReadBit",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：ModbusReadBit；运行时注册：ModbusReadBit",
+    "Gaps": "TCP客户端/RTU主站、14数值格式、分块、写前严格校验；TCP独立报文回环已测，RTU实线及原生服务器/从站四区未验。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "Modbus 寄存器读取",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/communication/Modbus%E5%AF%84%E5%AD%98%E5%99%A8%E8%AF%BB%E5%8F%96/Modbus%E5%AF%84%E5%AD%98%E5%99%A8%E8%AF%BB%E5%8F%96.html",
+    "Driver": "ModbusReadRegister",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：ModbusReadRegister；运行时注册：ModbusReadRegister",
+    "Gaps": "TCP客户端/RTU主站、14数值格式、分块、写前严格校验；TCP独立报文回环已测，RTU实线及原生服务器/从站四区未验。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "Modbus 位写入",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/communication/Modbus%E4%BD%8D%E5%86%99%E5%85%A5/Modbus%E4%BD%8D%E5%86%99%E5%85%A5.html",
+    "Driver": "ModbusWriteBit",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：ModbusWriteBit；运行时注册：ModbusWriteBit",
+    "Gaps": "TCP客户端/RTU主站、14数值格式、分块、写前严格校验；TCP独立报文回环已测，RTU实线及原生服务器/从站四区未验。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "Modbus 寄存器写入",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/communication/Modbus%E5%AF%84%E5%AD%98%E5%99%A8%E5%86%99%E5%85%A5/Modbus%E5%AF%84%E5%AD%98%E5%99%A8%E5%86%99%E5%85%A5.html",
+    "Driver": "ModbusWriteRegister",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：ModbusWriteRegister；运行时注册：ModbusWriteRegister",
+    "Gaps": "TCP客户端/RTU主站、14数值格式、分块、写前严格校验；TCP独立报文回环已测，RTU实线及原生服务器/从站四区未验。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "批量读取PLC",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/communication/%E6%89%B9%E9%87%8F%E8%AF%BB%E5%8F%96PLC/%E6%89%B9%E9%87%8F%E8%AF%BB%E5%8F%96PLC.html",
+    "Driver": "BatchReadPlc",
+    "RelatedDrivers": "",
+    "Status": "缺少本地驱动实现",
+    "Evidence": "4.5.1 参数目录：BatchReadPlc；运行时注册：无",
+    "Gaps": "尚未实现这些驱动的执行逻辑，目录和参数页不能替代计算。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "批量写入PLC",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/communication/%E6%89%B9%E9%87%8F%E5%86%99%E5%85%A5PLC/%E6%89%B9%E9%87%8F%E5%86%99%E5%85%A5PLC.html",
+    "Driver": "BatchWritePlc",
+    "RelatedDrivers": "",
+    "Status": "缺少本地驱动实现",
+    "Evidence": "4.5.1 参数目录：BatchWritePlc；运行时注册：无",
+    "Gaps": "尚未实现这些驱动的执行逻辑，目录和参数页不能替代计算。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "读取PLC",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/communication/%E8%AF%BB%E5%8F%96PLC/%E8%AF%BB%E5%8F%96PLC.html",
+    "Driver": "ReadPlc",
+    "RelatedDrivers": "",
+    "Status": "缺少本地驱动实现",
+    "Evidence": "4.5.1 参数目录：ReadPlc；运行时注册：无",
+    "Gaps": "尚未实现这些驱动的执行逻辑，目录和参数页不能替代计算。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "写入PLC",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/communication/%E5%86%99%E5%85%A5PLC/%E5%86%99%E5%85%A5PLC.html",
+    "Driver": "WritePlc",
+    "RelatedDrivers": "",
+    "Status": "缺少本地驱动实现",
+    "Evidence": "4.5.1 参数目录：WritePlc；运行时注册：无",
+    "Gaps": "尚未实现这些驱动的执行逻辑，目录和参数页不能替代计算。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "创建数据表",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/file/%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E8%A1%A8/%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E8%A1%A8.html",
+    "Driver": "Create Table",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：Create Table；运行时注册：Create Table",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "读取配方文件",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/file/%E8%AF%BB%E5%8F%96%E9%85%8D%E6%96%B9%E6%96%87%E4%BB%B6/%E8%AF%BB%E5%8F%96%E9%85%8D%E6%96%B9%E6%96%87%E4%BB%B6.html",
+    "Driver": "Read Recipe File",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：Read Recipe File；运行时注册：Read Recipe File",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "写入CSV",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/file/%E5%86%99%E5%85%A5CSV/%E5%86%99%E5%85%A5CSV.html",
+    "Driver": "Write CSV",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：Write CSV；运行时注册：Write CSV",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "写入数据表",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/file/%E5%86%99%E5%85%A5%E6%95%B0%E6%8D%AE%E8%A1%A8/%E5%86%99%E5%85%A5%E6%95%B0%E6%8D%AE%E8%A1%A8.html",
+    "Driver": "Write Table",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：Write Table；运行时注册：Write Table",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "调用程序",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/logic/%E8%B0%83%E7%94%A8%E7%A8%8B%E5%BA%8F/%E8%B0%83%E7%94%A8%E7%A8%8B%E5%BA%8F.html",
+    "Driver": "Call",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：Call；运行时注册：Call",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "延时",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/logic/%E5%BB%B6%E6%97%B6/%E5%BB%B6%E6%97%B6.html",
+    "Driver": "Delay",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：Delay；运行时注册：Delay",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "条件分支",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/logic/%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF/%E6%9D%A1%E4%BB%B6%E5%88%86%E6%94%AF.html",
+    "Driver": "If",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：If；运行时注册：If",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "判断",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/logic/%E5%88%A4%E6%96%AD/%E5%88%A4%E6%96%AD.html",
+    "Driver": "Judge",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：Judge；运行时注册：Judge",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "跳转",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/logic/%E8%B7%B3%E8%BD%AC/%E8%B7%B3%E8%BD%AC.html",
+    "Driver": "Jump",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：Jump；运行时注册：Jump",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "标记",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/logic/%E6%A0%87%E8%AE%B0/%E6%A0%87%E8%AE%B0.html",
+    "Driver": "Mark",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：Mark；运行时注册：Mark",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "并行调用程序",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/logic/%E5%B9%B6%E8%A1%8C%E8%B0%83%E7%94%A8%E7%A8%8B%E5%BA%8F/%E5%B9%B6%E8%A1%8C%E8%B0%83%E7%94%A8%E7%A8%8B%E5%BA%8F.html",
+    "Driver": "Parallel Call",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：Parallel Call；运行时注册：Parallel Call",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "切换配方",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/logic/%E5%88%87%E6%8D%A2%E9%85%8D%E6%96%B9/%E5%88%87%E6%8D%A2%E9%85%8D%E6%96%B9.html",
+    "Driver": "SwitchRecipe",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：SwitchRecipe；运行时注册：SwitchRecipe",
+    "Gaps": "仅证明存在执行代码；需检查全部参数组合、检测叠加和原版数值。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "数据检查",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/logic/%E6%95%B0%E6%8D%AE%E6%A3%80%E6%9F%A5/%E6%95%B0%E6%8D%AE%E6%A3%80%E6%9F%A5.html",
+    "Driver": "Value Check",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：Value Check；运行时注册：Value Check",
+    "Gaps": "数值上下限、与或和取反已补；手册 Bool/String 独立类型模式未接入当前模板。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "基本语法",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/script/%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "LuaLite / LuaParser：本地表达式、函数、循环、table、作用域与取消。",
+    "Gaps": "属于自有 Lua 子集；非完整 Lua VM，元表/协程等未覆盖。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "常用函数",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/script/%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "LuaLibrary / LuaDataFunctions：常用 math/string/table、JSON 双向转换及类型处理。",
+    "Gaps": "函数库不是完整 Lua 标准库；各模式需继续补充一致性测试。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "Logic 逻辑",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/script/Logic%20%E9%80%BB%E8%BE%91.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "LuaOp / ExecutionEngine：脚本 Jump 控制流已有回归。",
+    "Gaps": "嵌套程序的所有跳转组合未穷举。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "Values 值",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/script/Values%20%E5%80%BC.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "LuaManualFunctions / LuaDataFunctions：标量、四种数组输出与全局读写、矩阵维度、GetOutput、JSON；原有SetFloat输出表保留兼容。",
+    "Gaps": "新数组函数严格检查类型及连续索引；不宣称完整Lua VM兼容。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "Geomety 几何",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/script/Geomety%20%E5%87%A0%E4%BD%95.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "LuaManualFunctions：点、线、段、面、圆、环、窗口、盒、圆柱、定向盒与Pose输出；对应1D/2D/3D绘制已接入。",
+    "Gaps": "位姿四元数归一化；几何退化明确拒绝；图元透明度/遮挡与原版仍需逐项对照。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "Text 文本",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/script/Text%20%E6%96%87%E6%9C%AC.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "LuaManualFunctions / DetectionOverlay2D / ProfileView：补DrawText1D/2D，修DrawText3D的XYZ顺序、IM绑定、颜色与像素字号；保留旧字符串IM编号。",
+    "Gaps": "屏幕字号按用户要求限制，不能按原版世界坐标字号逐像素比较。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "IO 输入输出",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/script/IO%20%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "ControlOps.cs / LuaDataFunctions：文件读写追加覆盖、制表符参数、路径约束；真实 SQLite HMI 写入。",
+    "Gaps": "保存为 UTF-8 以保留中文；与旧 ASCII 文件编码有区别。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "Recipe 配方",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/script/Recipe%20%E9%85%8D%E6%96%B9.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "RecipeRuntime / LuaOp：GetRecipeSet 零基访问、失败 nil、SwitchRecipe 名称切换且验证后提交。",
+    "Gaps": "并行子程序切换不同配方会报冲突；原版此行为未给出数值基线。"
+  },
+  {
+    "Category": "算法与脚本",
+    "Title": "变量设置",
+    "Url": "https://ai-vision.tydi.fun/docs/operation/variable/%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE/%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE.html",
+    "Driver": "Value Setting",
+    "RelatedDrivers": "",
+    "Status": "已有实现 / 待全模式验收",
+    "Evidence": "4.5.1 参数目录：Value Setting；运行时注册：Value Setting",
+    "Gaps": "新增ResultArray真实更新值、GetOutput按当前程序算子名称读取；缺少输出会明确报错。"
+  },
+  {
+    "Category": "设备",
+    "Title": "TCP客户端",
+    "Url": "https://ai-vision.tydi.fun/docs/device/%E9%80%9A%E4%BF%A1/TCPClient.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "已有协议实现 / 待现场验收",
+    "Evidence": "DeviceRuntime；本地环回、寄存器和虚拟 IO 测试见 DesktopIntegrationProbe。",
+    "Gaps": "没有实际生产网络、串口线路及现场控制器的长期断线恢复验证。"
+  },
+  {
+    "Category": "设备",
+    "Title": "TCP服务器",
+    "Url": "https://ai-vision.tydi.fun/docs/device/%E9%80%9A%E4%BF%A1/TCPServer.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "已有协议实现 / 待现场验收",
+    "Evidence": "DeviceRuntime；本地环回、寄存器和虚拟 IO 测试见 DesktopIntegrationProbe。",
+    "Gaps": "没有实际生产网络、串口线路及现场控制器的长期断线恢复验证。"
+  },
+  {
+    "Category": "设备",
+    "Title": "UDP",
+    "Url": "https://ai-vision.tydi.fun/docs/device/%E9%80%9A%E4%BF%A1/UDP.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "已有协议实现 / 待现场验收",
+    "Evidence": "DeviceRuntime；本地环回、寄存器和虚拟 IO 测试见 DesktopIntegrationProbe。",
+    "Gaps": "没有实际生产网络、串口线路及现场控制器的长期断线恢复验证。"
+  },
+  {
+    "Category": "设备",
+    "Title": "凌华 I/O板卡(PCI)",
+    "Url": "https://ai-vision.tydi.fun/docs/device/IO/AdlinkDask.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "需硬件 / SDK",
+    "Evidence": "设备运行层及配置目录核对。",
+    "Gaps": "缺少对应厂商采集/控制 SDK 接入和实机回归。"
+  },
+  {
+    "Category": "设备",
+    "Title": "虚拟I/O",
+    "Url": "https://ai-vision.tydi.fun/docs/device/IO/IOEmulator.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "已有协议实现 / 待现场验收",
+    "Evidence": "DeviceRuntime；本地环回、寄存器和虚拟 IO 测试见 DesktopIntegrationProbe。",
+    "Gaps": "没有实际生产网络、串口线路及现场控制器的长期断线恢复验证。"
+  },
+  {
+    "Category": "设备",
+    "Title": "天云数智 控制器I/O",
+    "Url": "https://ai-vision.tydi.fun/docs/device/IO/TydiIO.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "需硬件 / SDK",
+    "Evidence": "设备运行层及配置目录核对。",
+    "Gaps": "缺少对应厂商采集/控制 SDK 接入和实机回归。"
+  },
+  {
+    "Category": "设备",
+    "Title": "ModbusTCP服务器",
+    "Url": "https://ai-vision.tydi.fun/docs/device/Modbus/ModbusTcpServer.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "已有协议实现 / 待现场验收",
+    "Evidence": "DeviceRuntime；本地环回、寄存器和虚拟 IO 测试见 DesktopIntegrationProbe。",
+    "Gaps": "没有实际生产网络、串口线路及现场控制器的长期断线恢复验证。"
+  },
+  {
+    "Category": "设备",
+    "Title": "ModbusTCP客户端",
+    "Url": "https://ai-vision.tydi.fun/docs/device/Modbus/ModbusTcpClient.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "已有协议实现 / 待现场验收",
+    "Evidence": "DeviceRuntime；本地环回、寄存器和虚拟 IO 测试见 DesktopIntegrationProbe。",
+    "Gaps": "没有实际生产网络、串口线路及现场控制器的长期断线恢复验证。"
+  },
+  {
+    "Category": "设备",
+    "Title": "基恩士 KV上位链路协议",
+    "Url": "https://ai-vision.tydi.fun/docs/device/PLC/KeyenceNanoSerialOverTcp.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "需硬件 / SDK",
+    "Evidence": "HslPlcBridge 可加载授权的 HslCommunication 驱动。",
+    "Gaps": "发布包未包含该外部驱动，未连接实际 PLC，不算已验证协议。"
+  },
+  {
+    "Category": "设备",
+    "Title": "欧姆龙 Fins-tcp协议",
+    "Url": "https://ai-vision.tydi.fun/docs/device/PLC/OmronFinsTcp.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "需硬件 / SDK",
+    "Evidence": "HslPlcBridge 可加载授权的 HslCommunication 驱动。",
+    "Gaps": "发布包未包含该外部驱动，未连接实际 PLC，不算已验证协议。"
+  },
+  {
+    "Category": "设备",
+    "Title": "西门子 S7协议",
+    "Url": "https://ai-vision.tydi.fun/docs/device/PLC/Siemens%20S7.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "需硬件 / SDK",
+    "Evidence": "HslPlcBridge 可加载授权的 HslCommunication 驱动。",
+    "Gaps": "发布包未包含该外部驱动，未连接实际 PLC，不算已验证协议。"
+  },
+  {
+    "Category": "设备",
+    "Title": "LMI Gocator",
+    "Url": "https://ai-vision.tydi.fun/docs/device/%E7%9B%B8%E6%9C%BA/Gocator.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "需硬件 / SDK",
+    "Evidence": "设备运行层及配置目录核对。",
+    "Gaps": "缺少对应厂商采集/控制 SDK 接入和实机回归。"
+  },
+  {
+    "Category": "设备",
+    "Title": "海伯森 HPS-DBL系列",
+    "Url": "https://ai-vision.tydi.fun/docs/device/%E7%9B%B8%E6%9C%BA/HPS_DBL.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "需硬件 / SDK",
+    "Evidence": "设备运行层及配置目录核对。",
+    "Gaps": "缺少对应厂商采集/控制 SDK 接入和实机回归。"
+  },
+  {
+    "Category": "设备",
+    "Title": "海伯森 HPS-LCF/LCX系列",
+    "Url": "https://ai-vision.tydi.fun/docs/device/%E7%9B%B8%E6%9C%BA/HPS_LCF.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "需硬件 / SDK",
+    "Evidence": "设备运行层及配置目录核对。",
+    "Gaps": "缺少对应厂商采集/控制 SDK 接入和实机回归。"
+  },
+  {
+    "Category": "设备",
+    "Title": "基恩士 LJ-V7000系列",
+    "Url": "https://ai-vision.tydi.fun/docs/device/%E7%9B%B8%E6%9C%BA/ljv7.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "需硬件 / SDK",
+    "Evidence": "设备运行层及配置目录核对。",
+    "Gaps": "缺少对应厂商采集/控制 SDK 接入和实机回归。"
+  },
+  {
+    "Category": "设备",
+    "Title": "基恩士 LJ-X8000系列",
+    "Url": "https://ai-vision.tydi.fun/docs/device/%E7%9B%B8%E6%9C%BA/ljx8.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "需硬件 / SDK",
+    "Evidence": "设备运行层及配置目录核对。",
+    "Gaps": "缺少对应厂商采集/控制 SDK 接入和实机回归。"
+  },
+  {
+    "Category": "设备",
+    "Title": "翌视 3D工业相机",
+    "Url": "https://ai-vision.tydi.fun/docs/device/%E7%9B%B8%E6%9C%BA/Lvm.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "需硬件 / SDK",
+    "Evidence": "设备运行层及配置目录核对。",
+    "Gaps": "缺少对应厂商采集/控制 SDK 接入和实机回归。"
+  },
+  {
+    "Category": "设备",
+    "Title": "海康机器人 3D激光轮廓传感器",
+    "Url": "https://ai-vision.tydi.fun/docs/device/%E7%9B%B8%E6%9C%BA/Mv3d.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "需硬件 / SDK",
+    "Evidence": "本机安装 MVS 4.8.1，2D GigE/USB 枚举接口已接通，当前枚举 0 台。",
+    "Gaps": "本页是海康 Mv3d 3D 激光传感器，不能用 MVS 2D 驱动代替；需 Mv3d SDK 和实机。"
+  },
+  {
+    "Category": "设备",
+    "Title": "光图智能 GTS系列",
+    "Url": "https://ai-vision.tydi.fun/docs/device/%E7%9B%B8%E6%9C%BA/Oi.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "需硬件 / SDK",
+    "Evidence": "设备运行层及配置目录核对。",
+    "Gaps": "缺少对应厂商采集/控制 SDK 接入和实机回归。"
+  },
+  {
+    "Category": "设备",
+    "Title": "盛相 SizectorS系列",
+    "Url": "https://ai-vision.tydi.fun/docs/device/%E7%9B%B8%E6%9C%BA/MPSizectorS.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "需硬件 / SDK",
+    "Evidence": "设备运行层及配置目录核对。",
+    "Gaps": "缺少对应厂商采集/控制 SDK 接入和实机回归。"
+  },
+  {
+    "Category": "设备",
+    "Title": "盛相 Hdc系列",
+    "Url": "https://ai-vision.tydi.fun/docs/device/%E7%9B%B8%E6%9C%BA/MPHdc.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "需硬件 / SDK",
+    "Evidence": "设备运行层及配置目录核对。",
+    "Gaps": "缺少对应厂商采集/控制 SDK 接入和实机回归。"
+  },
+  {
+    "Category": "设备",
+    "Title": "图漾 3D工业相机",
+    "Url": "https://ai-vision.tydi.fun/docs/device/%E7%9B%B8%E6%9C%BA/Percipio.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "需硬件 / SDK",
+    "Evidence": "设备运行层及配置目录核对。",
+    "Gaps": "缺少对应厂商采集/控制 SDK 接入和实机回归。"
+  },
+  {
+    "Category": "设备",
+    "Title": "深视智能 SR系列3D相机",
+    "Url": "https://ai-vision.tydi.fun/docs/device/%E7%9B%B8%E6%9C%BA/SSZN.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "需硬件 / SDK",
+    "Evidence": "设备运行层及配置目录核对。",
+    "Gaps": "缺少对应厂商采集/控制 SDK 接入和实机回归。"
+  },
+  {
+    "Category": "设备",
+    "Title": "SmartRay",
+    "Url": "https://ai-vision.tydi.fun/docs/device/%E7%9B%B8%E6%9C%BA/SmartRay.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "需硬件 / SDK",
+    "Evidence": "设备运行层及配置目录核对。",
+    "Gaps": "缺少对应厂商采集/控制 SDK 接入和实机回归。"
+  },
+  {
+    "Category": "设备",
+    "Title": "FocalSpec 3D线共焦传感器",
+    "Url": "https://ai-vision.tydi.fun/docs/device/%E7%9B%B8%E6%9C%BA/FocalSpec.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "需硬件 / SDK",
+    "Evidence": "设备运行层及配置目录核对。",
+    "Gaps": "缺少对应厂商采集/控制 SDK 接入和实机回归。"
+  },
+  {
+    "Category": "设备",
+    "Title": "华睿 DL系列",
+    "Url": "https://ai-vision.tydi.fun/docs/device/%E7%9B%B8%E6%9C%BA/iRAYPLE_DL.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "需硬件 / SDK",
+    "Evidence": "设备运行层及配置目录核对。",
+    "Gaps": "缺少对应厂商采集/控制 SDK 接入和实机回归。"
+  },
+  {
+    "Category": "设备",
+    "Title": "SICK Ranger3/Ruler3000系列",
+    "Url": "https://ai-vision.tydi.fun/docs/device/%E7%9B%B8%E6%9C%BA/SICK_Ranger3_Ruler3000.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "需硬件 / SDK",
+    "Evidence": "设备运行层及配置目录核对。",
+    "Gaps": "缺少对应厂商采集/控制 SDK 接入和实机回归。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "脚本循环",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E8%BF%9B%E9%98%B6%E7%A4%BA%E4%BE%8B/%E8%84%9A%E6%9C%AC%E5%BE%AA%E7%8E%AF/%E8%84%9A%E6%9C%AC%E5%BE%AA%E7%8E%AF.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例仍有失败",
+    "Evidence": "进阶示例/脚本循环/脚本循环.aivs: FAIL",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "逻辑算子应用",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E8%BF%9B%E9%98%B6%E7%A4%BA%E4%BE%8B/%E9%80%BB%E8%BE%91%E7%AE%97%E5%AD%90%E5%BA%94%E7%94%A8/%E9%80%BB%E8%BE%91%E7%AE%97%E5%AD%90%E5%BA%94%E7%94%A8.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例执行通过",
+    "Evidence": "进阶示例/逻辑算子应用/逻辑算子应用.aivs: PASS",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "PEKAT(表面检测)",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E8%BF%9B%E9%98%B6%E7%A4%BA%E4%BE%8B/PEKAT(%E8%A1%A8%E9%9D%A2%E6%A3%80%E6%B5%8B)/PEKAT(%E8%A1%A8%E9%9D%A2%E6%A3%80%E6%B5%8B).html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例待专项核对",
+    "Evidence": "150 个工程实际运行报告：shots/gap-completion/all-examples.json",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "TCP切换配方与Gocator参数修改",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E8%BF%9B%E9%98%B6%E7%A4%BA%E4%BE%8B/TCP%E5%88%87%E6%8D%A2%E9%85%8D%E6%96%B9%E4%B8%8EGocator%E5%8F%82%E6%95%B0%E4%BF%AE%E6%94%B9/TCP%E5%88%87%E6%8D%A2%E9%85%8D%E6%96%B9%E4%B8%8EGocator%E5%8F%82%E6%95%B0%E4%BF%AE%E6%94%B9.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例仍有失败",
+    "Evidence": "进阶示例/TCP切换配方与Gocator参数修改/TCP切换配方与Gocator参数修改.aivs: TIMEOUT",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "TCP收发字符",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E8%BF%9B%E9%98%B6%E7%A4%BA%E4%BE%8B/TCP%E6%94%B6%E5%8F%91%E5%AD%97%E7%AC%A6/TCP%E6%94%B6%E5%8F%91%E5%AD%97%E7%AC%A6.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例仍有失败",
+    "Evidence": "进阶示例/TCP收发字符/TCP收发字符.aivs: TIMEOUT",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "连接器Pin针正位度检测",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E5%B7%A5%E7%A8%8B%E7%A4%BA%E4%BE%8B/%E8%BF%9E%E6%8E%A5%E5%99%A8Pin%E9%92%88%E6%AD%A3%E4%BD%8D%E5%BA%A6%E6%A3%80%E6%B5%8B/%E8%BF%9E%E6%8E%A5%E5%99%A8Pin%E9%92%88%E6%AD%A3%E4%BD%8D%E5%BA%A6%E6%A3%80%E6%B5%8B.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例仍有失败",
+    "Evidence": "工程示例/连接器Pin针正位度检测/连接器Pin针正位度检测.aivs: FAIL",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "BGA焊锡球共面度测量",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E5%B7%A5%E7%A8%8B%E7%A4%BA%E4%BE%8B/BGA%E7%84%8A%E9%94%A1%E7%90%83%E5%85%B1%E9%9D%A2%E5%BA%A6%E6%B5%8B%E9%87%8F/BGA%E7%84%8A%E9%94%A1%E7%90%83%E5%85%B1%E9%9D%A2%E5%BA%A6%E6%B5%8B%E9%87%8F.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例执行通过",
+    "Evidence": "工程示例/BGA焊锡球共面度测量/BGA焊锡球共面度测量.aivs: PASS",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "Type-C连接器引脚段差测量",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E5%B7%A5%E7%A8%8B%E7%A4%BA%E4%BE%8B/Type-C%E8%BF%9E%E6%8E%A5%E5%99%A8%E5%BC%95%E8%84%9A%E6%AE%B5%E5%B7%AE%E6%B5%8B%E9%87%8F/Type-C%E8%BF%9E%E6%8E%A5%E5%99%A8%E5%BC%95%E8%84%9A%E6%AE%B5%E5%B7%AE%E6%B5%8B%E9%87%8F.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例执行通过",
+    "Evidence": "工程示例/Type-C连接器引脚段差测量/Type-C连接器引脚段差测量.aivs: PASS",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "铝壳表面平面度测量",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E5%B7%A5%E7%A8%8B%E7%A4%BA%E4%BE%8B/%E9%93%9D%E5%A3%B3%E8%A1%A8%E9%9D%A2%E5%B9%B3%E9%9D%A2%E5%BA%A6%E6%B5%8B%E9%87%8F/%E9%93%9D%E5%A3%B3%E8%A1%A8%E9%9D%A2%E5%B9%B3%E9%9D%A2%E5%BA%A6%E6%B5%8B%E9%87%8F.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例执行通过",
+    "Evidence": "工程示例/铝壳表面平面度测量/铝壳表面平面度测量.aivs: PASS",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "轮胎胶条尺寸检测",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E5%B7%A5%E7%A8%8B%E7%A4%BA%E4%BE%8B/%E8%BD%AE%E8%83%8E%E8%83%B6%E6%9D%A1%E5%B0%BA%E5%AF%B8%E6%A3%80%E6%B5%8B/%E8%BD%AE%E8%83%8E%E8%83%B6%E6%9D%A1%E5%B0%BA%E5%AF%B8%E6%A3%80%E6%B5%8B.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例执行通过",
+    "Evidence": "工程示例/轮胎胶条尺寸检测/轮胎胶条尺寸检测.aivs: PASS",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "铜卷位置检测及尺寸测量",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E5%B7%A5%E7%A8%8B%E7%A4%BA%E4%BE%8B/%E9%93%9C%E5%8D%B7%E4%BD%8D%E7%BD%AE%E6%A3%80%E6%B5%8B%E5%8F%8A%E5%B0%BA%E5%AF%B8%E6%B5%8B%E9%87%8F/%E9%93%9C%E5%8D%B7%E4%BD%8D%E7%BD%AE%E6%A3%80%E6%B5%8B%E5%8F%8A%E5%B0%BA%E5%AF%B8%E6%B5%8B%E9%87%8F.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例执行通过",
+    "Evidence": "工程示例/铜卷位置检测及尺寸测量/铜卷位置检测及尺寸测量.aivs: PASS",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "PCB焊点质量检测",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E5%B7%A5%E7%A8%8B%E7%A4%BA%E4%BE%8B/PCB%E7%84%8A%E7%82%B9%E8%B4%A8%E9%87%8F%E6%A3%80%E6%B5%8B/PCB%E7%84%8A%E7%82%B9%E8%B4%A8%E9%87%8F%E6%A3%80%E6%B5%8B.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例执行通过",
+    "Evidence": "工程示例/PCB焊点质量检测/PCB焊点质量检测.aivs: PASS",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "胶路检测",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E5%B7%A5%E7%A8%8B%E7%A4%BA%E4%BE%8B/%E8%83%B6%E8%B7%AF%E6%A3%80%E6%B5%8B/%E8%83%B6%E8%B7%AF%E6%A3%80%E6%B5%8B.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例执行通过",
+    "Evidence": "入门示例/2D胶路检测/2D胶路检测.aivs: PASS；入门示例/胶路检测(分割)/胶路检测(分割).aivs: PASS；入门示例/胶路检测(轨迹)/胶路检测(轨迹).aivs: PASS；入门示例/胶路检测(轮廓)/胶路检测(轮廓).aivs: PASS；工程示例/胶路检测/胶路检测.aivs: PASS",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "BGA焊球高度和直径测量",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E5%B7%A5%E7%A8%8B%E7%A4%BA%E4%BE%8B/BGA%E7%84%8A%E7%90%83%E9%AB%98%E5%BA%A6%E5%92%8C%E7%9B%B4%E5%BE%84%E6%B5%8B%E9%87%8F/BGA%E7%84%8A%E7%90%83%E9%AB%98%E5%BA%A6%E5%92%8C%E7%9B%B4%E5%BE%84%E6%B5%8B%E9%87%8F.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例执行通过",
+    "Evidence": "工程示例/BGA焊球高度和直径测量/BGA焊球高度和直径测量.aivs: PASS",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "PCB板检测电阻有无",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E5%B7%A5%E7%A8%8B%E7%A4%BA%E4%BE%8B/PCB%E6%9D%BF%E6%A3%80%E6%B5%8B%E7%94%B5%E9%98%BB%E6%9C%89%E6%97%A0/PCB%E6%9D%BF%E6%A3%80%E6%B5%8B%E7%94%B5%E9%98%BB%E6%9C%89%E6%97%A0.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例执行通过",
+    "Evidence": "工程示例/PCB板检测电阻有无/PCB板检测电阻有无.aivs: PASS",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "焊锡球体积高度测量",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E5%B7%A5%E7%A8%8B%E7%A4%BA%E4%BE%8B/%E7%84%8A%E9%94%A1%E7%90%83%E4%BD%93%E7%A7%AF%E9%AB%98%E5%BA%A6%E6%B5%8B%E9%87%8F/%E7%84%8A%E9%94%A1%E7%90%83%E4%BD%93%E7%A7%AF%E9%AB%98%E5%BA%A6%E6%B5%8B%E9%87%8F.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例执行通过",
+    "Evidence": "工程示例/焊锡球体积高度测量/焊锡球体积高度测量.aivs: PASS",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "闸片支撑板圆孔位置度",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E5%B7%A5%E7%A8%8B%E7%A4%BA%E4%BE%8B/%E9%97%B8%E7%89%87%E6%94%AF%E6%92%91%E6%9D%BF%E5%9C%86%E5%AD%94%E4%BD%8D%E7%BD%AE%E5%BA%A6/%E9%97%B8%E7%89%87%E6%94%AF%E6%92%91%E6%9D%BF%E5%9C%86%E5%AD%94%E4%BD%8D%E7%BD%AE%E5%BA%A6.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例执行通过",
+    "Evidence": "工程示例/闸片支撑板圆孔位置度/闸片支撑板圆孔位置度.aivs: PASS",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "Pin针高度测量",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E5%B7%A5%E7%A8%8B%E7%A4%BA%E4%BE%8B/Pin%E9%92%88%E9%AB%98%E5%BA%A6%E6%B5%8B%E9%87%8F/Pin%E9%92%88%E9%AB%98%E5%BA%A6%E6%B5%8B%E9%87%8F.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例执行通过",
+    "Evidence": "工程示例/Pin针高度测量/Pin针高度测量.aivs: PASS",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "3D转2D模板匹配",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E5%B7%A5%E7%A8%8B%E7%A4%BA%E4%BE%8B/3D%E8%BD%AC2D%E6%A8%A1%E6%9D%BF%E5%8C%B9%E9%85%8D/3D%E8%BD%AC2D%E6%A8%A1%E6%9D%BF%E5%8C%B9%E9%85%8D.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例仍有失败",
+    "Evidence": "工程示例/3D转2D模板匹配/3D转2D模板匹配.aivs: FAIL",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "圆柱面缺陷检测",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E5%B7%A5%E7%A8%8B%E7%A4%BA%E4%BE%8B/%E5%9C%86%E6%9F%B1%E9%9D%A2%E7%BC%BA%E9%99%B7%E6%A3%80%E6%B5%8B/%E5%9C%86%E6%9F%B1%E9%9D%A2%E7%BC%BA%E9%99%B7%E6%A3%80%E6%B5%8B.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例执行通过",
+    "Evidence": "工程示例/圆柱面缺陷检测/圆柱面缺陷检测.aivs: PASS",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "电池顶盖平面度高度测量",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E5%B7%A5%E7%A8%8B%E7%A4%BA%E4%BE%8B/%E7%94%B5%E6%B1%A0%E9%A1%B6%E7%9B%96%E5%B9%B3%E9%9D%A2%E5%BA%A6%E9%AB%98%E5%BA%A6%E6%B5%8B%E9%87%8F/%E7%94%B5%E6%B1%A0%E9%A1%B6%E7%9B%96%E5%B9%B3%E9%9D%A2%E5%BA%A6%E9%AB%98%E5%BA%A6%E6%B5%8B%E9%87%8F.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例执行通过",
+    "Evidence": "工程示例/电池顶盖平面度高度测量/电池顶盖平面度高度测量.aivs: PASS",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "3D点云拼接",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E5%B7%A5%E7%A8%8B%E7%A4%BA%E4%BE%8B/3D%E7%82%B9%E4%BA%91%E6%8B%BC%E6%8E%A5/3D%E7%82%B9%E4%BA%91%E6%8B%BC%E6%8E%A5.html",
+    "Driver": "3D SplicingFilter",
+    "RelatedDrivers": "",
+    "Status": "示例执行通过",
+    "Evidence": "入门示例/3D点云拼接/3D点云拼接.aivs: PASS；工程示例/3D点云拼接/3D点云拼接.aivs: PASS",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "背板组装检测",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E5%B7%A5%E7%A8%8B%E7%A4%BA%E4%BE%8B/%E8%83%8C%E6%9D%BF%E7%BB%84%E8%A3%85%E6%A3%80%E6%B5%8B/%E8%83%8C%E6%9D%BF%E7%BB%84%E8%A3%85%E6%A3%80%E6%B5%8B.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例执行通过",
+    "Evidence": "工程示例/背板组装检测/背板组装检测.aivs: PASS",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "示例工程",
+    "Title": "端子高度测量",
+    "Url": "https://ai-vision.tydi.fun/docs/project/%E5%B7%A5%E7%A8%8B%E7%A4%BA%E4%BE%8B/%E7%AB%AF%E5%AD%90%E9%AB%98%E5%BA%A6%E6%B5%8B%E9%87%8F/%E7%AB%AF%E5%AD%90%E9%AB%98%E5%BA%A6%E6%B5%8B%E9%87%8F.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "示例执行通过",
+    "Evidence": "工程示例/端子高度测量/端子高度测量.aivs: PASS",
+    "Gaps": "入口执行通过不代表未执行分支或原版数值一致。"
+  },
+  {
+    "Category": "参考",
+    "Title": "Q&A",
+    "Url": "https://ai-vision.tydi.fun/docs/others/QA.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "问题排查参考：使用当前日志、核对表与完整示例报告定位故障。",
+    "Gaps": "手册中厂商运行库/授权问题不由自有内核解决。"
+  },
+  {
+    "Category": "参考",
+    "Title": "版本说明",
+    "Url": "https://ai-vision.tydi.fun/docs/others/%E7%89%88%E6%9C%AC%E8%AF%B4%E6%98%8E.html",
+    "Driver": "",
+    "RelatedDrivers": "",
+    "Status": "部分实现 / 按项核对",
+    "Evidence": "版本差异参考：在线手册同时包含 4.4.3/4.5.0 内容，参考程序为 4.5.1。",
+    "Gaps": "不能把不同版本模板或本地算法视为完全一致。"
+  }
+]

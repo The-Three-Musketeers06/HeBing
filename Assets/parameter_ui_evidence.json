@@ -1,0 +1,57 @@
+{
+ "evidence_id": "parameter-ui-shipped-js-20261021",
+ "authority": "shipped-artifact",
+ "confidence": "observed",
+ "source": {
+  "path": "E:\\Vision-Studi\\ES-Vision-Studio 4.5.1.exe",
+  "sha256": "de7d79861b4eca44b76cac4f7c9e3dd788c5efa642c77a42c9c424a579caf40c",
+  "size": 72995168
+ },
+ "records": [
+  {
+   "asset": "/assets/form-11507bab.js",
+   "compressed_offset": 66707389,
+   "compressed_length": 9597,
+   "decoded_length": 29034,
+   "decoded_sha256": "d3b365b3ba32e3ec6f8488d28db81acc82e46dbf86c4472ff08c0863cb3f67b1",
+   "artifact": "shots/original-ui-form-11507bab.js"
+  },
+  {
+   "asset": "/assets/recursiveTemplate-bdae102d.js",
+   "compressed_offset": 63263603,
+   "compressed_length": 13130,
+   "decoded_length": 44271,
+   "decoded_sha256": "3e60fc24a6efaa8ac95045a45668d4f53937d5381fa0b5cc469510d2006ec4ca",
+   "artifact": "shots/original-recursiveTemplate-bdae102d.js"
+  }
+ ],
+ "findings": [
+  {
+   "claim": "Image-tool primary panels are input/basic/render with initial proportions 20/60/20",
+   "artifact": "shots/original-ui-form-11507bab.js",
+   "anchor": "j=ee([{key:\"input\",title:\"Input Parameters\",size:20",
+   "decoded_character_offset": 22760
+  },
+  {
+   "claim": "Advanced parameters are collapsed initially and rendered inside the basic (calculation) panel",
+   "artifact": "shots/original-ui-form-11507bab.js",
+   "anchors": [
+    "advance:!1",
+    "s.key===\"basic\"",
+    "global.Advance Parameters"
+   ],
+   "decoded_character_offsets": [
+    23452,
+    27684
+   ]
+  },
+  {
+   "claim": "Floating-point increment is 1 / 10^configured decimalPlaces",
+   "artifact": "shots/original-recursiveTemplate-bdae102d.js",
+   "anchor": "step:1/Math.pow(10,Y(l).currentStore.decimalPlaces)"
+  }
+ ],
+ "limitations": [
+  "Static frontend declarations establish declared layout and control behavior, not pixel-level runtime verification."
+ ]
+}
