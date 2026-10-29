@@ -29,7 +29,7 @@ public partial class MainViewModel
     internal static bool IsTemplateOverlay(NativeOverlay3D overlay, Operation operation)
         => overlay.Values.TryGetValue("_owned_operation", out var owner) && (Equals(owner, operation.Uuid) || Equals(owner, operation.Driver));
 
-    internal static bool IsTemplateOutputAlias(string driver, string name) => ContourTemplateEngine.IsTemplateTool(driver) && (name == "Elapsed Time" || driver == ContourTemplateEngine.GrayDriver && name == "ShapeMatch.Scale");
+    internal static bool IsTemplateOutputAlias(string driver, string name) => ContourTemplateEngine.IsTemplateTool(driver) && name == "Elapsed Time";
 
     private bool ShowSelectedOutput(string name)
     {

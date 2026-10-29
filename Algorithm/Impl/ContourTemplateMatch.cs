@@ -9,9 +9,12 @@ namespace AiVisionStudio.Algorithm.Impl;
 
 public static partial class ContourTemplateEngine
 {
-    public const string GrayDriver = "Basic NCC Match";
-    public static bool IsTemplateTool(string driver) => driver is "Basic Shape Match" or "Basic Shape Model" or GrayDriver;
-    public static bool IsMatcher(string driver) => driver is "Basic Shape Match" or GrayDriver;
+    // Keep the persisted driver identifier so existing projects retain their operations and bindings.
+    public const string ShapeDriver = "Basic NCC Match";
+    public const string GrayDriver = ShapeDriver;
+    public const string ShapeBackend = "OpenCV.Shape";
+    public static bool IsTemplateTool(string driver) => driver is "Basic Shape Match" or "Basic Shape Model" or ShapeDriver;
+    public static bool IsMatcher(string driver) => driver is "Basic Shape Match" or ShapeDriver;
 
     public static string ImageFingerprint(Mat image)
     {
@@ -69,8 +72,7 @@ public static partial class ContourTemplateEngine
         using var nativeRegion = NativeRegion(mask);
         using var reduced = nativeImage.ReduceDomain(nativeRegion);
         nativeRegion.AreaCenter(out double centerY, out double centerX);
-        bool gray = parameters.Str("Matching Method") == "Gray";
-        model.Backend = gray ? "HALCON.NCC" : "HALCON.Shape";
+        model.Backend = "HALCON.Shape";
         model.SourceFingerprint = ImageFingerprint(image);
         model.InputFingerprint = model.SourceFingerprint;
         using var levels = IsAuto(parameters.Group("Create Model"), "Num Levels") ? new HTuple("auto") : new HTuple(model.PyramidLevels);
@@ -80,21 +82,13 @@ public static partial class ContourTemplateEngine
             ? new HTuple("auto") : new HTuple(new[] { (int)model.EdgeLow, (int)model.EdgeHigh, Math.Max(1, model.MinContourSize) });
         using var minContrast = IsAuto(parameters.Group("Parameters"), "Min Contrast") ? new HTuple("auto") : new HTuple(model.MinContrast);
         using var optimization = new HTuple(Boolean(NestedGroup(parameters.Group("Parameters"), "Optimization"), "Value", false) ? "point_reduction_medium" : "auto");
-        var metrics = gray ? new[] { "use_polarity", "ignore_global_polarity" } : new[] { "use_polarity", "ignore_global_polarity", "ignore_local_polarity" };
+        var metrics = new[] { "use_polarity", "ignore_global_polarity", "ignore_local_polarity" };
         try
         {
             foreach (string metric in metrics)
             {
                 cancellation.ThrowIfCancellationRequested();
                 using var stream = new MemoryStream();
-                if (gray)
-                {
-                    using var handle = new HNCCModel();
-                    handle.CreateNccModel(reduced, levels, -model.AngleMax * Math.PI / 180, (model.AngleMax - model.AngleMin) * Math.PI / 180, angleStep, metric);
-                    handle.SetNccModelOrigin(model.OriginY - centerY, model.OriginX - centerX);
-                    handle.Serialize(stream);
-                }
-                else
                 {
                     using var handle = new HShapeModel();
                     handle.CreateScaledShapeModel(reduced, levels, -model.AngleMax * Math.PI / 180, (model.AngleMax - model.AngleMin) * Math.PI / 180,
@@ -121,8 +115,6 @@ public static partial class ContourTemplateEngine
             }
         }
         catch (HOperatorException error) { Trace.WriteLine(error); cancellation.ThrowIfCancellationRequested(); throw new InvalidOperationException("HALCON模板训练失败：请检查模板区域、对比度、金字塔层数及运行许可。", error); }
-        if (gray)
-            model.Contours.Add(new() { new() { X = 0, Y = 0 }, new() { X = model.Width - 1, Y = 0 }, new() { X = model.Width - 1, Y = model.Height - 1 }, new() { X = 0, Y = model.Height - 1 }, new() { X = 0, Y = 0 } });
         model.Features = Sample(model.Contours.SelectMany(contour => contour).Select(point => new ContourTemplateFeature
         { X = point.X, Y = point.Y, Nx = 1, Ny = 0 }).ToArray(), 100000).ToList();
         cancellation.ThrowIfCancellationRequested();
@@ -130,15 +122,15 @@ public static partial class ContourTemplateEngine
 
     public static ContourMatchResult Match(Mat image, ContourTemplateModel model, ContourMatchOptions options, Mat searchMask = null, CancellationToken cancellation = default)
     {
+        if (model?.Version == 1) return MatchShape(image, model, options, searchMask, cancellation);
         ValidateImage(image); ValidateModel(model); ValidateOptions(options); cancellation.ThrowIfCancellationRequested();
         if (model.NativeModels?.Count == 0) throw new InvalidOperationException("这是旧版模板，请点击“创建”重新训练HALCON模板。");
-        bool gray = model.Backend == "HALCON.NCC";
-        if (gray && (options.ScaleMin != 1 || options.ScaleMax != 1)) throw new ArgumentException("灰度匹配不支持缩放搜索，请使用基于轮廓匹配。");
+        if (model.Backend == "HALCON.NCC") throw new InvalidOperationException("灰度模板已停用，请点击“创建”重新训练形状模板。");
         if (searchMask != null && (searchMask.IsDisposed || searchMask.Empty() || searchMask.Type() != MatType.CV_8UC1 || searchMask.Size() != image.Size()))
             throw new ArgumentException("搜索区域遮罩必须是与输入图像等大的8位单通道图像。");
         if (searchMask != null && Cv2.CountNonZero(searchMask) < 25) throw new ArgumentException("搜索区域为空或过小，请重新绘制搜索区域。");
         string metric = options.Polarity switch { "Ignore Global Polarity" => "ignore_global_polarity", "Ignore Local Polarity" => "ignore_local_polarity", _ => "use_polarity" };
-        if (!model.NativeModels.TryGetValue(metric, out var bytes)) throw new ArgumentException("灰度匹配不支持忽略局部极性，请选择使用极性或忽略全局极性。");
+        if (!model.NativeModels.TryGetValue(metric, out var bytes)) throw new ArgumentException("模板不包含所选极性的模型，请重新训练模板。");
         double scaleMin = Math.Max(model.ScaleMin, options.ScaleMin), scaleMax = Math.Min(model.ScaleMax, options.ScaleMax);
         var angles = Enumerable.Range(-2, 5).Select(turn => (Min: Math.Max(options.AngleMin, model.AngleMin + 360 * turn), Max: Math.Min(options.AngleMax, model.AngleMax + 360 * turn)))
             .Where(range => range.Min <= range.Max).Distinct().ToArray();
@@ -152,22 +144,13 @@ public static partial class ContourTemplateEngine
         try
         {
             using var stream = new MemoryStream(bytes, false);
-            using var shape = gray ? null : (HShapeModel)HShapeModel.Deserialize(stream); using var ncc = gray ? (HNCCModel)HNCCModel.Deserialize(stream) : null;
+            using var shape = (HShapeModel)HShapeModel.Deserialize(stream);
             foreach (var range in angles)
             {
                 cancellation.ThrowIfCancellationRequested();
                 int remaining = options.TimeoutMilliseconds == 0 ? -1 : Math.Max(1, options.TimeoutMilliseconds - (int)watch.ElapsedMilliseconds);
                 if (options.TimeoutMilliseconds > 0 && watch.ElapsedMilliseconds >= options.TimeoutMilliseconds) { result.TimedOut = true; break; }
                 HTuple rows, cols, rotations, scores, scales;
-                if (gray)
-                {
-                    ncc.SetNccModelParam("timeout", remaining);
-                    ncc.FindNccModel(reduced, -range.Max * Math.PI / 180, (range.Max - range.Min) * Math.PI / 180,
-                        options.MinScore, options.MaxMatches, Math.Min(options.MaxOverlap, .8), options.SubPixel ? "true" : "false", options.NumLevels,
-                        out rows, out cols, out rotations, out scores);
-                    scales = new HTuple(Enumerable.Repeat(1d, rows.Length).ToArray());
-                }
-                else
                 {
                     shape.SetShapeModelParam("timeout", remaining);
                     shape.FindScaledShapeModel(reduced, -range.Max * Math.PI / 180, (range.Max - range.Min) * Math.PI / 180,
@@ -189,34 +172,12 @@ public static partial class ContourTemplateEngine
         if (result.TimedOut) result.Matches.Clear();
         else
         {
-            if (gray) result.Matches = SuppressGrayDuplicates(model, result.Matches, options.MaxOverlap, cancellation);
             result.Matches = result.Matches.OrderByDescending(match => match.Score).Take(options.MaxMatches == 0 ? int.MaxValue : options.MaxMatches).ToList();
         }
         result.ElapsedMilliseconds = watch.Elapsed.TotalMilliseconds;
         if (options.TimeoutMilliseconds > 0 && result.ElapsedMilliseconds >= options.TimeoutMilliseconds)
         { result.TimedOut = true; result.Matches.Clear(); }
         return result;
-    }
-
-    private static List<ContourMatch> SuppressGrayDuplicates(ContourTemplateModel model, List<ContourMatch> matches, double maxOverlap, CancellationToken cancellation)
-    {
-        var accepted = new List<(ContourMatch Match, RotatedRect Bounds)>();
-        foreach (var match in matches.OrderByDescending(item => Math.Round(item.Score, 6)).ThenBy(item => Math.Abs(item.Rotation)).ThenByDescending(item => item.Score).ThenBy(item => item.Y).ThenBy(item => item.X))
-        {
-            cancellation.ThrowIfCancellationRequested();
-            var center = TransformPoint(model, match, (model.Width - 1) / 2d, (model.Height - 1) / 2d);
-            var bounds = new RotatedRect(new Point2f((float)center.X, (float)center.Y), new Size2f((float)(model.Width * match.Scale), (float)(model.Height * match.Scale)), (float)match.Rotation);
-            bool duplicate = accepted.Any(previous =>
-            {
-                var type = Cv2.RotatedRectangleIntersection(previous.Bounds, bounds, out Point2f[] intersection);
-                if (type == RectanglesIntersectTypes.None || intersection.Length < 3) return false;
-                double area = Math.Abs(Cv2.ContourArea(intersection));
-                double smaller = Math.Min(previous.Bounds.Size.Width * previous.Bounds.Size.Height, bounds.Size.Width * bounds.Size.Height);
-                return area / Math.Max(1, smaller) > Math.Min(maxOverlap, .8);
-            });
-            if (!duplicate) accepted.Add((match, bounds));
-        }
-        return accepted.Select(item => item.Match).ToList();
     }
 
     private static double NormalizeAngle(double angle) { angle %= 360; if (angle > 180) angle -= 360; if (angle <= -180) angle += 360; return angle; }

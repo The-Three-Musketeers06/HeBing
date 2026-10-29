@@ -50,7 +50,7 @@ internal static class ContourTemplateSchema
         Add(match, Scalar("Scale Step", "粗搜索尺度步长", "float", .05, .001, 1));
         Add(match, Scalar("Timeout", "超时（毫秒，0为不限）", "int", 3000, 0, 600000));
 
-        // New tools show their detected contour immediately; saved projects retain explicit display choices.
+        // Default result rendering and precision; saved projects retain explicit display choices.
         var values = match.ParameterValues is { ValueKind: JsonValueKind.Object } currentValues
             ? JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(currentValues.GetRawText())! : new Dictionary<string, JsonElement>();
         values["Display Contours"] = JsonSerializer.SerializeToElement(true);
@@ -60,6 +60,10 @@ internal static class ContourTemplateSchema
         match.Params.First(p => p.Name == "Display Contours").Default = JsonSerializer.SerializeToElement(true);
         match.Params.First(p => p.Name == "Sub Pixel").Default = JsonSerializer.SerializeToElement(true);
         match.Params.First(p => p.Name == "Max Overlap").Default = JsonSerializer.SerializeToElement(.5);
+        var matchCount = match.Params.First(p => p.Name == "Num Matches");
+        matchCount.Minimum = 0;
+        matchCount.Maximum = 1000;
+        matchCount.DisplayName = "最大匹配个数";
 
         var pose = new[] { Group("Point", "位置", new { X = 0d, Y = 0d }, Scalar("X", "X", "float", 0), Scalar("Y", "Y", "float", 0)),
             Scalar("Angle", "角度", "float", 0), Scalar("ScaleX", "X尺度", "float", 1), Scalar("ScaleY", "Y尺度", "float", 1) };
@@ -77,32 +81,15 @@ internal static class ContourTemplateSchema
         Add(match, display);
         match.Params.First(p => p.Name == "Display Contours Attribute").Depends = JsonSerializer.SerializeToElement(new Dictionary<string, object> { ["Match Display"] = "Contour" });
         match.Params.First(p => p.Name == "Display Rect Region Attribute").Depends = JsonSerializer.SerializeToElement(new Dictionary<string, object> { ["Match Display"] = "Rectangle" });
-        var gray = new DriverDef
+        // The former NCC entry now exposes the complete AiVisionStudio-1 shape-matching contract.
+        var shape = new DriverDef
         {
-            Driver = AiVisionStudio.Algorithm.Impl.ContourTemplateEngine.GrayDriver, Group = match.Group, Version = match.Version,
+            Driver = AiVisionStudio.Algorithm.Impl.ContourTemplateEngine.ShapeDriver, Group = match.Group, Version = match.Version,
             Window = match.Window, Raw = match.Raw, ParameterValues = match.ParameterValues, ParameterBind = match.ParameterBind,
             Params = match.Params.Select(p => Copy(p)).ToList(), Outputs = match.Outputs.Select(p => Copy(p)).ToList()
         };
-        gray.Params.RemoveAll(p => p.Name is "Match Display" or "Display Contours Attribute" or "Scale Range" or "Scale Step" or "Angle Step" or "Greediness" or "Parameters");
-        var grayCreate = gray.Params.First(p => p.Name == "Create Model");
-        grayCreate.Children.RemoveAll(p => p.Name is "Scale Range" or "Scale Step" or "Optimization" or "Pregeneration");
-        if (grayCreate.Default is { } grayDefaults)
-        {
-            var filtered = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(grayDefaults.GetRawText());
-            foreach (var name in new[] { "Scale Range", "Scale Step", "Optimization", "Pregeneration" }) filtered.Remove(name);
-            grayCreate.Default = JsonSerializer.SerializeToElement(filtered);
-        }
-        if (gray.ParameterValues is { } grayValues)
-        {
-            var filtered = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(grayValues.GetRawText());
-            foreach (var name in new[] { "Scale Range", "Scale Step", "Angle Step", "Greediness", "Parameters" }) filtered.Remove(name);
-            filtered["Create Model"] = grayCreate.Default.Value;
-            gray.ParameterValues = JsonSerializer.SerializeToElement(filtered);
-        }
-        if (gray.Params.FirstOrDefault(p => p.Name == "Polarity") is { } polarity) polarity.Items.Remove("Ignore Local Polarity");
         match.Params.RemoveAll(p => p.Name is "Angle Step" or "Scale Step");
-        gray.Params.First(p => p.Name == "Display Rect Region Attribute").Depends = null;
-        foreach (var definition in new[] { match, gray })
+        foreach (var definition in new[] { match, shape })
         {
             definition.Params.RemoveAll(p => p.Name is "Base Point" or "Running Point" or "Base Point Display" or "Running Point Display" or "Display Contours" or "Display Rect Region");
             foreach (var parameter in definition.Params)
@@ -113,7 +100,7 @@ internal static class ContourTemplateSchema
                 if (parameter.Name == "Display Contours Attribute") parameter.DisplayName = "匹配轮廓样式";
             }
         }
-        definitions[gray.Driver] = gray;
+        definitions[shape.Driver] = shape;
         foreach (var definition in definitions.Values)
             foreach (var parameter in definition.Params) AddGeometryArrays(parameter);
     }
@@ -122,10 +109,8 @@ internal static class ContourTemplateSchema
     {
         if (!AiVisionStudio.Algorithm.Impl.ContourTemplateEngine.IsMatcher(driver) || path.Count == 0) return false;
         string name = path[0];
-        if (name is "Model File" or "Angle Step" or "Scale Step" or "Base Point" or "Running Point" or "Base Point Display" or "Running Point Display" or "Display Contours" or "Display Rect Region") return true;
-        if (driver != AiVisionStudio.Algorithm.Impl.ContourTemplateEngine.GrayDriver) return false;
-        if (name is "Scale Range" or "Greediness" or "Parameters" or "Match Display" or "Display Contours Attribute") return true;
-        return name == "Create Model" && path.Count > 1 && path[1] is "Scale Range" or "Scale Step" or "Optimization" or "Pregeneration";
+        if (name is "Model File" or "Base Point" or "Running Point" or "Base Point Display" or "Running Point Display" or "Display Contours" or "Display Rect Region") return true;
+        return driver != AiVisionStudio.Algorithm.Impl.ContourTemplateEngine.ShapeDriver && name is "Angle Step" or "Scale Step";
     }
 
     private static void AddGeometryArrays(ParamSpec parameter)

@@ -7,6 +7,11 @@ internal static class Program
     {
         try
         {
+            if (args.Contains("--post-training")) { PostTrainingMatchCases.Run(); return 0; }
+            if (args.Contains("--contour-display")) { ContourDisplayCases.Run(); return 0; }
+            if (args.Contains("--mask-editor")) { TemplateMaskEditingCases.Run(); EditorCases.Run(); TemplateCleanupCases.Run(); return 0; }
+            if (args.Contains("--region-list")) { TemplateMaskEditingCases.RunRegionList(); return 0; }
+            if (args.Contains("--shape-template")) { ShapeEngineCases.Run(); NativeTemplateCases.Run(); TemplateCleanupCases.Run(); MatchingSyncCases.Run(); return 0; }
             if (args.Contains("--matching-sync")) { MatchingSyncCases.Run(); return 0; }
             if (args.Contains("--matching-cleanup")) { TemplateCleanupCases.Run(); return 0; }
             if (args.Contains("--native-template")) { NativeTemplateCases.Run(); return 0; }
@@ -20,6 +25,11 @@ internal static class Program
             if (args.Contains("--channels")) { ChannelSplitCases.Run(); return 0; }
             if (args.Contains("--halcon")) { HalconGeometryCases.Run(); return 0; }
             var total = EngineCases.Run();
+            total += ShapeEngineCases.Run();
+            total += ContourDisplayCases.Run();
+            total += PostTrainingMatchCases.Run();
+            total += TemplateMaskEditingCases.Run();
+            total += TemplateMaskEditingCases.RunRegionList();
             total += WorkflowCases.Run();
             total += RegionCases.Run();
             total += EditorCases.Run();

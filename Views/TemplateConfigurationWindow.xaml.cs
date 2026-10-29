@@ -31,25 +31,35 @@ public partial class TemplateConfigurationWindow : System.Windows.Window
     private bool _ready, _updating, _busy, _closePending, _dirty, _showFeatures;
     private Button _undoButton, _redoButton;
     public bool IsTraining => _busy;
+    public bool HasSavedTraining { get; private set; }
 
     public TemplateConfigurationWindow(Dictionary<string, object> values, string regionKey, Mat image,
         ContourTemplateModel model, Func<Mat> currentImage,
         Func<ContourTemplateModel, IReadOnlyDictionary<string, object>, bool> save, string matchingMethod = "Contour", Action imageReplaced = null)
     {
         InitializeComponent();
-        _matchingMethod = matchingMethod; _imageReplaced = imageReplaced;
+        _matchingMethod = matchingMethod == "Gray" ? "Shape" : matchingMethod; _imageReplaced = imageReplaced;
         WindowScreenBehavior.Attach(this);
         _draft = Copy(values); _regionKey = regionKey; _currentImage = currentImage; _save = save;
         _image = image?.Clone();
         _model = model == null ? null : ContourTemplateEngine.DeserializeModel(ContourTemplateEngine.SerializeModel(model));
+        _regionListLocked = _model != null;
         _showFeatures = _model != null;
         CanvasView.ConfigureTemplateCanvas();
         BuildToolbar();
-        if (_matchingMethod == "Gray")
+        BuildMaskToolbar();
+        CanvasView.TemplateViewChanged += (_, _) => UpdateImageSize();
+        CanvasView.RegionEditingChanged += (_, _) =>
         {
-            Title = "灰度模板配置";
-            foreach (var child in ((Grid)ThresholdMode.Parent).Children.OfType<FrameworkElement>().Where(child => Grid.GetRow(child) >= 2)) child.Visibility = Visibility.Collapsed;
-        }
+            if (!CanvasView.IsRegionEditing)
+            {
+                BrushSizePanel.Visibility = Visibility.Collapsed;
+                SelectDrawingTool(null);
+                _regionEditingKey = null;
+                RefreshRegionList();
+            }
+        };
+        CanvasView.TemplateRegionDraftChanged += (_, _) => RefreshRegionList();
         StoreImage.IsChecked = model == null || model.SourceImagePng?.Length > 10;
         ReadControls(); RefreshCanvas(); RefreshResults();
         _ready = true;
@@ -58,6 +68,8 @@ public partial class TemplateConfigurationWindow : System.Windows.Window
         Closed += (_, _) => { CanvasView.CancelRegionEdit(); CanvasView.Clear(); _image?.Dispose(); _image = null; };
         PreviewKeyDown += (_, e) =>
         {
+            if (Keyboard.FocusedElement is not TextBox && _maskWorking != null && e.Key is Key.Escape or Key.Enter)
+            { if (e.Key == Key.Escape) CancelMask(); else ApplyMask(); e.Handled = true; return; }
             if (e.Key == Key.Escape && !CanvasView.IsRegionEditing) { Close(); e.Handled = true; }
             if (Keyboard.Modifiers != ModifierKeys.Control || Keyboard.FocusedElement is TextBox) return;
             if (e.Key == Key.Z) { Undo(); e.Handled = true; }
@@ -67,24 +79,25 @@ public partial class TemplateConfigurationWindow : System.Windows.Window
 
     private void BuildToolbar()
     {
-        AddTool(EditTools, "选择 / 调整区域", "M3,2 L3,21 8,16 12,23 15,21 11,14 18,14 Z", EditRegion);
-        AddTool(EditTools, "多边形", "M3,19 L8,5 21,2 21,20 Z M2,18 L5,18 5,21 2,21 Z M7,3 L10,3 10,6 7,6 Z", () => BeginRegion("polygon2d"));
-        AddTool(EditTools, "圆形", "M21,12 A9,9 0 1 1 3,12 A9,9 0 1 1 21,12 M12,12 L18,6", () => BeginRegion("circle2d"));
-        var rectangle = AddTool(EditTools, "矩形（右键可选扇形、圆环）", "M3,4 L21,4 21,20 3,20 Z M1,2 L5,2 5,6 1,6 Z M19,18 L23,18 23,22 19,22 Z", () => BeginRegion("rect2d"));
+        AddDrawingTool("select", EditTools, "选择 / 调整区域", "M3,2 L3,21 8,16 12,23 15,21 11,14 18,14 Z", EditRegion);
+        AddDrawingTool("template:polygon2d", EditTools, "多边形", "M3,19 L8,5 21,2 21,20 Z M2,18 L5,18 5,21 2,21 Z M7,3 L10,3 10,6 7,6 Z", () => BeginRegion("polygon2d"));
+        AddDrawingTool("template:circle2d", EditTools, "圆形", "M21,12 A9,9 0 1 1 3,12 A9,9 0 1 1 21,12 M12,12 L18,6", () => BeginRegion("circle2d"));
+        var rectangle = AddDrawingTool("template:rect2d", EditTools, "矩形（右键可选扇形、圆环）", "M3,4 L21,4 21,20 3,20 Z M1,2 L5,2 5,6 1,6 Z M19,18 L23,18 23,22 19,22 Z", () => BeginRegion("rect2d"));
+        _drawingTools["template:sector2d"] = _drawingTools["template:ring2d"] = rectangle;
         rectangle.ContextMenu = new ContextMenu();
         foreach (var (label, type) in new[] { ("扇形", "sector2d"), ("圆环", "ring2d") })
         {
             var item = new MenuItem { Header = label }; item.Click += (_, _) => BeginRegion(type); rectangle.ContextMenu.Items.Add(item);
         }
-        var brush = AddTool(EditTools, "画笔屏蔽（右键设置笔刷半径）", "M5,16 L15,3 21,8 11,21 3,22 Z M14,5 L19,10", () => BeginPaint(false));
+        var brush = AddDrawingTool("mask:brush", MaskTools, "画笔屏蔽：下方滑动条调整大小", "M5,16 L15,3 21,8 11,21 3,22 Z M14,5 L19,10", () => BeginPaint(false));
         brush.ContextMenu = new ContextMenu();
         foreach (var radius in new[] { 3, 5, 10, 20, 40 })
         {
-            var item = new MenuItem { Header = $"半径 {radius} px" }; item.Click += (_, _) => _brushRadius = radius; brush.ContextMenu.Items.Add(item);
+            var item = new MenuItem { Header = $"半径 {radius} px" }; item.Click += (_, _) => SetBrushRadius(radius); brush.ContextMenu.Items.Add(item);
         }
-        AddTool(EditTools, "设置匹配中心", "M2,8 L2,2 8,2 M16,2 L22,2 22,8 M22,16 L22,22 16,22 M8,22 L2,22 2,16 M12,6 L12,18 M6,12 L18,12", BeginOrigin);
-        AddTool(EditTools, "完成绘制（Enter）", "M3,3 L17,3 17,7 M3,3 L3,21 21,21 21,13 M8,12 L12,16 22,6", () => CanvasView.CompleteRegionEdit());
-        var eraser = AddTool(EditTools, "橡皮擦：恢复屏蔽特征（右键清除全部屏蔽）", "M3,15 L14,3 22,10 11,22 9,22 Z M8,10 L17,17 M10,22 L23,22", () => BeginPaint(true));
+        AddDrawingTool("origin", EditTools, "设置匹配中心", "M2,8 L2,2 8,2 M16,2 L22,2 22,8 M22,16 L22,22 16,22 M8,22 L2,22 2,16 M12,6 L12,18 M6,12 L18,12", BeginOrigin);
+        AddTool(EditTools, "完成绘制（Enter）", "M3,3 L17,3 17,7 M3,3 L3,21 21,21 21,13 M8,12 L12,16 22,6", () => { if (_maskWorking != null) ApplyMask(); else CanvasView.CompleteRegionEdit(); });
+        var eraser = AddDrawingTool("mask:erase", MaskTools, "橡皮擦：恢复屏蔽特征（右键清除全部屏蔽）", "M3,15 L14,3 22,10 11,22 9,22 Z M8,10 L17,17 M10,22 L23,22", () => BeginPaint(true));
         eraser.ContextMenu = new ContextMenu();
         var clear = new MenuItem { Header = "清除全部屏蔽" }; clear.Click += (_, _) => ClearMask(); eraser.ContextMenu.Items.Add(clear);
         AddTool(EditTools, "删除模板区域", "M3,5 L21,5 M8,5 L8,2 16,2 16,5 M5,5 L6,22 18,22 19,5 M10,9 L10,18 M14,9 L14,18", () => Change(() => _draft[_regionKey] = EmptyRegion()));
@@ -92,8 +105,6 @@ public partial class TemplateConfigurationWindow : System.Windows.Window
         _redoButton = AddTool(EditTools, "重做（Ctrl+Y）", "M15,4 L21,9 15,14 M21,9 L9,9 C1,9 1,21 9,21 L15,21", Redo);
         AddTool(ZoomTools, "放大", "M17,10 A7,7 0 1 1 3,10 A7,7 0 1 1 17,10 M15,15 L23,23 M6,10 L14,10 M10,6 L10,14", () => CanvasView.ZoomTemplateCanvas(1.2));
         AddTool(ZoomTools, "缩小", "M17,10 A7,7 0 1 1 3,10 A7,7 0 1 1 17,10 M15,15 L23,23 M6,10 L14,10", () => CanvasView.ZoomTemplateCanvas(1 / 1.2));
-        var actual = new Button { Content = "1:1", Width = 34, Padding = new Thickness(0), BorderThickness = new Thickness(0), Background = Brushes.Transparent, ToolTip = "原始比例" };
-        actual.Click += (_, _) => CanvasView.ShowTemplateActualSize(); ZoomTools.Children.Add(actual);
         AddTool(ZoomTools, "适应窗口", "M2,3 L22,3 22,21 2,21 Z M6,10 L6,7 10,7 M14,17 L18,17 18,14 M6,7 L11,12 M18,17 L13,12", () => CanvasView.Fit());
     }
 
@@ -104,10 +115,6 @@ public partial class TemplateConfigurationWindow : System.Windows.Window
         button.Click += (_, _) => action(); panel.Children.Add(button); return button;
     }
 
-    public void StartMaskEditing() => BeginPaint(false);
-    private void OnMaskPaint(object sender, RoutedEventArgs e) => BeginPaint(false);
-    private void OnMaskErase(object sender, RoutedEventArgs e) => BeginPaint(true);
-    private void OnMaskClear(object sender, RoutedEventArgs e) => ClearMask();
     private double _brushRadius = 10;
     private void OnCurrentImage(object sender, RoutedEventArgs e)
     {
@@ -135,6 +142,7 @@ public partial class TemplateConfigurationWindow : System.Windows.Window
     }
     private void LoadImage(Mat image)
     {
+        CancelMask();
         CanvasView.CancelRegionEdit();
         bool changed = _image != null && ContourTemplateEngine.ImageFingerprint(_image) != ContourTemplateEngine.ImageFingerprint(image);
         if (changed) { _imageReplaced?.Invoke(); _model = null; }
@@ -142,6 +150,7 @@ public partial class TemplateConfigurationWindow : System.Windows.Window
         // History belongs to one image; geometry from another image cannot be replayed here.
         _undo.Clear(); _redo.Clear();
         _draft[_regionKey] = EmptyRegion();
+        _regionListLocked = false; _selectedRegionKey = null;
         _draft["Use Shielding Area"] = false; _draft["Shielding Strokes"] = Array.Empty<object>();
         _draft["Model Origin"] = Map(new { Auto = true, X = 0d, Y = 0d, Angle = 0d, Locked = false });
         _dirty = true; ReadControls(); RefreshCanvas(); CanvasView.Fit();
@@ -161,29 +170,28 @@ public partial class TemplateConfigurationWindow : System.Windows.Window
     }
     private void BeginRegion(string type, bool edit = false)
     {
-        if (!EnsureImage()) return;
+        if (!EnsureImage() || !RequireAppliedMask()) return;
+        CanvasView.SetTemplateMaskDrawing(false);
         CanvasView.BeginRegionEdit(type, edit ? Group(_draft, _regionKey) : null,
             value => Change(() => _draft[_regionKey] = value), "模板区域：拖动画选，Enter 完成");
+        TrackRegionEditing("template");
+        SelectDrawingTool(edit ? "select" : "template:" + type);
     }
     private void BeginPaint(bool erase)
     {
-        if (!EnsureImage()) return;
-        CanvasView.BeginMaskPaint(_brushRadius, strokes => Change(() =>
-        {
-            var values = (_draft.GetValueOrDefault("Shielding Strokes") as IEnumerable)?.Cast<object>().ToList() ?? new();
-            values.AddRange(strokes.Select(stroke => (object)new Dictionary<string, object>(stroke) { ["Erase"] = erase }));
-            _draft["Shielding Strokes"] = values;
-        }));
-        Status.Text = erase ? "涂抹要恢复的特征，Enter 应用橡皮擦" : "涂抹要忽略的特征，Enter 应用屏蔽";
-    }
-    private void ClearMask()
-    {
-        if (_busy) return;
-        Change(() => { _draft["Use Shielding Area"] = false; _draft["Shielding Strokes"] = Array.Empty<object>(); });
+        if (!StartMaskSession()) return;
+        CanvasView.SetTemplateMaskDrawing(true);
+        CanvasView.BeginMaskPaint(_brushRadius, strokes => AddBrushStrokes(strokes, erase), continuous: true, erase: erase);
+        SelectDrawingTool(erase ? "mask:erase" : "mask:brush");
+        BrushSizeLabel.Text = erase ? "橡皮擦半径" : "画笔半径";
+        BrushSizeSlider.Value = _brushRadius;
+        BrushSizePanel.Visibility = Visibility.Visible;
+        Status.Text = erase ? "涂抹恢复特征；点击“应用”确认，或“取消修改”恢复" : "涂抹屏蔽特征；点击“应用”确认，或“取消修改”恢复";
     }
     private void BeginOrigin()
     {
-        if (!EnsureImage()) return;
+        if (!EnsureImage() || !RequireAppliedMask()) return;
+        CanvasView.SetTemplateMaskDrawing(false);
         if (LockCenter.IsChecked == true) { Status.Text = "匹配中心已锁定，请先取消锁定"; return; }
         var (x, y) = Origin();
         var initial = Map(new { Type = "origin", origin = new { X = x, Y = y, Angle = Number(Group(_draft, "Model Origin"), "Angle") } });
@@ -193,18 +201,19 @@ public partial class TemplateConfigurationWindow : System.Windows.Window
             var point = Group(origin, "Point") ?? origin;
             Change(() => _draft["Model Origin"] = Map(new { Auto = false, X = Number(point, "X"), Y = Number(point, "Y"), Angle = Number(origin, "Angle"), Locked = false }));
         }, "匹配中心：拖动十字设置位置，拖动方向柄调整方向");
+        SelectDrawingTool("origin");
     }
 
     private void Change(Action change)
     {
-        if (_busy) return;
+        if (_busy || !RequireAppliedMask()) return;
         CanvasView.CancelRegionEdit();
         _undo.Push(JsonSerializer.Serialize(_draft)); _redo.Clear(); change();
         _dirty = true; ReadControls(); RefreshCanvas();
         Status.Text = "区域或参数已修改，点击训练后更新工程模板";
     }
-    private void Undo() => RestoreHistory(_undo, _redo);
-    private void Redo() => RestoreHistory(_redo, _undo);
+    private void Undo() { if (_maskWorking != null) UndoMask(); else RestoreHistory(_undo, _redo); }
+    private void Redo() { if (_maskWorking != null) RedoMask(); else RestoreHistory(_redo, _undo); }
     private void RestoreHistory(Stack<string> source, Stack<string> target)
     {
         if (_busy || source.Count == 0) return;
@@ -227,7 +236,6 @@ public partial class TemplateConfigurationWindow : System.Windows.Window
         var (x, y) = Origin();
         CenterX.Text = x.ToString("0.##", CultureInfo.InvariantCulture); CenterY.Text = y.ToString("0.##", CultureInfo.InvariantCulture);
         LockCenter.IsChecked = Boolean(Group(_draft, "Model Origin"), "Locked", false);
-        ShieldAll.IsChecked = IsAllShielded();
         UpdateEnabledControls(); _updating = false;
     }
     private void UpdateEnabledControls()
@@ -235,6 +243,7 @@ public partial class TemplateConfigurationWindow : System.Windows.Window
         FeatureScale.IsEnabled = ScaleMode.SelectedIndex == 1; ContrastThreshold.IsEnabled = ThresholdMode.SelectedIndex == 1;
         CenterX.IsReadOnly = CenterY.IsReadOnly = LockCenter.IsChecked == true;
         _undoButton.IsEnabled = !_busy && _undo.Count > 0; _redoButton.IsEnabled = !_busy && _redo.Count > 0;
+        UpdateMaskControls();
     }
     private bool SyncControls()
     {
@@ -278,31 +287,10 @@ public partial class TemplateConfigurationWindow : System.Windows.Window
         if (CanvasView.IsRegionEditing) CanvasView.CancelRegionEdit();
         if (SyncControls()) RefreshCanvas();
     }
-    private void OnShieldAll(object sender, RoutedEventArgs e)
-    {
-        if (!_ready || _updating || !EnsureImage()) return;
-        var enabled = ShieldAll.IsChecked == true;
-        Change(() =>
-        {
-            _draft["Use Shielding Area"] = enabled;
-            if (enabled)
-            {
-                _draft["Shielding Area"] = Map(new { Type = "rect2d", rect2d = new { Center = new { X = (_image.Width - 1) / 2d, Y = (_image.Height - 1) / 2d }, Size = new { Width = (double)_image.Width, Height = (double)_image.Height }, Rotation = 0d } });
-                _draft["Shielding Strokes"] = Array.Empty<object>();
-            }
-        });
-        if (enabled) Status.Text = "已全部屏蔽，用橡皮擦恢复需要保留的轮廓后再训练";
-    }
-    private bool IsAllShielded()
-    {
-        var area = Group(Group(_draft, "Shielding Area"), "rect2d");
-        return _image != null && Boolean(_draft, "Use Shielding Area", false) && Number(Group(area, "Size"), "Width") >= _image.Width && Number(Group(area, "Size"), "Height") >= _image.Height;
-    }
-
     private async void OnTrain(object sender, RoutedEventArgs e)
     {
         if (_busy) { _training?.Cancel(); return; }
-        if (!EnsureImage()) return;
+        if (!EnsureImage() || !RequireAppliedMask()) return;
         CanvasView.CompleteRegionEdit();
         if (CanvasView.IsRegionEditing) { Status.Text = "请完成有效的区域绘制，或按 Esc 取消"; return; }
         if (!SyncControls()) return;
@@ -320,9 +308,11 @@ public partial class TemplateConfigurationWindow : System.Windows.Window
             if (_closePending) return;
             if (StoreImage.IsChecked != true) model.SourceImagePng = Array.Empty<byte>();
             if (!_save(model, Copy(_draft))) throw new InvalidOperationException("工程模板未能更新，请检查当前工具及参数状态。");
+            HasSavedTraining = true;
             _model = model; _dirty = false; _showFeatures = true;
+            _regionListLocked = true;
             ReadControls(); RefreshCanvas(); RefreshResults();
-            Status.Text = _matchingMethod == "Gray" ? "NCC灰度模板训练成功，已保存到工程" : $"训练成功，{model.Features.Count} 个特征，模板已保存到工程";
+            Status.Text = $"训练成功，{model.Features.Count} 个特征，模板已保存到工程";
         }
         catch (OperationCanceledException) { Status.Text = "训练已取消，保留已保存的模板"; }
         catch (Exception exception) { ShowError(exception); }
@@ -335,7 +325,7 @@ public partial class TemplateConfigurationWindow : System.Windows.Window
     private void SetBusy(bool busy)
     {
         _busy = busy;
-        SourceActions.IsEnabled = SettingsPanel.IsEnabled = CenterPanel.IsEnabled = EditTools.IsEnabled = CanvasView.IsEnabled = !busy;
+        SourceActions.IsEnabled = EditTools.IsEnabled = ZoomTools.IsEnabled = ImageSize.IsEnabled = CanvasView.IsEnabled = !busy;
         TrainButton.Content = busy ? "停止训练" : "训练"; UpdateEnabledControls();
     }
     private void OnEditorClosing(object sender, CancelEventArgs e)
@@ -352,37 +342,25 @@ public partial class TemplateConfigurationWindow : System.Windows.Window
     }
     private void OnResultSelected(object sender, SelectionChangedEventArgs e)
     {
-        if (_model != null && !_busy) Status.Text = _matchingMethod == "Gray" ? $"灰度相关模板：{_model.Width} × {_model.Height} px" : $"工程模板：{_model.Features.Count} 个特征，{_model.Width} × {_model.Height} px";
+        if (_updatingRegionList || TemplateResults.SelectedItem is not ListBoxItem { Tag: TemplateRegionItem item }) return;
+        EditListedRegion(item);
     }
-    private void RefreshResults()
-    {
-        TemplateResults.Items.Clear();
-        if (_model == null) return;
-        var row = new StackPanel { Margin = new Thickness(2, 8, 2, 8) };
-        row.Children.Add(new TextBlock { Text = "模板 1", FontWeight = FontWeights.SemiBold, Margin = new Thickness(0, 0, 0, 7) });
-        row.Children.Add(new TextBlock { Text = _matchingMethod == "Gray" ? "灰度相关模板" : $"{_model.Features.Count} 个特征 · {_model.Contours.Count} 条轮廓", FontSize = 12, Foreground = Brushes.SlateGray });
-        row.Children.Add(new TextBlock { Text = $"{_model.Width} × {_model.Height} px", FontSize = 12, Margin = new Thickness(0, 5, 0, 0), Foreground = Brushes.SlateGray });
-        row.Children.Add(new TextBlock { Text = $"中心：({_model.OriginX:0.##}, {_model.OriginY:0.##})", FontSize = 12, Margin = new Thickness(0, 5, 0, 0), Foreground = Brushes.SlateGray });
-        row.Children.Add(new TextBlock { Text = "已保存到工程", FontSize = 12, Margin = new Thickness(0, 8, 0, 0), Foreground = new SolidColorBrush(Color.FromRgb(39, 135, 87)) });
-        TemplateResults.Items.Add(row); TemplateResults.SelectedIndex = 0;
-    }
+    private void RefreshResults() => RefreshRegionList();
     private void RefreshCanvas()
     {
-        if (_image == null) { CanvasView.Clear(); return; }
+        if (_image == null) { CanvasView.Clear(); RefreshRegionList(); return; }
         CanvasView.ShowMat(_image, "模板训练图像");
         var overlays = new List<NativeOverlay3D>();
         AddRegion(overlays, _draft.GetValueOrDefault(_regionKey), "#00C5E0");
-        if (Boolean(_draft, "Use Shielding Area", false)) AddRegion(overlays, _draft.GetValueOrDefault("Shielding Area"), "#FF6060");
-        if (_draft.GetValueOrDefault("Shielding Strokes") is IEnumerable strokes)
-            foreach (var stroke in strokes)
-                AddRegion(overlays, stroke, stroke is IReadOnlyDictionary<string, object> map && Boolean(map, "Erase", false) ? "#80E5A0" : "#FF6060");
-        if (_model != null && _showFeatures)
-            foreach (var contour in _model.Contours.Where(c => c.Count > 1))
+        RefreshMaskPreview();
+        if (_model != null && _showFeatures && _maskWorking == null)
+            foreach (var contour in ContourTemplateDisplay.GetContours(_model).Where(c => c.Count > 1))
                 overlays.Add(new NativeOverlay3D { Type = "trace2d", Values = new() { ["Points"] = contour.Select(p => (object)new Dictionary<string, object> { ["X"] = p.X + _model.OffsetX, ["Y"] = p.Y + _model.OffsetY }).ToArray(), ["_color"] = _dirty ? "#E6B74F" : "#00FF70", ["_thickness"] = 1 } });
         var (x, y) = Origin();
         double angle = Boolean(Group(_draft, "Model Origin"), "Auto", true) ? _model?.OriginAngle ?? 0 : Number(Group(_draft, "Model Origin"), "Angle");
         overlays.Add(new NativeOverlay3D { Type = "origin2d", Values = new() { ["X"] = x, ["Y"] = y, ["Angle"] = angle, ["_size"] = 12, ["_color"] = "#FFE050" } });
         CanvasView.SetNativeOverlays(overlays);
+        RefreshRegionList();
     }
     private (double x, double y) Origin()
     {

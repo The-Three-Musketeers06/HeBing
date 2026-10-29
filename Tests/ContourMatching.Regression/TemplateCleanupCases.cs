@@ -33,8 +33,11 @@ internal static class TemplateCleanupCases
         {
             context.Images.Set(0, image.Clone()); context.Images.Set(1, left.Clone()); context.Images.Set(2, right.Clone());
             var op = new ShapeMatchOp(ContourTemplateEngine.GrayDriver);
-            Check(op.Run(context, Parameters(payload, 2)) && Math.Abs(context.Vars.GetDouble("ShapeMatch.X") - 170) < 1, "掩膜必须限制NCC只匹配右侧目标");
-            Check(context.NativeOverlays.Count(item => item.Type == "rect2d") == 1 && context.NativeOverlays.All(item => item.Type != "trace2d") && context.NativeOverlays.Count(item => item.Type == "point2d") == 1, "灰度结果即使带旧显示开关也只能有一个框和一个中心");
+            Check(op.Run(context, Parameters(payload, 2)) && Math.Abs(context.Vars.GetDouble("ShapeMatch.X") - 170) < 1, "掩膜必须限制形状匹配只定位右侧目标");
+            Check(context.NativeOverlays.Count(item => item.Type == "rect2d") == 1 && context.NativeOverlays.All(item => item.Type != "trace2d") && context.NativeOverlays.Count(item => item.Type == "point2d") == 1, "矩形标注模式只能显示一个外框和一个中心");
+            var contourRoot = Root(payload, 2);
+            ((YamlMappingNode)contourRoot.Children[new YamlScalarNode("value")]).Add("Match Display", "Contour");
+            Check(op.Run(context, ParamBag.FromYaml(contourRoot)) && context.NativeOverlays.Any(item => item.Type == "trace2d") && context.NativeOverlays.All(item => item.Type != "rect2d"), "形状匹配必须支持真实轮廓标注且不叠加旧灰度外框");
             var badRoot = Root(payload, 1); var badValues = (YamlMappingNode)badRoot.Children[new YamlScalarNode("value")];
             badValues.Add("Use Region", "true"); badValues.Add("Region", Yaml("Type: rect2d\nrect2d: {Center: {X: 170, Y: 50}, Size: {Width: 70, Height: 70}, Rotation: 0}"));
             var bad = ParamBag.FromYaml(badRoot);
@@ -60,25 +63,25 @@ internal static class TemplateCleanupCases
             vm.SelectedOperation = first; vm.SelectedOperation = second;
             vm.Images.Set(0, image.Clone()); vm.Images.Set(1, left.Clone()); vm.Images.Set(2, right.Clone());
             vm.RunAll();
-            Check(first.State == OpState.Ok && second.State == OpState.Ok, "连续两个NCC算子应分别使用自己的掩膜");
+            Check(first.State == OpState.Ok && second.State == OpState.Ok, "连续两个形状匹配算子应分别使用自己的掩膜");
             Check(vm.NativeOverlays.Count(item => item.Type == "rect2d") == 2 && vm.GetSelectedPreviewOverlays(0).Count(item => item.Type == "rect2d") == 1, "窗口应隔离同一图层上其他算子的框");
             foreach (var source in vm.GetVisualSources())
                 vm.UseVisualSnapshot(source.Key, snapshot => Check(snapshot.Overlays.Count(item => item.Type == "rect2d") == 1 && snapshot.Overlays.All(item => Equals(item.Values.GetValueOrDefault("_owned_operation"), source.Key.OperationId)), "结果快照必须只保存本算子的匹配框"));
-            Check(vm.SelectedOutputs.All(row => row.Name != "Elapsed Time" && row.Name != "ShapeMatch.Scale") && vm.SelectedOutputs.Where(row => row.Name.StartsWith("ShapeMatch.")).All(row => !row.DisplayName.Contains("ShapeMatch") && !row.DisplayName.Contains("ElapsedMs")), "输出应汉化并隐藏重复耗时、灰度固定尺度");
+            Check(vm.SelectedOutputs.All(row => row.Name != "Elapsed Time") && vm.SelectedOutputs.Any(row => row.Name == "ShapeMatch.Scale") && vm.SelectedOutputs.Where(row => row.Name.StartsWith("ShapeMatch.")).All(row => !row.DisplayName.Contains("ShapeMatch") && !row.DisplayName.Contains("ElapsedMs")), "输出应汉化、保留形状尺度并隐藏重复耗时");
             var flag = VarRow.FromOwned("ShapeMatch.TimedOut", false, ContourTemplateEngine.GrayDriver);
             Check(flag.DisplayName == "匹配超时" && flag.DisplayType == "布尔" && flag.DisplayValue == "否", "输出名称类型和值都应为中文");
-            Check(vm.AllParameterNodes.Where(node => node.Parent == null).All(node => node.Name is not ("Model File" or "Display Contours" or "Display Rect Region" or "Base Point" or "Running Point" or "Scale Range")), "过时输入与冲突显示开关不得回到参数页");
+            Check(vm.AllParameterNodes.Where(node => node.Parent == null).All(node => node.Name is not ("Model File" or "Display Contours" or "Display Rect Region" or "Base Point" or "Running Point")), "过时输入与冲突显示开关不得回到参数页");
             var window = new ParamsWindow(vm);
             try
             {
                 Check(((System.Collections.ICollection)typeof(ParamsWindow).GetField("_shapeMatchRows", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(window)).Count == 1, "重新打开参数窗口必须显示已有的匹配列表");
                 var editor = (TemplateConfigurationWindow)typeof(ParamsWindow).GetMethod("CreateShapeTemplateConfiguration", BindingFlags.Instance | BindingFlags.NonPublic)!.Invoke(window, null);
-                Check(Children<Button>((DependencyObject)editor.Content).Any(button => Equals(button.Content, "涂抹屏蔽")) && Children<Button>((DependencyObject)editor.Content).Any(button => Equals(button.Content, "橡皮擦")), "模板创建窗口必须提供可见的掩膜画笔与橡皮擦入口");
                 Render(editor, "mask-editor.png", 1180, 760);
+                Check(Children<Button>((DependencyObject)editor.Content).Any(button => Equals(button.Content, "全部填充")) && Children<Button>((DependencyObject)editor.Content).Any(button => button.ToolTip?.ToString()?.StartsWith("橡皮擦") == true), "模板创建窗口必须提供独立的掩膜工具栏与橡皮擦入口");
                 editor.Close();
                 var tabs = (TabControl)typeof(ParamsWindow).GetField("_shapeTabs", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(window); tabs.SelectedIndex = 2;
                 window.RefreshPreview(); Render(window, "matching-result.png", 1280, 800);
-                Check(((StackPanel)((ScrollViewer)((TabItem)((TabControl)typeof(ParamsWindow).GetField("_shapeTabs", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(window)).Items[2]).Content).Content).Children.OfType<DataGrid>().Single().Columns.All(column => !Equals(column.Header, "尺度")), "灰度匹配结果表不应显示固定尺度列");
+                Check(((StackPanel)((ScrollViewer)((TabItem)((TabControl)typeof(ParamsWindow).GetField("_shapeTabs", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(window)).Items[2]).Content).Content).Children.OfType<DataGrid>().Single().Columns.Any(column => Equals(column.Header, "尺度")), "形状匹配结果表必须显示实际尺度列");
             }
             finally { window.Close(); }
             string old = vm.ReadParameterValue(ContourTemplateStorage.ModelKey)?.ToString();

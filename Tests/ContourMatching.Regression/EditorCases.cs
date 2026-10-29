@@ -52,7 +52,7 @@ public static class EditorCases
             window.RefreshPreview();
             Render(window, output, "template-teaching.png", 1280, 800);
             var labels = Descendants<Button>((DependencyObject)window.Content).Select(button => button.Content?.ToString()).ToArray();
-            Require(labels.Contains("创建") && !labels.Contains("图片加载") && !labels.Contains("训练模板") && !labels.Contains("画笔屏蔽"), "原示教操作块必须替换为创建按钮"); count++;
+            Require(labels.Contains("创建") && !labels.Contains("掩膜编辑") && !labels.Contains("图片加载") && !labels.Contains("训练模板") && !labels.Contains("画笔屏蔽"), "示教页只保留创建入口，掩膜编辑放在创建窗口内"); count++;
             var editor = CreateTemplateEditor(window);
             Invoke(editor, "LoadImage", image);
             Require(Convert.ToDouble(vm.ReadParameterValue("Training Region", "rect2d", "Size", "Width")) == 170 && vm.ReadParameterValue(ContourTemplateStorage.ModelKey) == null, "弹窗加载图像只能修改草稿，不能清空工程模板或区域"); count++;
@@ -75,7 +75,7 @@ public static class EditorCases
             Require(vm.ReadParameterValue(ContourTemplateStorage.ModelKey) == null && Field<ContourTemplateModel>(window, "_shapeTemplate") == null, "一次撤销训练必须移除新模板和父窗口预览");
             vm.Redo(); Pump();
             Require(vm.ReadParameterValue(ContourTemplateStorage.ModelKey)?.ToString() == savedPayload && Field<ContourTemplateModel>(window, "_shapeTemplate") != null, "重做训练必须恢复内嵌模板和父窗口预览"); count++;
-            Field<CheckBox>(editor, "ShieldAll").IsChecked = true;
+            Invoke(editor, "FillMask"); Invoke(editor, "ApplyMask");
             Invoke(editor, "OnTrain", null, new RoutedEventArgs()); PumpUntil(() => !editor.IsTraining);
             Require(vm.ReadParameterValue(ContourTemplateStorage.ModelKey)?.ToString() == savedPayload && vm.ReadParameterValue(ContourTemplateStorage.DirtyKey) is false, "全部屏蔽导致训练失败时必须保留原模板"); count++;
             Field<Dictionary<string, object>>(editor, "_draft")["Shielding Strokes"] = new object[] { new Dictionary<string, object>(rectangle) { ["Erase"] = true } };
@@ -90,6 +90,7 @@ public static class EditorCases
             Invoke(editor, "OnTrain", null, new RoutedEventArgs()); PumpUntil(() => !editor.IsTraining);
             Require(vm.ReadParameterValue(ContourTemplateStorage.ModelKey)?.ToString() == erasedPayload, "恢复后的区域重新涂抹屏蔽必须再次屏蔽，失败时保留原模板"); count++;
             Invoke(editor, "ClearMask");
+            Invoke(editor, "ApplyMask");
             Field<ComboBox>(editor, "ScaleMode").SelectedIndex = 1;
             Field<TextBox>(editor, "FeatureScale").Text = "3.0";
             Field<ComboBox>(editor, "ThresholdMode").SelectedIndex = 1;

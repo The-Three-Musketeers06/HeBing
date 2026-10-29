@@ -403,7 +403,9 @@ public class ShapeMatchOp : IOperator
         var image = ctx.Images.Get(p.Int("IM In", 0));
         if (image == null || image.IsDisposed || image.Empty()) throw new ArgumentException("输入图像为空，请先采集或加载图像。");
         var model = ContourTemplateStorage.Read(p, ctx);
-        if ((Driver == ContourTemplateEngine.GrayDriver) != (model.Backend == "HALCON.NCC"))
+        if (Driver == ContourTemplateEngine.ShapeDriver && model.Version != 1)
+            throw new InvalidOperationException("此工具已升级为形状模板匹配，请点击“创建”重新训练形状模板。");
+        if (Driver != ContourTemplateEngine.ShapeDriver && model.Backend == "HALCON.NCC")
             throw new InvalidOperationException("模板类型不匹配，请在当前控件重新训练模板。");
         using var mask = TemplateSearchMask.Create(ctx, p, image);
         var result = ContourTemplateEngine.Match(image, model, ContourMatchOptions.FromParameters(p), mask, ctx.CancellationToken);
@@ -416,15 +418,19 @@ public class ShapeMatchOp : IOperator
         {
             var pose = ContourTemplateOutputs.Pose(match.X, match.Y, match.Angle, match.Scale);
             records.Add(new Dictionary<string, object> { ["Center"] = DetectionOverlay2D.XY(match.X, match.Y), ["Score"] = match.Score, ["Angle"] = match.Angle, ["Rotation"] = match.Rotation, ["Scale"] = match.Scale, ["Run Point"] = pose });
-            DetectionOverlay2D.Marker(ctx, p, Driver, "Display Center Point", new(match.X, match.Y));
-            bool rectangle = Driver == ContourTemplateEngine.GrayDriver || p.Str("Match Display", p.Bool("Display Rect Region") ? "Rectangle" : "Contour") == "Rectangle";
+            int matchIndex = records.Count - 1;
+            if (p.Bool("Display Center Point"))
+                DetectionOverlay2D.Add(ctx, p, Driver, "point2d", new() { ["X"] = match.X, ["Y"] = match.Y, ["_marker"] = "cross", ["_match_index"] = matchIndex }, "Display Center Point Attribute");
+            bool rectangle = p.Str("Match Display", p.Bool("Display Rect Region") ? "Rectangle" : "Contour") == "Rectangle";
             if (rectangle)
             {
                 var center = ContourTemplateEngine.TransformPoint(model, match, (model.Width - 1) / 2d, (model.Height - 1) / 2d);
-                DetectionOverlay2D.Add(ctx, p, Driver, "rect2d", DetectionOverlay2D.Rect(new RotatedRect(new((float)center.X, (float)center.Y), new((float)(model.Width * match.Scale), (float)(model.Height * match.Scale)), (float)match.Rotation)), "Display Rect Region Attribute");
+                var bounds = DetectionOverlay2D.Rect(new RotatedRect(new((float)center.X, (float)center.Y), new((float)(model.Width * match.Scale), (float)(model.Height * match.Scale)), (float)match.Rotation));
+                bounds["_match_index"] = matchIndex;
+                DetectionOverlay2D.Add(ctx, p, Driver, "rect2d", bounds, "Display Rect Region Attribute");
             }
-            if (!rectangle) foreach (var contour in model.Contours)
-                DetectionOverlay2D.Add(ctx, p, Driver, "trace2d", new() { ["Points"] = contour.Select(point => { var transformed = ContourTemplateEngine.TransformPoint(model, match, point.X, point.Y); return (object)DetectionOverlay2D.XY(transformed.X, transformed.Y); }).ToArray() }, "Display Contours Attribute");
+            if (!rectangle) foreach (var contour in ContourTemplateDisplay.GetContours(model))
+                DetectionOverlay2D.Add(ctx, p, Driver, "trace2d", new() { ["Points"] = contour.Select(point => { var transformed = ContourTemplateEngine.TransformPoint(model, match, point.X, point.Y); return (object)DetectionOverlay2D.XY(transformed.X, transformed.Y); }).ToArray(), ["_match_index"] = matchIndex }, "Display Contours Attribute");
         }
         var best = result.Matches[0];
         ctx.Vars.Set("ShapeMatch.Score", best.Score); ctx.Vars.Set("ShapeMatch.X", best.X); ctx.Vars.Set("ShapeMatch.Y", best.Y);
