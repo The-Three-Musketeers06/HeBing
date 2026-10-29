@@ -126,6 +126,8 @@ public static partial class ContourTemplateEngine
 
     public static ContourTemplateModel Train(Mat image, ParamBag parameters, CancellationToken cancellation = default)
     {
+        // Gray is accepted as a legacy teaching-mode alias; this entry now trains shape features.
+        if (parameters?.Str("Matching Method") is "Shape" or "Gray") return TrainShape(image, parameters, cancellation);
         ValidateImage(image); cancellation.ThrowIfCancellationRequested();
         var p = parameters ?? throw new ArgumentNullException(nameof(parameters));
         using var gray = Img.ToGray8(image);
@@ -133,24 +135,7 @@ public static partial class ContourTemplateEngine
             ? BlobDetectOp.RegionMask(gray.Size(), p.Raw("Region"), p)
             : new Mat(gray.Size(), MatType.CV_8UC1, Scalar.White);
         if (Cv2.CountNonZero(region) < 25) throw new ArgumentException("模板区域为空或过小，请在图像中重新绘制模板区域。");
-        using var shieldMask = new Mat(gray.Size(), MatType.CV_8UC1, Scalar.Black);
-        if (p.Bool("Use Shielding Area"))
-        {
-            if (p.Raw("Shielding Area") == null) throw new ArgumentException("已开启屏蔽区域，请先绘制需要排除的区域。");
-            using var shield = BlobDetectOp.RegionMask(gray.Size(), p.Raw("Shielding Area"), p);
-            Cv2.BitwiseOr(shieldMask, shield, shieldMask);
-        }
-        if (p.Raw("Shielding Strokes") is IEnumerable<object> strokes && strokes.Any())
-        {
-            // Replay brush operations in order so repainting an erased area masks it again.
-            foreach (var stroke in strokes)
-            {
-                using var brushMask = BlobDetectOp.RegionMask(gray.Size(), stroke, p);
-                if (stroke is IReadOnlyDictionary<string, object> geometry && Boolean(geometry, "Erase", false))
-                { using var keepShield = new Mat(); Cv2.BitwiseNot(brushMask, keepShield); Cv2.BitwiseAnd(shieldMask, keepShield, shieldMask); }
-                else Cv2.BitwiseOr(shieldMask, brushMask, shieldMask);
-            }
-        }
+        using var shieldMask = TemplateShieldingMask.Create(gray.Size(), p, region);
         using (var visible = new Mat()) { Cv2.BitwiseNot(shieldMask, visible); Cv2.BitwiseAnd(region, visible, region); }
         if (Cv2.CountNonZero(region) < 25) throw new ArgumentException("屏蔽覆盖了整个模板，请用橡皮擦恢复特征或减小屏蔽区域。");
         using var selected = new Mat(); Cv2.FindNonZero(region, selected);
@@ -180,7 +165,6 @@ public static partial class ContourTemplateEngine
         model.ScaleMin = Number(scales, "min", 1); model.ScaleMax = Number(scales, "max", 1);
         model.TrainingAngleStep = IsAuto(create, "Angle Step") ? 0 : NestedValue(create, "Angle Step", 5);
         model.TrainingScaleStep = IsAuto(create, "Scale Step") ? 0 : NestedValue(create, "Scale Step", .05);
-        if (p.Str("Matching Method") == "Gray") model.ScaleMin = model.ScaleMax = 1;
         ValidateRanges(model.AngleMin, model.AngleMax, model.ScaleMin, model.ScaleMax);
         if (!Finite(model.TrainingAngleStep, model.TrainingScaleStep) || model.TrainingAngleStep < 0 || model.TrainingAngleStep > 90 || model.TrainingScaleStep < 0 || model.TrainingScaleStep > 1)
             throw new ArgumentException("模板训练角度步长需在 0～90，缩放步长需在 0～1（0 表示自动）。");

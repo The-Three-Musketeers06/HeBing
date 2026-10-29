@@ -128,7 +128,7 @@ public static class OperatorRegistry
         Register(new CreateTableOp());
         Register(new WriteTableOp());
         Register(new ShapeMatchOp());
-        Register(new ShapeMatchOp(ContourTemplateEngine.GrayDriver));
+        Register(new ShapeMatchOp(ContourTemplateEngine.ShapeDriver));
         Register(new MatrixCodeReadOp());
 
         // 入门示例补齐
@@ -260,6 +260,23 @@ public partial class ExecutionEngine
     {
         InvalidateExecution();
         return Execute(operations, log, false, 0, cancellationToken, target);
+    }
+
+    /// <summary>Locate with an already available input, without running acquisition or preceding tools.</summary>
+    public void TestTemplateCurrentInput(IEnumerable<Operation> operations, Operation target, Action<string, bool> log, CancellationToken cancellationToken = default)
+    {
+        if (!AiVisionStudio.Algorithm.Impl.ContourTemplateEngine.IsMatcher(target?.Driver))
+            throw new ArgumentException("仅支持对当前模板匹配工具进行定位测试。", nameof(target));
+        var list = operations.ToList();
+        int position = list.IndexOf(target);
+        if (position < 0) throw new ArgumentException("当前匹配工具不在流程中。", nameof(target));
+        InvalidateExecution();
+        _cancellation.Dispose();
+        _cancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        Context.CancellationToken = _cancellation.Token;
+        Context.CancellationToken.ThrowIfCancellationRequested();
+        LastOkCount = LastFailCount = 0;
+        RunOperation(new Frame(list) { Position = position }, target, log ?? ((_, _) => { }));
     }
 
     private int Execute(IEnumerable<Operation> operations, Action<string, bool> log, bool singleStep, int startIndex, CancellationToken cancellationToken, Operation testTarget = null)

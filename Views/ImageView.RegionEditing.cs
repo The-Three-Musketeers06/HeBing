@@ -19,6 +19,7 @@ public partial class ImageView
     private Action<IReadOnlyList<Dictionary<string, object>>> _maskCommit;
     private readonly List<List<Point>> _maskStrokes = new();
     private double _maskRadius = 8;
+    private bool _maskContinuous, _maskErasing;
     private bool _regionDrawing, _regionHandMode, _regionPointerDown, _regionPanning;
     private int _regionHandle = -1;
     private Point _regionPointerStart, _regionPanStart;
@@ -103,13 +104,15 @@ public partial class ImageView
     }
 
     /// <summary>Paints exclusion strokes; every returned item is a polygon2d region.</summary>
-    public void BeginMaskPaint(double radius, Action<IReadOnlyList<Dictionary<string, object>>> commit)
+    public void BeginMaskPaint(double radius, Action<IReadOnlyList<Dictionary<string, object>>> commit, bool continuous = false, bool erase = false)
     {
         if (!HasImage) throw new InvalidOperationException("请先载入要编辑遮罩的图像");
         if (commit == null) throw new ArgumentNullException(nameof(commit));
         CancelRegionEdit(); MeasurementEnabled = false;
         _maskRadius = double.IsFinite(radius) ? Math.Clamp(radius, 1, 500) : 8;
-        _maskCommit = commit; _regionType = "mask"; _regionLabel = "屏蔽画笔"; _regionDrawing = true; _regionHandMode = false;
+        _maskContinuous = continuous;
+        _maskErasing = erase;
+        _maskCommit = commit; _regionType = "mask"; _regionLabel = erase ? "橡皮擦" : "屏蔽画笔"; _regionDrawing = true; _regionHandMode = false;
         Focus(); UpdateRegionEditor(); RegionEditingChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -134,7 +137,8 @@ public partial class ImageView
         { _regionHint.Text = "请输入有效角度：起始角度 -360～360°，扇形角度 -360～360°且不能为 0"; return; }
         if (_maskCommit != null)
         {
-            if (_maskStrokes.Count == 0) { _regionHint.Text = "请先在要屏蔽的位置涂抹"; return; }
+            if (_maskStrokes.Count == 0)
+            { if (_maskContinuous) CancelRegionEdit(); else _regionHint.Text = "请先在要屏蔽的位置涂抹"; return; }
             var callback = _maskCommit;
             var regions = _maskStrokes.Where(s => s.Count > 0).SelectMany(StrokeRegions).ToArray();
             CancelRegionEdit(); callback(regions); return;
@@ -151,6 +155,8 @@ public partial class ImageView
         var active = IsRegionEditing;
         _regionCommit = null; _maskCommit = null; _regionDraft = null; _regionBeforeDrag = null;
         _maskStrokes.Clear(); _regionPointerDown = false; _regionHandMode = false;
+        _maskErasing = false;
+        UpdateTemplateMaskErasePreview();
         if (Host.IsMouseCaptured) Host.ReleaseMouseCapture();
         if (_regionChrome != null) _regionChrome.Visibility = Visibility.Collapsed;
         _regionSurface?.InvalidateVisual(); Cursor = Cursors.Arrow;
@@ -175,7 +181,7 @@ public partial class ImageView
         Cursor = _regionHandMode ? Cursors.Hand : Cursors.Cross;
         UpdateRegionPanCursor();
         _regionHint.Text = _regionHandMode ? "左键拖动画面；再次点击手形按钮继续编辑。滚轮缩放，中键始终可平移。"
-            : _maskCommit != null ? $"按住左键涂抹要排除的特征，画笔半径 {_maskRadius:0.#} px；Enter 应用，Esc 取消。"
+            : _maskCommit != null ? (_maskErasing ? $"按住左键擦除掩膜，半径 {_maskRadius:0.#} px；Enter 应用，Esc 取消。" : $"按住左键涂抹要排除的特征，画笔半径 {_maskRadius:0.#} px；Enter 应用，Esc 取消。")
             : _regionDrawing ? _regionType is "polygon2d" or "trace2d" ? "逐点单击画多边形或折线，双击结束；Backspace 撤回一点，Enter 应用。中键平移，滚轮缩放。"
                 : "按住左键拖动绘制；释放后拖动方形手柄调整，橙色手柄旋转。Enter 应用，Esc 取消。"
             : "拖动中心移动、方形手柄调整、橙色圆点旋转；重新画选可替换。Enter 应用，Esc 取消。";
@@ -189,7 +195,9 @@ public partial class ImageView
             _sectorSweepAngle.Text = (_regionDraft?.AngleRange ?? 90).ToString("0.###", CultureInfo.InvariantCulture);
             _updatingSectorAngles = false; _sectorAnglesValid = true;
         }
+        UpdateTemplateMaskErasePreview();
         _regionSurface.InvalidateVisual();
+        if (_templateViewConfigured && !_regionPointerDown) TemplateRegionDraftChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private void OnSectorAnglesChanged(object sender, TextChangedEventArgs e)
@@ -318,6 +326,7 @@ public partial class ImageView
         {
             var stroke = _maskStrokes[^1];
             if ((stroke[^1] - p).Length >= Math.Max(.5, _maskRadius / 3)) stroke.Add(p);
+            UpdateTemplateMaskErasePreview();
             _regionSurface.InvalidateVisual(); return;
         }
         if (_regionHandle == -2) _regionDraft.Draw(_regionPointerStart, p);
@@ -343,6 +352,11 @@ public partial class ImageView
             // Mouse-up can arrive without an intervening move for short drags.
             if (_maskCommit == null && _regionHandle == -2) _regionDraft.Draw(_regionPointerStart, RegionImagePoint(e.GetPosition(Host)));
             _regionPointerDown = false; Host.ReleaseMouseCapture(); _regionDrawing = _maskCommit == null && _regionDraft?.IsValid != true;
+            if (_maskCommit != null && _maskContinuous && _maskStrokes.Count > 0)
+            {
+                var regions = _maskStrokes.SelectMany(StrokeRegions).ToArray();
+                _maskStrokes.Clear(); _maskCommit(regions);
+            }
             UpdateRegionEditor(); e.Handled = true;
         }
     }
@@ -364,13 +378,16 @@ public partial class ImageView
         if (!IsRegionEditing || !HasImage) return;
         var scale = RegionScale; var cyan = new SolidColorBrush(Color.FromRgb(20, 218, 246));
         dc.PushTransform(new MatrixTransform(Mat.Matrix));
+        if (_templateMaskDrawing && _templateMaskClip != null) dc.PushClip(_templateMaskClip);
         var fill = new SolidColorBrush(Color.FromArgb(28, 20, 218, 246));
+        if (_templateMaskDrawing) { cyan = new SolidColorBrush(Color.FromRgb(255, 65, 65)); fill = new SolidColorBrush(Color.FromArgb(95, 255, 65, 65)); }
         var pen = new Pen(cyan, 1.6 / scale);
         if (_maskCommit != null)
         {
-            var red = new SolidColorBrush(Color.FromArgb(95, 255, 65, 65));
-            foreach (var stroke in _maskStrokes)
+            // Erasing reveals pixels through the mask layer; it never paints a colored trail.
+            if (!_maskErasing) foreach (var stroke in _maskStrokes)
             {
+                var red = new SolidColorBrush(Color.FromArgb(95, 255, 65, 65));
                 foreach (var p in stroke) dc.DrawEllipse(red, null, p, _maskRadius, _maskRadius);
                 for (var i = 1; i < stroke.Count; i++) dc.DrawLine(new Pen(red, _maskRadius * 2) { StartLineCap = PenLineCap.Round, EndLineCap = PenLineCap.Round }, stroke[i - 1], stroke[i]);
             }
@@ -405,6 +422,7 @@ public partial class ImageView
                 else dc.DrawRectangle(Brushes.White, pen, new Rect(handle.Position.X - 3.5 / scale, handle.Position.Y - 3.5 / scale, 7 / scale, 7 / scale));
             }
         }
+        if (_templateMaskDrawing && _templateMaskClip != null) dc.Pop();
         dc.Pop();
         void DrawPath(IReadOnlyList<Point> points, bool closed)
         {

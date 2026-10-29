@@ -429,10 +429,12 @@ public partial class MainViewModel
         IsDirty = HasParameterErrors || ProjectFile.Serialize(Programs) != _savedDocument;
     }
 
-    public async Task TestSelectedAsync()
+    public async Task TestSelectedAsync(bool templateCurrentInputOnly = false)
     {
         if (IsRunning || SelectedOperation == null || !ApplyParameters()) return;
         var target = SelectedOperation;
+        if (templateCurrentInputOnly && !AiVisionStudio.Algorithm.Impl.ContourTemplateEngine.IsMatcher(target.Driver))
+            throw new InvalidOperationException("当前图像定位只支持模板匹配工具。");
         var operations = Operations.ToArray();
         if (!operations.Contains(target)) return;
         using var cancellation = new CancellationTokenSource();
@@ -450,9 +452,16 @@ public partial class MainViewModel
         try
         {
             _engine.InvalidateExecution();
-            PrepareRun();
+            if (templateCurrentInputOnly)
+            {
+                _engine.ConfigurePrograms(Programs);
+                _engine.Context.ProjectDir = string.IsNullOrEmpty(ProjectPath) ? AppContext.BaseDirectory : Path.GetDirectoryName(ProjectPath)!;
+                _nativeRawOutputs.Remove(target.Uuid);
+            }
+            else PrepareRun();
             Status = $"正在测试：{target.Name}";
-            if (UseNativeKernel) await TestNativeAsync(target, DispatchLog, cancellation.Token);
+            if (templateCurrentInputOnly) await Task.Run(() => _engine.TestTemplateCurrentInput(operations, target, DispatchLog, cancellation.Token));
+            else if (UseNativeKernel) await TestNativeAsync(target, DispatchLog, cancellation.Token);
             else await Task.Run(() => _engine.TestThrough(operations, target, DispatchLog, cancellation.Token));
             await OnUiAsync(() =>
             {

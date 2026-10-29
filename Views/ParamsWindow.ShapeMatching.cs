@@ -27,7 +27,7 @@ public partial class ParamsWindow
     private TemplateConfigurationWindow _shapeConfigurationWindow;
     private ContourTemplateModel _shapeTemplate;
     private bool _shapeDirty, _shapeStateLoaded;
-    private bool IsGrayMatcher => _vm.SelectedOperation?.Driver == ContourTemplateEngine.GrayDriver;
+    private bool IsPortableShapeMatcher => _vm.SelectedOperation?.Driver == ContourTemplateEngine.ShapeDriver;
     private bool _shapeBusy => _shapeConfigurationWindow?.IsTraining == true;
     private string _shapeStoredPayload;
     private bool IsShapeTool => ContourTemplateEngine.IsTemplateTool(_vm.SelectedOperation?.Driver);
@@ -55,11 +55,12 @@ public partial class ParamsWindow
         _shapeObservedNodes.Clear();
         var roots = _vm.ParameterGroups.SelectMany(g => g.Items.Concat(g.AdvancedItems)).ToArray();
         var teaching = new HashSet<string>(new[] { "IM In", "Model File", ShapeTrainingRegionKey, "Use Shielding Area", "Shielding Area", "Shielding Strokes", "Parameters", "Create Model", "Model Origin" }, StringComparer.Ordinal);
-        _shapeTeachingEditors.ItemsSource = roots.Where(n => teaching.Contains(n.Name) && n.Name is not ("Shielding Strokes" or "Model File")).ToArray();
+        _shapeTeachingEditors.ItemsSource = roots.Where(n => teaching.Contains(n.Name) && n.Name is not ("Use Shielding Area" or "Shielding Area" or "Shielding Strokes" or "Model File")).ToArray();
         var runtime = roots.Where(n => n.Specification?.Field != "render" &&
             (!teaching.Contains(n.Name) || n.Name == "IM In") && n.Name is not ("Shielding Strokes" or "Model File") && !ContourTemplateStorage.IsInternal(n.Name)).ToArray();
         _shapeRuntimeEditors.ItemsSource = runtime;
         _shapeRenderEditors.ItemsSource = roots.Where(n => n.Specification?.Field == "render").ToArray();
+        ObserveShapeRuntimeParameters(roots, runtime);
         foreach (var node in roots.Where(n => teaching.Contains(n.Name) && n.Name is not ("IM In" or "Model File" or "Shielding Strokes")).SelectMany(ShapeDescendants))
         {
             node.PropertyChanged += OnShapeTeachingParameterChanged;
@@ -83,25 +84,29 @@ public partial class ParamsWindow
         var teach = new StackPanel { Margin = new Thickness(9, 8, 7, 8) };
         var capture = new WrapPanel { Margin = new Thickness(0, 7, 0, 4) };
         capture.Children.Add(ShapeAction("创建", (_, _) => OpenShapeTemplateConfiguration()));
-        capture.Children.Add(ShapeAction("掩膜编辑", (_, _) => OpenShapeTemplateConfiguration(true)));
         teach.Children.Add(capture);
         _shapeTeachingEditors = ShapeParameterList(); teach.Children.Add(_shapeTeachingEditors);
         _shapeTabs.Items.Add(new TabItem { Header = "模板示教", Content = ShapeScroll(teach) });
 
         var run = new StackPanel { Margin = new Thickness(9, 8, 7, 8) };
+        run.Children.Add(ShapeHint("设置运行参数后，点击底部“测试”执行匹配。"));
         _shapeRuntimeEditors = ShapeParameterList(); run.Children.Add(_shapeRuntimeEditors);
         _shapeTabs.Items.Add(new TabItem { Header = "运行参数", Content = ShapeScroll(run) });
 
         var result = new StackPanel { Margin = new Thickness(9, 8, 7, 8) };
         _shapeResultStatus = ShapeHint("尚未运行匹配。点击底部“测试”查看定位结果。");
         result.Children.Add(_shapeResultStatus);
-        var table = new DataGrid
+        var table = _shapeMatchTable = new DataGrid
         {
             ItemsSource = _shapeMatchRows, AutoGenerateColumns = false, IsReadOnly = true,
             CanUserAddRows = false, CanUserDeleteRows = false, HeadersVisibility = DataGridHeadersVisibility.Column,
             MinHeight = 100, MaxHeight = 300, Margin = new Thickness(0, 10, 0, 8),
             GridLinesVisibility = DataGridGridLinesVisibility.Horizontal, RowHeaderWidth = 0
         };
+        table.SelectionMode = DataGridSelectionMode.Single;
+        table.SelectionUnit = DataGridSelectionUnit.FullRow;
+        table.IsSynchronizedWithCurrentItem = false;
+        table.SelectionChanged += OnShapeMatchSelectionChanged;
         table.SetResourceReference(BackgroundProperty, "Panel"); table.SetResourceReference(ForegroundProperty, "Text");
         table.SetResourceReference(DataGrid.HorizontalGridLinesBrushProperty, "Border");
         table.SetResourceReference(DataGrid.RowBackgroundProperty, "Panel");
@@ -113,19 +118,24 @@ public partial class ParamsWindow
         var cells = new Style(typeof(TextBlock));
         cells.Setters.Add(new Setter(MarginProperty, new Thickness(6, 4, 6, 4)));
         cells.Setters.Add(new Setter(TextBlock.TextAlignmentProperty, TextAlignment.Right));
-        foreach (var (title, path, format) in new[] { ("序号", "Index", "0"), ("X", "X", "0.00"), ("Y", "Y", "0.00"), ("角度°", "Angle", "0.00"), ("尺度", "Scale", "0.000"), ("分数", "Score", "0.000") }.Where(column => !IsGrayMatcher || column.Item2 != "Scale"))
+        foreach (var (title, path, format) in new[] { ("序号", "Index", "0"), ("X", "X", "0.00"), ("Y", "Y", "0.00"), ("角度°", "Angle", "0.00"), ("尺度", "Scale", "0.000"), ("分数", "Score", "0.000") })
             table.Columns.Add(new DataGridTextColumn { Header = title, Binding = new Binding(path) { StringFormat = format }, ElementStyle = cells, Width = path == "Index" ? new DataGridLength(44) : new DataGridLength(1, DataGridLengthUnitType.Star), MinWidth = path == "Index" ? 40 : 60 });
         result.Children.Add(table);
-        result.Children.Add(ShapeHint("坐标基于模板原点。右侧仅显示当前工具的匹配标注；输出参数可绑定到后续工具的运行位姿，使检测区域随目标移动与旋转。"));
+        _shapeSelectionInfo = ShapeHint("点击右侧绿框或列表中的一行查看对应目标；点击图像空白处取消选择。");
+        result.Children.Add(_shapeSelectionInfo);
+        result.Children.Add(ShapeHint("坐标基于模板原点。输出参数可绑定到后续工具的运行位姿，使检测区域随目标移动与旋转。"));
         _shapeRenderEditors = ShapeParameterList();
         result.Children.Add(new Expander { Header = "结果显示设置", Content = _shapeRenderEditors, IsExpanded = false, Margin = new Thickness(0, 8, 0, 0) });
         _shapeTabs.Items.Add(new TabItem { Header = "匹配结果", Content = ShapeScroll(result) });
         _shapeTabs.SelectionChanged += (_, e) =>
         {
             if (!ReferenceEquals(e.Source, _shapeTabs)) return;
-            Preview.CancelRegionEdit(); RefreshPreview();
+            Preview.CancelRegionEdit(); ClearShapeSelection(); RefreshPreview();
+            if (_shapeTabs.SelectedIndex == 0 && _shapeTemplate != null && !_shapeDirty) TestStatus.Text = "模板已训练，当前仅显示示教区域";
+            else if (_shapeResultsStale) TestStatus.Text = "参数已修改，请点击“测试”执行匹配";
         };
         ShapeEditorHost.Content = _shapeTabs;
+        Preview.ImagePointClicked += OnShapeImagePointClicked;
     }
 
     private Button ShapeAction(string label, RoutedEventHandler handler)
@@ -167,23 +177,24 @@ public partial class ParamsWindow
                 if (_vm.SelectedOperation?.Uuid != operation || !_vm.CanEdit) return false;
                 if (!_vm.StoreContourTemplate(model, draft)) return false;
                 _shapeMatchRows.Clear(); RestoreProjectTemplate(); RefreshPreview();
-                TestStatus.Text = IsGrayMatcher ? "NCC灰度模板训练成功，已保存到工程" : $"训练成功：{model.Features.Count} 个特征，模板已保存到工程";
+                TestStatus.Text = $"训练成功：{model.Features.Count} 个特征，模板已保存到工程";
                 return true;
-            }, IsGrayMatcher ? "Gray" : "Contour", () => { _vm.ClearSelectedContourTemplate(); RestoreProjectTemplate(); RefreshPreview(); });
+            }, IsPortableShapeMatcher ? "Shape" : "Contour", () => { _vm.ClearSelectedContourTemplate(); RestoreProjectTemplate(); RefreshPreview(); });
     }
-    private void OpenShapeTemplateConfiguration(bool editMask = false)
+    private void OpenShapeTemplateConfiguration()
     {
         if (!CanEditShape()) return;
         Preview.CancelRegionEdit();
+        TemplateConfigurationWindow editor = null;
         try
         {
-            _shapeConfigurationWindow = CreateShapeTemplateConfiguration();
+            editor = _shapeConfigurationWindow = CreateShapeTemplateConfiguration();
             _shapeConfigurationWindow.Owner = this;
-            if (editMask) _shapeConfigurationWindow.StartMaskEditing();
             _shapeConfigurationWindow.ShowDialog();
         }
         catch (Exception exception) { ShowShapeError(exception); }
         finally { _shapeConfigurationWindow = null; RestoreProjectTemplate(); RefreshPreview(); }
+        if (editor?.HasSavedTraining == true) TestStatus.Text = "模板已训练，请设置运行参数后点击“测试”";
     }
 
     private void RestoreProjectTemplate()
@@ -227,37 +238,33 @@ public partial class ParamsWindow
     }
     private void MarkShapeDirty()
     {
-        _shapeDirty = true; _shapeMatchRows.Clear();
+        _shapeDirty = true; _shapeResultsStale = true; ClearShapeMatchRows();
         if (_shapeResultStatus != null) _shapeResultStatus.Text = "示教参数已变化，请重新训练模板";
     }
     private bool TryShowShapeTrainingPreview()
     {
-        if (!IsShapeTool || _shapeTabs?.SelectedIndex != 0) return false;
+        if (!IsShapeTool || _shapeTabs == null || _regionTarget != null || _parameterRegionPreviewPath != null) return false;
         RestoreProjectTemplate();
         using var current = _vm.CopySelectedInputImage();
         if (current == null || current.IsDisposed || current.Empty()) return false;
-        Preview.ShowMat(current, _vm.GetImageName(_vm.RegionInputIndex));
-        PreviewMode.Text = IsGrayMatcher ? "灰度模板示教" : "轮廓模板示教"; PreviewSlot.Text = "输入图像";
+        var image = _shapeTabs.SelectedIndex == 0 && !_shapeDirty && _shapeTrainingImage != null ? _shapeTrainingImage : current;
+        Preview.ShowMat(image, _vm.GetImageName(_vm.RegionInputIndex));
+        PreviewMode.Text = IsPortableShapeMatcher ? "灰度模板示教" : "轮廓模板示教"; PreviewSlot.Text = "输入图像";
         EmptyPreview.Visibility = Visibility.Collapsed; PreviewTextOverlay.Visibility = Visibility.Collapsed;
-        var overlays = new List<NativeOverlay3D>();
-        AddShapeRegionOverlay(overlays, _vm.ReadParameterValue(ShapeTrainingRegionKey), "#00C5E0");
-        if (_vm.ReadParameterValue("Use Shielding Area") is true) AddShapeRegionOverlay(overlays, _vm.ReadParameterValue("Shielding Area"), "#FF5050");
-        if (_vm.ReadParameterValue("Shielding Strokes") is IEnumerable strokes)
-            foreach (var stroke in strokes) AddShapeRegionOverlay(overlays, stroke, stroke is IReadOnlyDictionary<string, object> map && map.GetValueOrDefault("Erase") is true ? "#80E5A0" : "#FF5050");
-        if (_shapeTemplate != null)
+        if (IsShapeMatcher && _shapeTabs.SelectedIndex > 0)
         {
-            foreach (var contour in _shapeTemplate.Contours.Where(c => c.Count > 1))
-                overlays.Add(new NativeOverlay3D { Type = "trace2d", Values = new Dictionary<string, object>
-                {
-                    ["Points"] = contour.Select(p => (object)ShapeXY(p.X + _shapeTemplate.OffsetX, p.Y + _shapeTemplate.OffsetY)).ToArray(), ["_color"] = _shapeDirty ? "#E7B94B" : "#00FF70", ["_thickness"] = 1
-                } });
+            PreviewMode.Text = _shapeTabs.SelectedIndex == 1 ? "运行匹配" : "匹配结果";
+            Preview.SetNativeOverlays(_showOverlays ? ShapeResultOverlays() : null);
+            return true;
         }
+        var overlays = new List<NativeOverlay3D>();
+        AddShapeRegionOverlay(overlays, _vm.ReadParameterValue(ShapeTrainingRegionKey), _shapeDirty ? "#00C5E0" : "#00FF00");
         var rawOrigin = _vm.ReadParameterValue("Model Origin") as IReadOnlyDictionary<string, object>;
         var autoOrigin = rawOrigin == null || !rawOrigin.TryGetValue("Auto", out var automatic) || Convert.ToBoolean(automatic, CultureInfo.InvariantCulture);
         var ox = autoOrigin ? _shapeTemplate?.OriginX ?? current.Width / 2d : ShapeNumber(rawOrigin, "X");
         var oy = autoOrigin ? _shapeTemplate?.OriginY ?? current.Height / 2d : ShapeNumber(rawOrigin, "Y");
         var angle = autoOrigin ? _shapeTemplate?.OriginAngle ?? 0 : ShapeNumber(rawOrigin, "Angle");
-        overlays.Add(new NativeOverlay3D { Type = "origin2d", Values = new Dictionary<string, object> { ["X"] = ox, ["Y"] = oy, ["Angle"] = angle, ["_size"] = 12, ["_color"] = "#FFE050" } });
+        overlays.Add(new NativeOverlay3D { Type = "point2d", Values = new Dictionary<string, object> { ["X"] = ox, ["Y"] = oy, ["Angle"] = angle, ["_marker"] = "cross", ["_size"] = 5, ["_color"] = "#00FF00" } });
         Preview.SetNativeOverlays(_showOverlays ? overlays : null); return true;
     }
     private static void AddShapeRegionOverlay(List<NativeOverlay3D> overlays, object raw, string color)
@@ -312,11 +319,14 @@ public partial class ParamsWindow
         if (_shapeTabs != null) _shapeTabs.SelectedIndex = 1;
         return true;
     }
-    private void RefreshShapeMatchResults(bool selectResults = true)
+    private void RefreshShapeMatchResults(bool selectResults = true, bool freshResults = false)
     {
         if (!IsShapeTool || _shapeResultStatus == null) return;
-        _shapeMatchRows.Clear();
+        if (freshResults) MarkShapeResultsCurrent();
+        ClearShapeMatchRows();
+        if (_shapeResultsStale) { _shapeResultStatus.Text = "参数已修改，请点击“测试”重新匹配"; return; }
         var output = _vm.GetSelectedOutputValues();
+        _shapeOutputMatches = output.GetValueOrDefault("Matches");
         if (output.GetValueOrDefault("Matches") is IEnumerable matches)
         {
             foreach (var raw in matches)
@@ -324,7 +334,7 @@ public partial class ParamsWindow
                 if (raw is not IReadOnlyDictionary<string, object> match) continue;
                 var center = match.GetValueOrDefault("Center") as IReadOnlyDictionary<string, object> ?? match;
                 _shapeMatchRows.Add(new ShapeMatchRow { Index = _shapeMatchRows.Count + 1, X = ShapeNumber(center, "X"), Y = ShapeNumber(center, "Y"),
-                    Angle = ShapeNumber(match, "Angle"), Scale = ShapeNumber(match, "Scale", 1), Score = ShapeNumber(match, "Score") });
+                    Angle = ShapeNumber(match, "Angle"), Rotation = ShapeNumber(match, "Rotation", ShapeNumber(match, "Angle") - (_shapeTemplate?.OriginAngle ?? 0)), Scale = ShapeNumber(match, "Scale", 1), Score = ShapeNumber(match, "Score") });
             }
         }
         var elapsed = ShapeNumber(output, "ShapeMatch.ElapsedMs", _vm.SelectedOperation?.ElapsedMs ?? 0);
@@ -344,6 +354,7 @@ public partial class ParamsWindow
     }
     private void DisposeShapeEditor()
     {
+        DisposeShapeInteractions();
         _shapeConfigurationWindow?.Close();
         _shapeTrainingImage?.Dispose(); _shapeTrainingImage = null;
         foreach (var node in _shapeObservedNodes) node.PropertyChanged -= OnShapeTeachingParameterChanged;
@@ -355,6 +366,7 @@ public partial class ParamsWindow
         public double X { get; init; }
         public double Y { get; init; }
         public double Angle { get; init; }
+        public double Rotation { get; init; }
         public double Scale { get; init; }
         public double Score { get; init; }
     }

@@ -54,7 +54,19 @@ public partial class MainViewModel
         {
             var region = ContourTemplateEngine.IsMatcher(SelectedOperation?.Driver) ? "Training Region" : "Region";
             foreach (var name in new[] { region, "Use Shielding Area", "Shielding Area", "Shielding Strokes", "Parameters", "Create Model", "Model Origin" })
-                if (!(SelectedOperation?.Driver == ContourTemplateEngine.GrayDriver && name == "Parameters") && teaching.TryGetValue(name, out var value)) changes[name] = value;
+                if (teaching.TryGetValue(name, out var value)) changes[name] = value;
+            if (ContourTemplateEngine.IsMatcher(SelectedOperation?.Driver))
+            {
+                changes["Match Display"] = "Rectangle";
+                changes["Display Center Point"] = true;
+                foreach (var name in new[] { "Display Rect Region Attribute", "Display Center Point Attribute" })
+                {
+                    var style = ReadParameterValue(name) is IReadOnlyDictionary<string, object> currentStyle
+                        ? new Dictionary<string, object>(currentStyle) : new Dictionary<string, object>();
+                    style["OK Color"] = "#00FF00";
+                    changes[name] = style;
+                }
+            }
         }
         return WriteContourState(changes, clearBindings: teaching != null);
     }

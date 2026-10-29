@@ -353,8 +353,8 @@ public partial class ImageView : UserControl
         var m = Matrix.Identity;
         m.Scale(s, s);
         m.Translate((vw - _bitmap.PixelWidth * s) / 2, (vh - _bitmap.PixelHeight * s) / 2);
-        Mat.Matrix = m;
         _userMoved = false;
+        Mat.Matrix = m;
         UpdatePixelStatus(Host.IsMouseOver ? Mouse.GetPosition(Host) : null);
     }
 
@@ -397,10 +397,17 @@ public partial class ImageView : UserControl
 
     private void OnUp(object sender, MouseButtonEventArgs e)
     {
+        var position = e.GetPosition(Host);
+        bool click = _dragging && e.ChangedButton == MouseButton.Left && (position - _dragOrigin).Length <= 4;
         if (_dragging) QueuePan(e.GetPosition(Host));
         ApplyPendingViewTransform();
         _dragging = false;
         ReleaseMouseCapture();
+        if (click && HasImage && Mat.Matrix.HasInverse && !IsRegionEditing && !RegionCanvas.IsEditing && !MeasurementEnabled)
+        {
+            TryGetImagePoint(position, out var point);
+            ImagePointClicked?.Invoke(this, new ImagePointClickedEventArgs(point));
+        }
     }
     
     private void OnMove(object sender, MouseEventArgs e)

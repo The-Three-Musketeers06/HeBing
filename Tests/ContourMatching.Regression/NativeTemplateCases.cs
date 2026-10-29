@@ -31,25 +31,25 @@ Create Model:
   Angle Range: {Value: {min: -90,max: 90}}
 """);
         var gray = ContourTemplateEngine.Train(image, parameters);
-        Check(gray.Backend == "HALCON.NCC" && gray.NativeModels.Count == 2, "灰度工具必须保存HALCON NCC原生模板");
+        Check(gray.Version == 1 && gray.Backend == ContourTemplateEngine.ShapeBackend && gray.NativeModels.Count == 0 && gray.Features.Count >= 12, "原灰度入口必须训练AiVisionStudio-1形状特征，不再生成NCC模板");
         Check(gray.SourceFingerprint == ContourTemplateEngine.ImageFingerprint(image), "模板必须保存实际源图指纹");
         var match = ContourTemplateEngine.Match(image, gray, new() { AngleMin = 0, AngleMax = 0, SubPixel = true });
-        Check(match.Matches.Count == 1 && Math.Abs(match.Matches[0].X - 90) < 1 && Math.Abs(match.Matches[0].Y - 70) < 1, "NCC必须正确返回自定义原点");
+        Check(match.Matches.Count == 1 && Math.Abs(match.Matches[0].X - 90) < 1 && Math.Abs(match.Matches[0].Y - 70) < 1, "形状匹配必须正确返回自定义原点");
         using var affine = new Mat(2, 3, MatType.CV_64FC1);
         double angle = 25 * Math.PI / 180, cosine = Math.Cos(angle), sine = Math.Sin(angle);
         affine.SetArray(new[] { cosine, -sine, 220 - cosine * 90 + sine * 70, sine, cosine, 170 - sine * 90 - cosine * 70 });
         using var moved = new Mat(); Cv2.WarpAffine(image, moved, affine, new OpenCvSharp.Size(420, 340), InterpolationFlags.Linear, BorderTypes.Constant, new Scalar(20, 25, 30));
         var rotated = ContourTemplateEngine.Match(moved, gray, new() { AngleMin = -45, AngleMax = 45, SubPixel = true });
-        Check(rotated.Matches.Count == 1 && Math.Abs(rotated.Matches[0].X - 220) < 1 && Math.Abs(rotated.Matches[0].Y - 170) < 1 && Math.Abs(rotated.Matches[0].Rotation - 25) < 1 && Math.Abs(rotated.Matches[0].Angle - 37) < 1, "NCC旋转与原点方向必须遵循顺时针图像坐标");
+        Check(rotated.Matches.Count == 1 && Math.Abs(rotated.Matches[0].X - 220) < 1 && Math.Abs(rotated.Matches[0].Y - 170) < 1 && Math.Abs(rotated.Matches[0].Rotation - 25) < 1 && Math.Abs(rotated.Matches[0].Angle - 37) < 1, "形状匹配旋转与原点方向必须遵循顺时针图像坐标");
         using var blank = new Mat(image.Size(), image.Type(), new Scalar(20, 25, 30));
-        Check(ContourTemplateEngine.Match(blank, gray, new()).Matches.Count == 0, "空白图不得匹配出NCC目标");
+        Check(ContourTemplateEngine.Match(blank, gray, new()).Matches.Count == 0, "空白图不得匹配出形状目标");
         using var inverse = new Mat(); Cv2.BitwiseNot(image, inverse);
-        Check(ContourTemplateEngine.Match(inverse, gray, new() { AngleMin = 0, AngleMax = 0, Polarity = "Ignore Global Polarity" }).Matches.Count == 1, "NCC忽略全局极性必须支持反色图");
+        Check(ContourTemplateEngine.Match(inverse, gray, new() { AngleMin = 0, AngleMax = 0, Polarity = "Ignore Global Polarity" }).Matches.Count == 1, "形状匹配忽略全局极性必须支持反色图");
         var restored = ContourTemplateEngine.DeserializeModel(ContourTemplateEngine.SerializeModel(gray));
-        Check(ContourTemplateEngine.Match(image, restored, new() { AngleMin = 0, AngleMax = 0 }).Matches.Count == 1, "NCC序列化后必须仍可匹配");
+        Check(ContourTemplateEngine.Match(image, restored, new() { AngleMin = 0, AngleMax = 0 }).Matches.Count == 1, "形状模板序列化后必须仍可匹配");
         DriverCatalog.Load(Path.Combine(AppContext.BaseDirectory, "Assets", "driver_defs.json"));
         var definition = DriverCatalog.Get(ContourTemplateEngine.GrayDriver);
-        Check(definition != null && definition.Params.All(p => p.Name is not ("Scale Range" or "Scale Step" or "Greediness")), "灰度工具不得提供无效缩放或贪心参数");
+        Check(definition != null && new[] { "Scale Range", "Scale Step", "Angle Step", "Greediness", "Parameters" }.All(name => definition.Params.Any(p => p.Name == name)), "形状工具必须提供完整的尺度搜索和轮廓训练参数");
         if (Application.Current == null)
         {
             var application = new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown };
@@ -59,18 +59,21 @@ Create Model:
         var vm = new MainViewModel(Path.Combine(AppContext.BaseDirectory, "case-output", "native-template-settings"));
         try
         {
-            Check(vm.Tools.SelectMany(Leaves).Any(node => node.Label == ContourTemplateEngine.GrayDriver && node.Display == "基于灰度匹配")
+            Check(vm.Tools.SelectMany(Leaves).Any(node => node.Label == ContourTemplateEngine.ShapeDriver && node.Display == "基于灰度匹配")
                 && !vm.Tools.SelectMany(Leaves).Any(node => node.Label == "Basic Shape Model"), "工具列表应替换成两个完整匹配入口");
-            vm.AddTool(new() { Label = ContourTemplateEngine.GrayDriver, Cn = "基于灰度匹配" });
-            Check(vm.AllParameterNodes.All(node => node.Name is not ("Scale Range" or "Scale Step")), "灰度参数树的嵌套建模设置也不能残留缩放搜索");
+            vm.AddTool(new() { Label = ContourTemplateEngine.ShapeDriver, Cn = "基于灰度匹配" });
+            Check(vm.AllParameterNodes.Any(node => node.Name == "Scale Range") && vm.AllParameterNodes.Any(node => node.Name == "Parameters"), "形状参数树必须包含尺度搜索与轮廓训练设置");
             vm.Images.Set(0, image.Clone());
-            Check(vm.StoreContourTemplate(gray), "NCC模板必须可保存到当前工程");
+            Check(vm.StoreContourTemplate(gray), "形状模板必须可保存到当前工程");
             var window = new ParamsWindow(vm);
             window.RefreshPreview();
             Render(window, "gray-teaching.png");
             Check(Field<TabControl>(window, "_shapeTabs").Items.Count == 3, "灰度工具必须有完整示教运行结果页面");
             using (var editor = new WindowScope((TemplateConfigurationWindow)Invoke(window, "CreateShapeTemplateConfiguration")))
+            {
                 Check(Field<Mat>(editor.Window, "_image").Size() == image.Size(), "模板创建窗口应读取当前输入");
+                Check(Field<string>(editor.Window, "_matchingMethod") == "Shape" && Field<ComboBox>(editor.Window, "ThresholdMode").Visibility == Visibility.Visible, "形状模板配置必须使用轮廓训练并显示边缘阈值设置");
+            }
             vm.Images.Set(0, new Mat(100, 140, MatType.CV_8UC3, Scalar.White));
             window.RefreshPreview(); Pump();
             Check(string.IsNullOrEmpty(vm.ReadParameterValue(ContourTemplateStorage.ModelKey)?.ToString()) && vm.ReadParameterValue(ContourTemplateStorage.DirtyKey) is true, "换图必须清除旧模板并标记待训练");
@@ -86,7 +89,7 @@ Create Model:
             Check(vm.SelectedOperation.State == OpState.Fail && string.IsNullOrEmpty(vm.ReadParameterValue(ContourTemplateStorage.ModelKey)?.ToString()) && vm.GetSelectedOutputValues().GetValueOrDefault("Run Point") == null, "关闭参数窗时换图也必须清除模板及匹配位姿");
         }
         finally { vm.Dispose(); }
-        Console.WriteLine($"Native template and image replacement cases passed: {count}");
+        Console.WriteLine($"Shape template and image replacement cases passed: {count}");
         return count;
     }
     private static void Render(System.Windows.Window window, string name)

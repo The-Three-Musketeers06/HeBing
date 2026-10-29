@@ -29,6 +29,11 @@
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Surface" Property="Background" Value="#E5EBF1" /></Trigger>
                                 <Trigger Property="IsPressed" Value="True"><Setter TargetName="Surface" Property="Background" Value="#D8E2EB" /></Trigger>
+                                <Trigger Property="Tag" Value="SelectedTool">
+                                    <Setter TargetName="Surface" Property="Background" Value="#CCD9E5" />
+                                    <Setter TargetName="Surface" Property="BorderBrush" Value="#8FA3B7" />
+                                    <Setter TargetName="Surface" Property="BorderThickness" Value="1" />
+                                </Trigger>
                                 <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.4" /></Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -67,7 +72,7 @@
             <Grid.RowDefinitions><RowDefinition Height="44" /><RowDefinition Height="72" /><RowDefinition Height="*" /><RowDefinition Height="52" /></Grid.RowDefinitions>
             <Border Background="#FAFAFA" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1" MouseLeftButtonDown="OnDrag">
                 <Grid>
-                    <TextBlock Text="模板配置" FontSize="17" FontWeight="SemiBold" Margin="16,0,0,0" VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" FontSize="17" FontWeight="SemiBold" Margin="16,0,0,0" VerticalAlignment="Center" />
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button Content="□" Width="44" Padding="0" Background="Transparent" BorderThickness="0" FontSize="23" ToolTip="最大化 / 还原" Click="OnMaximize" />
                         <Button Content="×" Width="44" Padding="0" Background="Transparent" BorderThickness="0" FontSize="25" ToolTip="关闭，保留已保存的模板" Click="OnClose" />
@@ -79,30 +84,52 @@
                     <Button Content="选择当前图像" Click="OnCurrentImage" Margin="0,0,10,0" />
                     <Button Content="选择其他图像" Click="OnOtherImage" Margin="0,0,10,0" />
                     <CheckBox x:Name="StoreImage" Content="模板存图" IsChecked="True" Style="{StaticResource Switch}" ToolTip="将完整训练图像内嵌到工程中，不生成额外文件" Margin="0,0,34,0" Checked="OnSettingChanged" Unchecked="OnSettingChanged" />
-                    <Button Content="涂抹屏蔽" Click="OnMaskPaint" Margin="0,0,8,0" /><Button Content="橡皮擦" Click="OnMaskErase" Margin="0,0,8,0" /><Button Content="清除掩膜" Click="OnMaskClear" Margin="0,0,8,0" />
-                    <CheckBox x:Name="ShieldAll" Content="全部屏蔽" Style="{StaticResource Switch}" ToolTip="屏蔽全部区域后，可用橡皮擦恢复需要的特征" Checked="OnShieldAll" Unchecked="OnShieldAll" />
+                    <TextBlock Text="红色区域不参与模板训练" Foreground="#CD5151" VerticalAlignment="Center" />
                 </StackPanel>
             </Grid>
             <Grid Grid.Row="2" Margin="14,0,10,12">
                 <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="280" /></Grid.ColumnDefinitions>
                 <Border BorderBrush="#E1E4E8" BorderThickness="1">
                     <Grid>
-                        <Grid.RowDefinitions><RowDefinition Height="48" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                        <Grid.RowDefinitions><RowDefinition Height="48" /><RowDefinition Height="46" /><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
                         <Border Background="#FCFCFD" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
                             <DockPanel LastChildFill="True" Margin="8,0">
-                                <StackPanel x:Name="ZoomTools" DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" />
+                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="图像大小" VerticalAlignment="Center" Margin="0,0,7,0" />
+                                    <ComboBox x:Name="ImageSize" Width="108" Height="30" VerticalContentAlignment="Center" SelectedIndex="0" SelectionChanged="OnImageSizeChanged">
+                                        <ComboBoxItem Content="适应窗口" /><ComboBoxItem Content="25%" /><ComboBoxItem Content="50%" /><ComboBoxItem Content="100%" /><ComboBoxItem Content="200%" /><ComboBoxItem Content="400%" /><ComboBoxItem Content="自定义" />
+                                    </ComboBox>
+                                    <StackPanel x:Name="ZoomTools" Orientation="Horizontal" VerticalAlignment="Center" />
+                                </StackPanel>
                                 <StackPanel x:Name="EditTools" Orientation="Horizontal" VerticalAlignment="Center" />
                             </DockPanel>
                         </Border>
-                        <local:ImageView x:Name="CanvasView" Grid.Row="1" />
+                        <Border Grid.Row="1" Background="#F5F8FB" BorderBrush="#E1E4E8" BorderThickness="0,0,0,1">
+                            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                                <StackPanel x:Name="MaskTools" Orientation="Horizontal" VerticalAlignment="Center" Margin="8,0">
+                                    <TextBlock Text="掩膜工具" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0" />
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Border>
+                        <Border x:Name="BrushSizePanel" Grid.Row="2" Visibility="Collapsed" Background="#F5F8FB" BorderBrush="#E1E4E8" BorderThickness="0,0,0,1" Padding="12,6">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock x:Name="BrushSizeLabel" Text="画笔半径" VerticalAlignment="Center" Width="84" />
+                                <Slider x:Name="BrushSizeSlider" Minimum="1" Maximum="500" Value="10" Width="260" Height="28" VerticalAlignment="Center"
+                                        TickFrequency="1" IsSnapToTickEnabled="True" SmallChange="1" LargeChange="10" IsMoveToPointEnabled="True"
+                                        AutomationProperties.Name="{Binding Text, ElementName=BrushSizeLabel}" ValueChanged="OnBrushSizeChanged" />
+                                <TextBlock Text="{Binding Value, ElementName=BrushSizeSlider, StringFormat={}{0:0} px}" Width="64" Margin="12,0,0,0" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Border>
+                        <local:ImageView x:Name="CanvasView" Grid.Row="3" />
                     </Grid>
                 </Border>
                 <Grid Grid.Column="1" Margin="20,0,0,0">
                     <Grid.RowDefinitions><RowDefinition Height="*" MinHeight="160" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
                     <Grid>
-                        <Grid.RowDefinitions><RowDefinition Height="42" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                        <Grid.RowDefinitions><RowDefinition Height="42" /><RowDefinition Height="*" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
                         <TextBlock Text="列表" FontSize="17" FontWeight="SemiBold" VerticalAlignment="Center" />
-                        <ListBox x:Name="TemplateResults" Grid.Row="1" BorderThickness="0" Background="White" Foreground="#4B5563" HorizontalContentAlignment="Stretch" SelectionChanged="OnResultSelected" />
+                        <ListBox x:Name="TemplateResults" Grid.Row="1" BorderThickness="0" Background="White" Foreground="#4B5563" HorizontalContentAlignment="Stretch" SelectionChanged="OnResultSelected" PreviewMouseLeftButtonDown="OnRegionItemClick" />
+                        <TextBlock x:Name="RegionListHint" Grid.Row="2" Text="按创建顺序排列，点击区域可修改" FontSize="12" Foreground="#697586" TextWrapping="Wrap" Margin="2,8,2,12" />
                     </Grid>
                     <Border Grid.Row="1" BorderBrush="#E0E3E7" BorderThickness="0,1,0,0" Padding="0,14,0,0">
                         <StackPanel x:Name="SettingsPanel">

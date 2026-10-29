@@ -262,8 +262,8 @@ public partial class ParamsWindow : Window
         TestStatus.Text = "测试中";
         try
         {
-            await _vm.TestSelectedAsync();
-            RefreshShapeMatchResults();
+            await _vm.TestSelectedAsync(templateCurrentInputOnly: IsShapeMatcher);
+            RefreshShapeMatchResults(freshResults: true);
             RefreshPreview();
             TestStatus.Text = _vm.SelectedResult;
             TestStatus.ToolTip = _vm.Status;
@@ -350,7 +350,8 @@ public partial class ParamsWindow : Window
     private void OnImageChanged(object sender, EventArgs e)
     {
         if (_committingRegion) return;
-        if (!Dispatcher.CheckAccess()) { Dispatcher.InvokeAsync(RefreshPreview); return; }
+        if (!Dispatcher.CheckAccess()) { Dispatcher.InvokeAsync(() => { RefreshShapeRowsIfChanged(); RefreshPreview(); }); return; }
+        RefreshShapeRowsIfChanged();
         RefreshPreview();
     }
 
